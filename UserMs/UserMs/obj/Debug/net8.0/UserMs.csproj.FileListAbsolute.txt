@@ -62,12 +62,10 @@ C:\Users\LENOVO\UserMS\UserMs\UserMs\bin\Debug\net8.0\System.Diagnostics.Diagnos
 C:\Users\LENOVO\UserMS\UserMs\UserMs\bin\Debug\net8.0\System.IdentityModel.Tokens.Jwt.dll
 C:\Users\LENOVO\UserMS\UserMs\UserMs\bin\Debug\net8.0\ZstdSharp.dll
 C:\Users\LENOVO\UserMS\UserMs\UserMs\bin\Debug\net8.0\UserMs.Application.dll
-C:\Users\LENOVO\UserMS\UserMs\UserMs\bin\Debug\net8.0\UserMs.Common.dll
 C:\Users\LENOVO\UserMS\UserMs\UserMs\bin\Debug\net8.0\UserMs.Core.dll
 C:\Users\LENOVO\UserMS\UserMs\UserMs\bin\Debug\net8.0\UserMs.Domain.dll
 C:\Users\LENOVO\UserMS\UserMs\UserMs\bin\Debug\net8.0\UserMs.Infrastructure.dll
 C:\Users\LENOVO\UserMS\UserMs\UserMs\bin\Debug\net8.0\UserMs.Application.pdb
-C:\Users\LENOVO\UserMS\UserMs\UserMs\bin\Debug\net8.0\UserMs.Common.pdb
 C:\Users\LENOVO\UserMS\UserMs\UserMs\bin\Debug\net8.0\UserMs.Core.pdb
 C:\Users\LENOVO\UserMS\UserMs\UserMs\bin\Debug\net8.0\UserMs.Domain.pdb
 C:\Users\LENOVO\UserMS\UserMs\UserMs\bin\Debug\net8.0\UserMs.Infrastructure.pdb
@@ -88,3 +86,5 @@ C:\Users\LENOVO\UserMS\UserMs\UserMs\obj\Debug\net8.0\refint\UserMs.dll
 C:\Users\LENOVO\UserMS\UserMs\UserMs\obj\Debug\net8.0\UserMs.pdb
 C:\Users\LENOVO\UserMS\UserMs\UserMs\obj\Debug\net8.0\UserMs.genruntimeconfig.cache
 C:\Users\LENOVO\UserMS\UserMs\UserMs\obj\Debug\net8.0\ref\UserMs.dll
+C:\Users\LENOVO\UserMS\UserMs\UserMs\bin\Debug\net8.0\UserMs.Commoon.dll
+C:\Users\LENOVO\UserMS\UserMs\UserMs\bin\Debug\net8.0\UserMs.Commoon.pdb

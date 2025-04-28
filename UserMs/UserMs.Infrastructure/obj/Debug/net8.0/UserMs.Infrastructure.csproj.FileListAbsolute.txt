@@ -7,10 +7,8 @@ C:\Users\LENOVO\UserMS\UserMs\UserMs.Infrastructure\obj\Debug\net8.0\UserMs.Infr
 C:\Users\LENOVO\UserMS\UserMs\UserMs.Infrastructure\bin\Debug\net8.0\UserMs.Infrastructure.deps.json
 C:\Users\LENOVO\UserMS\UserMs\UserMs.Infrastructure\bin\Debug\net8.0\UserMs.Infrastructure.dll
 C:\Users\LENOVO\UserMS\UserMs\UserMs.Infrastructure\bin\Debug\net8.0\UserMs.Infrastructure.pdb
-C:\Users\LENOVO\UserMS\UserMs\UserMs.Infrastructure\bin\Debug\net8.0\UserMs.Common.dll
 C:\Users\LENOVO\UserMS\UserMs\UserMs.Infrastructure\bin\Debug\net8.0\UserMs.Core.dll
 C:\Users\LENOVO\UserMS\UserMs\UserMs.Infrastructure\bin\Debug\net8.0\UserMs.Domain.dll
-C:\Users\LENOVO\UserMS\UserMs\UserMs.Infrastructure\bin\Debug\net8.0\UserMs.Common.pdb
 C:\Users\LENOVO\UserMS\UserMs\UserMs.Infrastructure\bin\Debug\net8.0\UserMs.Core.pdb
 C:\Users\LENOVO\UserMS\UserMs\UserMs.Infrastructure\bin\Debug\net8.0\UserMs.Domain.pdb
 C:\Users\LENOVO\UserMS\UserMs\UserMs.Infrastructure\obj\Debug\net8.0\UserMs.I.828F78E6.Up2Date
@@ -18,3 +16,5 @@ C:\Users\LENOVO\UserMS\UserMs\UserMs.Infrastructure\obj\Debug\net8.0\UserMs.Infr
 C:\Users\LENOVO\UserMS\UserMs\UserMs.Infrastructure\obj\Debug\net8.0\refint\UserMs.Infrastructure.dll
 C:\Users\LENOVO\UserMS\UserMs\UserMs.Infrastructure\obj\Debug\net8.0\UserMs.Infrastructure.pdb
 C:\Users\LENOVO\UserMS\UserMs\UserMs.Infrastructure\obj\Debug\net8.0\ref\UserMs.Infrastructure.dll
+C:\Users\LENOVO\UserMS\UserMs\UserMs.Infrastructure\bin\Debug\net8.0\UserMs.Commoon.dll
+C:\Users\LENOVO\UserMS\UserMs\UserMs.Infrastructure\bin\Debug\net8.0\UserMs.Commoon.pdb

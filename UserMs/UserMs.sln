@@ -13,7 +13,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UserMs.Domain", "UserMs.Dom
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UserMs.Infrastructure", "UserMs.Infrastructure\UserMs.Infrastructure.csproj", "{24BB7DD3-1662-42F6-AAD9-886C281456ED}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UserMs.Common", "UserMs.Commoon\UserMs.Common.csproj", "{9FAB9DE6-F82A-4781-A504-8327CDCC1D0D}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UserMs.Commoon", "UserMs.Commoon\UserMs.Commoon.csproj", "{9FAB9DE6-F82A-4781-A504-8327CDCC1D0D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

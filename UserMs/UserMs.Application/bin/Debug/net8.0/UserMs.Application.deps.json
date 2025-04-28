@@ -431,6 +431,18 @@
           }
         }
       },
+      "UserMs.Commoon/1.0.0": {
+        "dependencies": {
+          "AutoMapper": "14.0.0",
+          "UserMs.Domain": "1.0.0"
+        },
+        "runtime": {
+          "UserMs.Commoon.dll": {
+            "assemblyVersion": "1.0.0.0",
+            "fileVersion": "1.0.0.0"
+          }
+        }
+      },
       "UserMs.Core/1.0.0": {
         "dependencies": {
           "Microsoft.EntityFrameworkCore": "9.0.4",
@@ -465,6 +477,7 @@
           "Npgsql.EntityFrameworkCore.PostgreSQL": "9.0.4",
           "RabbitMQ.Client": "7.1.2",
           "UserMs.Common": "1.0.0",
+          "UserMs.Commoon": "1.0.0",
           "UserMs.Core": "1.0.0"
         },
         "runtime": {
@@ -796,6 +809,11 @@
       "sha512": "sha512-U9Ix4l4cl58Kzz1rJzj5hoVTjmbx1qGMwzAcbv1j/d3NzrFaESIurQyg+ow4mivCgkE3S413y+U9k4WdnEIkRA==",
       "path": "zstdsharp.port/0.7.3",
       "hashPath": "zstdsharp.port.0.7.3.nupkg.sha512"
+    },
+    "UserMs.Commoon/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
     },
     "UserMs.Core/1.0.0": {
       "type": "project",

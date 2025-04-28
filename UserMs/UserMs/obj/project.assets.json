@@ -1043,6 +1043,20 @@
           "bin/placeholder/UserMs.Common.dll": {}
         }
       },
+      "UserMs.Commoon/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v8.0",
+        "dependencies": {
+          "AutoMapper": "14.0.0",
+          "UserMs.Domain": "1.0.0"
+        },
+        "compile": {
+          "bin/placeholder/UserMs.Commoon.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/UserMs.Commoon.dll": {}
+        }
+      },
       "UserMs.Core/1.0.0": {
         "type": "project",
         "framework": ".NETCoreApp,Version=v8.0",
@@ -1083,6 +1097,7 @@
           "Npgsql.EntityFrameworkCore.PostgreSQL": "9.0.4",
           "RabbitMQ.Client": "7.1.2",
           "UserMs.Common": "1.0.0",
+          "UserMs.Commoon": "1.0.0",
           "UserMs.Core": "1.0.0"
         },
         "compile": {
@@ -2915,8 +2930,13 @@
     },
     "UserMs.Common/1.0.0": {
       "type": "project",
-      "path": "../UserMs.Common/UserMs.Common.csproj",
-      "msbuildProject": "../UserMs.Common/UserMs.Common.csproj"
+      "path": "../UserMs.Commoon/UserMs.Common.csproj",
+      "msbuildProject": "../UserMs.Commoon/UserMs.Common.csproj"
+    },
+    "UserMs.Commoon/1.0.0": {
+      "type": "project",
+      "path": "../UserMs.Commoon/UserMs.Commoon.csproj",
+      "msbuildProject": "../UserMs.Commoon/UserMs.Commoon.csproj"
     },
     "UserMs.Core/1.0.0": {
       "type": "project",
@@ -2946,6 +2966,7 @@
       "Swashbuckle.AspNetCore >= 6.6.2",
       "UserMs.Application >= 1.0.0",
       "UserMs.Common >= 1.0.0",
+      "UserMs.Commoon >= 1.0.0",
       "UserMs.Core >= 1.0.0",
       "UserMs.Domain >= 1.0.0"
     ]
@@ -2988,6 +3009,9 @@
             },
             "C:\\Users\\LENOVO\\UserMS\\UserMs\\UserMs.Common\\UserMs.Common.csproj": {
               "projectPath": "C:\\Users\\LENOVO\\UserMS\\UserMs\\UserMs.Common\\UserMs.Common.csproj"
+            },
+            "C:\\Users\\LENOVO\\UserMS\\UserMs\\UserMs.Commoon\\UserMs.Commoon.csproj": {
+              "projectPath": "C:\\Users\\LENOVO\\UserMS\\UserMs\\UserMs.Commoon\\UserMs.Commoon.csproj"
             },
             "C:\\Users\\LENOVO\\UserMS\\UserMs\\UserMs.Core\\UserMs.Core.csproj": {
               "projectPath": "C:\\Users\\LENOVO\\UserMS\\UserMs\\UserMs.Core\\UserMs.Core.csproj"
