@@ -1,0 +1,13 @@
+C:\Users\LENOVO\UserMS\UserMs\UserMs.Domain\bin\Debug\net8.0\UserMs.Domain.deps.json
+C:\Users\LENOVO\UserMS\UserMs\UserMs.Domain\bin\Debug\net8.0\UserMs.Domain.dll
+C:\Users\LENOVO\UserMS\UserMs\UserMs.Domain\bin\Debug\net8.0\UserMs.Domain.pdb
+C:\Users\LENOVO\UserMS\UserMs\UserMs.Domain\obj\Debug\net8.0\UserMs.Domain.csproj.AssemblyReference.cache
+C:\Users\LENOVO\UserMS\UserMs\UserMs.Domain\obj\Debug\net8.0\UserMs.Domain.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\LENOVO\UserMS\UserMs\UserMs.Domain\obj\Debug\net8.0\UserMs.Domain.AssemblyInfoInputs.cache
+C:\Users\LENOVO\UserMS\UserMs\UserMs.Domain\obj\Debug\net8.0\UserMs.Domain.AssemblyInfo.cs
+C:\Users\LENOVO\UserMS\UserMs\UserMs.Domain\obj\Debug\net8.0\UserMs.Domain.csproj.CoreCompileInputs.cache
+C:\Users\LENOVO\UserMS\UserMs\UserMs.Domain\obj\Debug\net8.0\UserMs.Domain.sourcelink.json
+C:\Users\LENOVO\UserMS\UserMs\UserMs.Domain\obj\Debug\net8.0\UserMs.Domain.dll
+C:\Users\LENOVO\UserMS\UserMs\UserMs.Domain\obj\Debug\net8.0\refint\UserMs.Domain.dll
+C:\Users\LENOVO\UserMS\UserMs\UserMs.Domain\obj\Debug\net8.0\UserMs.Domain.pdb
+C:\Users\LENOVO\UserMS\UserMs\UserMs.Domain\obj\Debug\net8.0\ref\UserMs.Domain.dll
