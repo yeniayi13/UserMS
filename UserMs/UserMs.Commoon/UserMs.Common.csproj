@@ -7,8 +7,12 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Dtos\Auctioneer\" />
-    <Folder Include="Dtos\Bidder\" />
+    <Compile Remove="Dtos\Auctioneer\**" />
+    <Compile Remove="Dtos\Bidder\**" />
+    <EmbeddedResource Remove="Dtos\Auctioneer\**" />
+    <EmbeddedResource Remove="Dtos\Bidder\**" />
+    <None Remove="Dtos\Auctioneer\**" />
+    <None Remove="Dtos\Bidder\**" />
   </ItemGroup>
 
   <ItemGroup>
