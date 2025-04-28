@@ -584,18 +584,6 @@
           }
         }
       },
-      "UserMs.Common/1.0.0": {
-        "dependencies": {
-          "AutoMapper": "14.0.0",
-          "UserMs.Domain": "1.0.0"
-        },
-        "runtime": {
-          "UserMs.Common.dll": {
-            "assemblyVersion": "1.0.0.0",
-            "fileVersion": "1.0.0.0"
-          }
-        }
-      },
       "UserMs.Core/1.0.0": {
         "dependencies": {
           "Microsoft.EntityFrameworkCore": "9.0.4",
@@ -1082,11 +1070,6 @@
       "hashPath": "zstdsharp.port.0.7.3.nupkg.sha512"
     },
     "UserMs.Application/1.0.0": {
-      "type": "project",
-      "serviceable": false,
-      "sha512": ""
-    },
-    "UserMs.Common/1.0.0": {
       "type": "project",
       "serviceable": false,
       "sha512": ""

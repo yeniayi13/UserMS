@@ -170,3 +170,6 @@
 /UserMs/.vs/UserMs/FileContentIndex/74ed1c01-790c-4098-b577-d7605c0ad5dc.vsidx
 /UserMs/.vs/UserMs/FileContentIndex/8ef301d2-7ea0-4b43-994f-0d58e9b590d5.vsidx
 /UserMs/.vs/UserMs/FileContentIndex/f7ff2670-4c2f-4371-ae86-37167b48dc0d.vsidx
+*.vsidx
+/UserMs/UserMs.Application/obj/project.assets.json
+/UserMs/UserMs.Application/obj/Debug/net8.0/UserMs.Application.csproj.CoreCompileInputs.cache

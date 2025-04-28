@@ -11,17 +11,11 @@ using RabbitMQ.Client;
 using UserMs.Domain.Entities.IUser.ValueObjects;
 using System.Text.Json;
 using UserMs.Infrastructure.JsonConverter.IUser;
+using MongoDB.Driver;
+using UserMs.Common.Dtos.Users.Request;
 
 namespace UserMs.Infrastructure.RabbitMQ.Consumer
 {
-
-    using System;
-    using System.Text;
-    using System.Threading.Tasks;
-    using MongoDB.Driver;
-    using System.Text.Json;
-    using UserMs.Common.Dtos.Users.Request;
-
     public class RabbitMQConsumer
     {
         private readonly RabbitMQConnection _rabbitMQConnection;
