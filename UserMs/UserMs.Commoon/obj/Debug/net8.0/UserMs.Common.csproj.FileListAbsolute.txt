@@ -1,0 +1,16 @@
+C:\Users\LENOVO\UserMS\UserMs\UserMs.Commoon\bin\Debug\net8.0\UserMs.Common.deps.json
+C:\Users\LENOVO\UserMS\UserMs\UserMs.Commoon\bin\Debug\net8.0\UserMs.Common.dll
+C:\Users\LENOVO\UserMS\UserMs\UserMs.Commoon\bin\Debug\net8.0\UserMs.Common.pdb
+C:\Users\LENOVO\UserMS\UserMs\UserMs.Commoon\bin\Debug\net8.0\UserMs.Domain.dll
+C:\Users\LENOVO\UserMS\UserMs\UserMs.Commoon\bin\Debug\net8.0\UserMs.Domain.pdb
+C:\Users\LENOVO\UserMS\UserMs\UserMs.Commoon\obj\Debug\net8.0\UserMs.Common.csproj.AssemblyReference.cache
+C:\Users\LENOVO\UserMS\UserMs\UserMs.Commoon\obj\Debug\net8.0\UserMs.Common.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\LENOVO\UserMS\UserMs\UserMs.Commoon\obj\Debug\net8.0\UserMs.Common.AssemblyInfoInputs.cache
+C:\Users\LENOVO\UserMS\UserMs\UserMs.Commoon\obj\Debug\net8.0\UserMs.Common.AssemblyInfo.cs
+C:\Users\LENOVO\UserMS\UserMs\UserMs.Commoon\obj\Debug\net8.0\UserMs.Common.csproj.CoreCompileInputs.cache
+C:\Users\LENOVO\UserMS\UserMs\UserMs.Commoon\obj\Debug\net8.0\UserMs.Common.sourcelink.json
+C:\Users\LENOVO\UserMS\UserMs\UserMs.Commoon\obj\Debug\net8.0\UserMs.C.F0E2FD11.Up2Date
+C:\Users\LENOVO\UserMS\UserMs\UserMs.Commoon\obj\Debug\net8.0\UserMs.Common.dll
+C:\Users\LENOVO\UserMS\UserMs\UserMs.Commoon\obj\Debug\net8.0\refint\UserMs.Common.dll
+C:\Users\LENOVO\UserMS\UserMs\UserMs.Commoon\obj\Debug\net8.0\UserMs.Common.pdb
+C:\Users\LENOVO\UserMS\UserMs\UserMs.Commoon\obj\Debug\net8.0\ref\UserMs.Common.dll

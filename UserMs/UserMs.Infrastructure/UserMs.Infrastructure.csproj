@@ -18,6 +18,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\UserMs.Common\UserMs.Common.csproj" />
+    <ProjectReference Include="..\UserMs.Commoon\UserMs.Common.csproj" />
     <ProjectReference Include="..\UserMs.Core\UserMs.Core.csproj" />
   </ItemGroup>
 
