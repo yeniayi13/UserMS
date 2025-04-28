@@ -17,9 +17,12 @@
 /.vs/UserMS/v17/DocumentLayout.backup.json
 /.vs/UserMS/v17/DocumentLayout.json
 /.vs/VSWorkspaceState.json
+<<<<<<< HEAD
 /UserMs/.vs/ProjectEvaluation/userms.metadata.v9.bin
 /UserMs/.vs/ProjectEvaluation/userms.projects.v9.bin
 /UserMs/.vs/ProjectEvaluation/userms.strings.v9.bin
+=======
+>>>>>>> 478ae5b (Implementacion Base de datos y Rabbit con CQRS)
 /UserMs/.vs/UserMs/config/applicationhost.config
 /UserMs/.vs/UserMs/CopilotIndices/17.13.444.19527/CodeChunks.db
 /UserMs/.vs/UserMs/CopilotIndices/17.13.444.19527/CodeChunks.db-shm
@@ -28,6 +31,7 @@
 /UserMs/.vs/UserMs/CopilotIndices/17.13.444.19527/SemanticSymbols.db-shm
 /UserMs/.vs/UserMs/CopilotIndices/17.13.444.19527/SemanticSymbols.db-wal
 /UserMs/.vs/UserMs/DesignTimeBuild/.dtbcache.v2
+<<<<<<< HEAD
 /UserMs/.vs/UserMs/FileContentIndex/363ec98f-c874-4a19-9e5d-e39995b8ad4c.vsidx
 /UserMs/.vs/UserMs/FileContentIndex/8ef48b8d-66af-43d4-b98f-ef5d861e12a6.vsidx
 /UserMs/.vs/UserMs/FileContentIndex/9a9d34d1-19bb-4b1f-997b-c69913922e1a.vsidx
@@ -36,3 +40,14 @@
 /UserMs/.vs/UserMs/v17/.futdcache.v2
 /UserMs/.vs/UserMs/v17/.suo
 /UserMs/.vs/UserMs/v17/DocumentLayout.backup.json
+=======
+/UserMs/.vs/UserMs/FileContentIndex/9053db01-d2e6-4e6f-bcfb-5e3fae9fb27a.vsidx
+/UserMs/.vs/UserMs/FileContentIndex/93674388-9b57-4b40-9d78-7c351bfabc50.vsidx
+/UserMs/.vs/UserMs/FileContentIndex/a3e43f55-30ad-472d-a9e7-74e53348c720.vsidx
+/UserMs/.vs/UserMs/FileContentIndex/c7279427-1275-4be2-ad39-150a2ffc24e4.vsidx
+/UserMs/.vs/UserMs/FileContentIndex/db5582e9-1cde-4318-851a-126c2d0acca9.vsidx
+/UserMs/.vs/UserMs/v17/.futdcache.v2
+/UserMs/.vs/UserMs/v17/.suo
+/UserMs/.vs/UserMs/v17/DocumentLayout.backup.json
+/UserMs/.vs/UserMs/v17/DocumentLayout.json
+>>>>>>> 478ae5b (Implementacion Base de datos y Rabbit con CQRS)
