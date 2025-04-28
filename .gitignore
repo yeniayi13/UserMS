@@ -177,3 +177,4 @@
 /UserMs/.vs/UserMs/v17/TestStore/0/000.testlog
 /UserMs/.vs/UserMs/v17/TestStore/0/testlog.manifest
 *.vsidx
+/UserMs/UserMs.Commoon/bin/Debug/net8.0/UserMs.Common.pdb
