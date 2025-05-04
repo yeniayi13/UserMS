@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "IxYXPW3CIeQ=",
+  "dgSpecHash": "rrSgnsqnook=",
   "success": true,
-  "projectFilePath": "C:\\Users\\LENOVO\\UserMS\\UserMs\\UserMs.Commoon\\UserMs.Common.csproj",
+  "projectFilePath": "C:\\Users\\LENOVO\\UserMS\\UserMs\\UserMs.Commoon\\UserMs.Commoon.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\LENOVO\\.nuget\\packages\\automapper\\14.0.0\\automapper.14.0.0.nupkg.sha512",
     "C:\\Users\\LENOVO\\.nuget\\packages\\microsoft.entityframeworkcore\\9.0.4\\microsoft.entityframeworkcore.9.0.4.nupkg.sha512",
