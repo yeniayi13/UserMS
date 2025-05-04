@@ -638,9 +638,9 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\LENOVO\\UserMS\\UserMs\\UserMs.Commoon\\UserMs.Commoon.csproj",
-      "projectName": "UserMs.Commoon",
-      "projectPath": "C:\\Users\\LENOVO\\UserMS\\UserMs\\UserMs.Commoon\\UserMs.Commoon.csproj",
+      "projectUniqueName": "C:\\Users\\LENOVO\\UserMS\\UserMs\\UserMs.Commoon\\UserMs.Common.csproj",
+      "projectName": "UserMs.Common",
+      "projectPath": "C:\\Users\\LENOVO\\UserMS\\UserMs\\UserMs.Commoon\\UserMs.Common.csproj",
       "packagesPath": "C:\\Users\\LENOVO\\.nuget\\packages\\",
       "outputPath": "C:\\Users\\LENOVO\\UserMS\\UserMs\\UserMs.Commoon\\obj\\",
       "projectStyle": "PackageReference",
