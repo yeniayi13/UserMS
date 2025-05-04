@@ -18,14 +18,14 @@ namespace UserMs.Controllers
     {
         private readonly ILogger<UsersController> _logger;
         private readonly IMediator _mediator;
-        private readonly IEventBus<CreateUsersDto> _eventBus;
+       
 
 
-        public UsersController(ILogger<UsersController> logger, IMediator mediator, IEventBus<CreateUsersDto> eventBus)
+        public UsersController(ILogger<UsersController> logger, IMediator mediator)
         {
             _logger = logger;
             _mediator = mediator;
-            _eventBus = eventBus;
+            
         }
 
         // [Authorize(Policy = "AuctioneerBidderOnly")]
@@ -38,9 +38,7 @@ namespace UserMs.Controllers
                 var command = new CreateUsersCommand(createUsersDto);
                 var userId = await _mediator.Send(command);
 
-
-                // Publicamos el mensaje en RabbitMQ
-                await _eventBus.PublishMessageAsync(createUsersDto, "userQueue");
+               
               
 
                 return Ok(userId);
