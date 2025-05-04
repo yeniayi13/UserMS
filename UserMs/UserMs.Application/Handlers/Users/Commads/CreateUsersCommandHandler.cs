@@ -16,11 +16,11 @@ namespace UserMs.Application.Handlers.User.Commands
 {
     public class CreateUsersCommandHandler : IRequestHandler<CreateUsersCommand, UserId>
     {
-        private readonly IUsersRepository _usersRepository;
+        private readonly IUserRepository _usersRepository;
         private readonly IKeycloakRepository _keycloakMsService;
         private readonly IEventBus<CreateUsersDto> _eventBus;
 
-        public CreateUsersCommandHandler(IUsersRepository usersRepository, IKeycloakRepository keycloakMsService, IEventBus<CreateUsersDto> eventBus)
+        public CreateUsersCommandHandler(IUserRepository usersRepository, IKeycloakRepository keycloakMsService, IEventBus<CreateUsersDto> eventBus)
         {
             _usersRepository = usersRepository;
             _keycloakMsService = keycloakMsService;

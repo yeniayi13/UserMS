@@ -8,10 +8,10 @@ namespace UserMs.Application.Handlers.User.Commands
 {
     public class DeleteUsersCommandHandler : IRequestHandler<DeleteUsersCommand, UserId>
     {
-        private readonly IUsersRepository _usersRepository;
+        private readonly IUserRepository _usersRepository;
         private readonly IAuthMsService _authMsService;
 
-        public DeleteUsersCommandHandler(IUsersRepository usersRepository, IAuthMsService authMsService)
+        public DeleteUsersCommandHandler(IUserRepository usersRepository, IAuthMsService authMsService)
         {
             _usersRepository = usersRepository;
             _authMsService = authMsService;

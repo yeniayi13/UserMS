@@ -7,9 +7,9 @@ namespace UserMs.Application.Handlers.User.Queries
 {
     public class GetUsersQueryHandler : IRequestHandler<GetUsersQuery, List<GetUsersDto>>
     {
-        private readonly IUsersRepository _usersRepository;
+        private readonly IUserRepository _usersRepository;
        
-        public GetUsersQueryHandler(IUsersRepository usersRepository)
+        public GetUsersQueryHandler(IUserRepository usersRepository)
         {
             _usersRepository = usersRepository;
         }
