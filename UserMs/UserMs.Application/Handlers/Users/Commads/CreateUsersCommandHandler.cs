@@ -7,9 +7,9 @@ using UserMs.Core.Interface;
 using UserMs.Domain.Entities.IUser.ValueObjects;
 using UserMs.Infrastructure.Exceptions;
 using UserMs.Core;
-using UserMs.Common.Dtos.Users.Request;
 using UserMs.Core.RabbitMQ;
 using UserMs.Commoon.Dtos;
+using UserMs.Commoon.Dtos.Users.Request;
 
 
 namespace UserMs.Application.Handlers.User.Commands
@@ -33,18 +33,21 @@ namespace UserMs.Application.Handlers.User.Commands
         {
             try
             {
+                
+
                 var validator = new CreateUsersValidator();
                 await validator.ValidateRequest(request.Users);
                 //var userId = request.Users.UserId;
                 var usersEmailValue = request.Users.UserEmail;
                 var usersPasswordValue = request.Users.UserPassword;
                 var usersNameValue = request.Users.UserName;
+                var usersLastNameValue = request.Users.UserLastName;
                 var usersPhoneValue = request.Users.UserPhone;
                 var usersAddressValue = request.Users.UserAddress;
                 //var usersDepartamentValue = request.Users.ProviderDepartmentId;
 
 
-                 await _keycloakMsService.CreateUserAsync(usersEmailValue!, usersPasswordValue);
+                 await _keycloakMsService.CreateUserAsync(usersEmailValue!, usersPasswordValue, usersNameValue, usersLastNameValue, usersPhoneValue, usersAddressValue);
                  var Id = await _keycloakMsService.GetUserByUserName(usersEmailValue);
                 // await _authMsService.AssignClientRoleToUser(userId, request.Users.UsersType.ToString()!);
 
@@ -55,12 +58,24 @@ namespace UserMs.Application.Handlers.User.Commands
                     UserName.Create(usersNameValue ),
                     UserPhone.Create(usersPhoneValue ),
                     UserAddress.Create(usersAddressValue),
+                    UserLastName.Create(request.Users.UserLastName),
                     Enum.Parse<UsersType>(request.Users.UsersType.ToString()!),
                     Enum.Parse<UserAvailable>(request.Users.UserAvailable.ToString()!)
                 );
 
+
+
                 request.Users.UserId = Id;
+                //var existingUser = await _usersRepository.GetUsersByEmail(users.UserEmail);
+              //  if (existingUser != null)
+               // {
+                //    throw new Exception("Este Correo ya se encuentra registrado en el sistema.");
+                //}
                 // Publicamos el mensaje en RabbitMQ
+
+
+                await _usersRepository.AddAsync(users);
+
                 await _eventBus.PublishMessageAsync(request.Users, "userQueue");
 
                 if (request.Users.UsersType == null)
@@ -68,8 +83,6 @@ namespace UserMs.Application.Handlers.User.Commands
                     throw new NullAtributeException("UsersType can't be null");
                 }
 
-
-                await _usersRepository.AddAsync(users);
 
                 return users.UserId;
             }

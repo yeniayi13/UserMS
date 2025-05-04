@@ -12,7 +12,7 @@ using UserMs.Domain.Entities.IUser.ValueObjects;
 using System.Text.Json;
 using UserMs.Infrastructure.JsonConverter.IUser;
 using MongoDB.Driver;
-using UserMs.Common.Dtos.Users.Request;
+using UserMs.Commoon.Dtos.Users.Request;
 
 namespace UserMs.Infrastructure.RabbitMQ.Consumer
 {

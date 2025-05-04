@@ -9,6 +9,7 @@ namespace UserMs.Application.Dtos.Users.Response{
         public string? UserPhone { get; set; } = String.Empty;
         public string? UserAddress { get; set; } = String.Empty;
         public string? UsersAvailable { get; init; }
+        public string? UserLastName { get; set; } = String.Empty;
 
     }
 }

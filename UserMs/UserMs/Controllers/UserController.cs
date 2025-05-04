@@ -4,7 +4,7 @@ using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using UserMs.Domain.Entities;
 using Microsoft.AspNetCore.Authorization;
-using UserMs.Common.Dtos.Users.Request;
+using UserMs.Commoon.Dtos.Users.Request;
 using UserMs.Core.RabbitMQ;
 using UserMs.Domain.Entities.IUser.ValueObjects;
 

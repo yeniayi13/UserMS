@@ -8,7 +8,7 @@ using UserMs.Application.Dtos.Users.Response;
 using UserMs.Domain.Entities;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 
-namespace UserMs.Common.AutoMapper
+namespace UserMs.Commoon.AutoMapper
 {
     public class UserProfile : Profile
     {

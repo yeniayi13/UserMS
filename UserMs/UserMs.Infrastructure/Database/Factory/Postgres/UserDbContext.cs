@@ -55,7 +55,10 @@ namespace UserMs.Infrastructure.Database.Factory.Postgres
                         .HasConversion<UserDeleteConverter>();
             modelBuilder.Entity<Users>()   
                         .Property(u => u.UsersType);
-            
+            modelBuilder.Entity<Users>()
+                       .Property(u => u.UserLastName)
+                       .HasConversion(new UserLastNameValueConverter());
+
 
             modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
         }
