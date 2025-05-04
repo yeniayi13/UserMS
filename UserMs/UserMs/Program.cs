@@ -1,5 +1,6 @@
 
 
+using AuthMs.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization;
@@ -9,6 +10,7 @@ using UserMs.Application.Handlers.User.Commands;
 using UserMs.Application.Handlers.User.Queries;
 using UserMs.Common.AutoMapper;
 using UserMs.Common.Dtos.Users.Request;
+using UserMs.Core;
 using UserMs.Core.Database;
 using UserMs.Core.Interface;
 using UserMs.Core.RabbitMQ;
@@ -83,6 +85,9 @@ builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblies(
 builder.Services.AddTransient<IUserDbContext, UserDbContext>();
 builder.Services.AddTransient<IUsersRepository, UsersRepository>();
 builder.Services.AddTransient<IAuthMsService, AuthMsService>();
+builder.Services.AddTransient<IKeycloakRepository, KeycloakRepository>();
+builder.Services.AddScoped<IKeycloakRepository, KeycloakRepository>();
+
 //***********************************************************************
 builder.Services.AddControllers().AddJsonOptions(options =>
 {
@@ -136,8 +141,17 @@ builder.Services.AddDbContext<UserDbContext>(options =>
 
 //**********************************************************************************    
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAll", builder =>
+    {
+        builder.AllowAnyOrigin()
+               .AllowAnyMethod()
+               .AllowAnyHeader();
+    });
+});
 var app = builder.Build();
-app.UseCors("AllowAll");
+
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment() || app.Environment.IsProduction())
@@ -148,6 +162,7 @@ if (app.Environment.IsDevelopment() || app.Environment.IsProduction())
 
 app.MapGet("/", () => "Connected!");
 
+app.UseCors("AllowAll");
 app.UseHttpsRedirection();
 app.UseRouting();
 app.UseAuthentication();

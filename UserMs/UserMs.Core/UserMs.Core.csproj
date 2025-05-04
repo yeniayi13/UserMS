@@ -12,6 +12,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\UserMs.Commoon\UserMs.Commoon.csproj" />
     <ProjectReference Include="..\UserMs.Domain\UserMs.Domain.csproj" />
   </ItemGroup>
 

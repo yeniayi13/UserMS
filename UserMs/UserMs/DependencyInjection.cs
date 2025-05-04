@@ -1,5 +1,8 @@
+using AuthMs.Infrastructure;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
+using System.Net.Http.Headers;
+using UserMs.Core;
 using UserMs.Core.Interface;
 using UserMs.Infrastructure;
 
@@ -138,7 +141,13 @@ namespace UserMs
             services.AddHttpContextAccessor();
             // Registra el DelegatingHandler
 
-            services.AddHttpClient<IAuthMsService, AuthMsService>();
+            // Configura HttpClient para IKeycloakRepository
+            services.AddHttpClient<IKeycloakRepository, KeycloakRepository>()
+            .ConfigureHttpClient(client =>
+            {
+                client.BaseAddress = new Uri("https://localhost:18080/");
+                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+            });
 
 
             return services;

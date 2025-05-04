@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("UserMs.Commoon")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+ed5c9796a952eff690ae3836a1aa447e5a0179c0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+6b9e9379af7ec43e2bfaa7590c244b9f957fbe2a")]
 [assembly: System.Reflection.AssemblyProductAttribute("UserMs.Commoon")]
 [assembly: System.Reflection.AssemblyTitleAttribute("UserMs.Commoon")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

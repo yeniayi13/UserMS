@@ -6,6 +6,10 @@ using MediatR;
 using UserMs.Core.Interface;
 using UserMs.Domain.Entities.IUser.ValueObjects;
 using UserMs.Infrastructure.Exceptions;
+using UserMs.Core;
+using UserMs.Common.Dtos.Users.Request;
+using UserMs.Core.RabbitMQ;
+using UserMs.Commoon.Dtos;
 
 
 namespace UserMs.Application.Handlers.User.Commands
@@ -13,12 +17,14 @@ namespace UserMs.Application.Handlers.User.Commands
     public class CreateUsersCommandHandler : IRequestHandler<CreateUsersCommand, UserId>
     {
         private readonly IUsersRepository _usersRepository;
-        private readonly IAuthMsService _authMsService;
+        private readonly IKeycloakRepository _keycloakMsService;
+        private readonly IEventBus<CreateUsersDto> _eventBus;
 
-        public CreateUsersCommandHandler(IUsersRepository usersRepository, IAuthMsService authMsService)
+        public CreateUsersCommandHandler(IUsersRepository usersRepository, IKeycloakRepository keycloakMsService, IEventBus<CreateUsersDto> eventBus)
         {
             _usersRepository = usersRepository;
-            _authMsService = authMsService;
+            _keycloakMsService = keycloakMsService;
+            _eventBus = eventBus;
         }
 
 
@@ -29,7 +35,7 @@ namespace UserMs.Application.Handlers.User.Commands
             {
                 var validator = new CreateUsersValidator();
                 await validator.ValidateRequest(request.Users);
-                var userId = request.Users.UserId;
+                //var userId = request.Users.UserId;
                 var usersEmailValue = request.Users.UserEmail;
                 var usersPasswordValue = request.Users.UserPassword;
                 var usersNameValue = request.Users.UserName;
@@ -37,12 +43,13 @@ namespace UserMs.Application.Handlers.User.Commands
                 var usersAddressValue = request.Users.UserAddress;
                 //var usersDepartamentValue = request.Users.ProviderDepartmentId;
 
-               // await _authMsService.CreateUserAsync(usersEmailValue!, usersPasswordValue);
-                //var userId = await _authMsService.GetUserByUserName(UserEmail.Create(usersEmailValue!));
-               // await _authMsService.AssignClientRoleToUser(userId, request.Users.UsersType.ToString()!);
+
+                 await _keycloakMsService.CreateUserAsync(usersEmailValue!, usersPasswordValue);
+                 var Id = await _keycloakMsService.GetUserByUserName(usersEmailValue);
+                // await _authMsService.AssignClientRoleToUser(userId, request.Users.UsersType.ToString()!);
 
                 var users = new Users(
-                    UserId.Create(userId),
+                    UserId.Create(Id),
                     UserEmail.Create(usersEmailValue ),
                     UserPassword.Create(usersPasswordValue ),
                     UserName.Create(usersNameValue ),
@@ -50,9 +57,11 @@ namespace UserMs.Application.Handlers.User.Commands
                     UserAddress.Create(usersAddressValue),
                     Enum.Parse<UsersType>(request.Users.UsersType.ToString()!),
                     Enum.Parse<UserAvailable>(request.Users.UserAvailable.ToString()!)
-
-
                 );
+
+                request.Users.UserId = Id;
+                // Publicamos el mensaje en RabbitMQ
+                await _eventBus.PublishMessageAsync(request.Users, "userQueue");
 
                 if (request.Users.UsersType == null)
                 {
