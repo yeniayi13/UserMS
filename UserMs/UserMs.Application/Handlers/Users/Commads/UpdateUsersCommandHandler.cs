@@ -10,10 +10,10 @@ namespace UserMs.Application.Handlers.User.Commands
 {
     public class UpdateUsersCommandHandler : IRequestHandler<UpdateUsersCommand,Users>
     {
-        private readonly IUsersRepository _usersRepository;
+        private readonly IUserRepository _usersRepository;
         private readonly IAuthMsService _authMsService;
 
-        public UpdateUsersCommandHandler(IUsersRepository usersRepository, IAuthMsService authMsService)
+        public UpdateUsersCommandHandler(IUserRepository usersRepository, IAuthMsService authMsService)
         {
             _usersRepository = usersRepository;
             _authMsService = authMsService;

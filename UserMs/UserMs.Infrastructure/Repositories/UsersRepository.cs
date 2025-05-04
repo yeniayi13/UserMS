@@ -8,7 +8,7 @@ using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
 namespace UserMs.Infrastructure.Repositories
 {
-    public class UsersRepository : IUsersRepository
+    public class UsersRepository : IUserRepository
     {
         private readonly IUserDbContext _dbContext;
         private readonly IMongoCollection<Users> _collection;

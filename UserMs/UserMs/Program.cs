@@ -83,7 +83,7 @@ builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblies(
 
 //***********************Configuracion de Repositorios*********************
 builder.Services.AddTransient<IUserDbContext, UserDbContext>();
-builder.Services.AddTransient<IUsersRepository, UsersRepository>();
+builder.Services.AddTransient<IUserRepository, UsersRepository>();
 builder.Services.AddTransient<IAuthMsService, AuthMsService>();
 builder.Services.AddTransient<IKeycloakRepository, KeycloakRepository>();
 builder.Services.AddScoped<IKeycloakRepository, KeycloakRepository>();
