@@ -1,5 +1,5 @@
 
-namespace UserMs.Common.Dtos.Users.Request{
+namespace UserMs.Commoon.Dtos.Users.Request{
     public class UpdateUsersDto
     {
         public string UserEmail { get; set; } = String.Empty;
@@ -9,5 +9,6 @@ namespace UserMs.Common.Dtos.Users.Request{
         public string? UserName { get; set; } = String.Empty;
         public string? UserPhone { get; set; } = String.Empty;
         public string? UserAddress { get; set; } = String.Empty;
+        public string? UserLastName { get; set; } = String.Empty;
     }
 }

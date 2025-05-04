@@ -40,6 +40,11 @@ namespace UserMs.Infrastructure.Repositories
             return await _collection.Find(user => user.UserId == userId).FirstOrDefaultAsync();
         }
 
+        public async Task<Users?> GetUsersByEmail(UserEmail userEmail)
+        {
+            return await _collection.Find(user => user.UserEmail == userEmail).FirstOrDefaultAsync();
+        }
+
         public async Task AddAsync(Users users)
         {
             await _dbContext.Users.AddAsync(users);

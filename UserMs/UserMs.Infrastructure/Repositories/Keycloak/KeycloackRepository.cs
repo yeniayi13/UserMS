@@ -10,7 +10,7 @@ using System.IdentityModel.Tokens.Jwt;
 using UserMs.Core;
 using UserMs.Commoon.Dtos;
 using UserMs.Infrastructure.Exceptions;
-using UserMs.Common.Dtos.Users.Request;
+using UserMs.Commoon.Dtos.Users.Request;
 using UserMs.Infrastructure;
 
 namespace AuthMs.Infrastructure
@@ -101,31 +101,40 @@ namespace AuthMs.Infrastructure
 
 
 
-        public async Task<string> CreateUserAsync(string userEmail, string userPassword)
+        public async Task<string> CreateUserAsync(string userEmail, string userPassword, string userName, string userLastName, string userPhone, string userAddress)
         {
             try
             {
-                // Crear el usuario en Keycloak
+                // Crear el usuario en Keycloak con atributos personalizados
                 var userData = new
                 {
                     username = userEmail,
                     email = userEmail,
-                    emailVerified = true, // Requiere verificación
-                    enabled = true, // El usuario estará deshabilitado hasta activación
+                    firstName = userName,  // Nombre del usuario
+                    lastName = userLastName,  // Apellido del usuario
+                    emailVerified = true,  // Confirmación de correo
+                    enabled = true,  // Habilitar usuario
                     credentials = new[]
                     {
                 new
                 {
                     type = "password",
                     value = $"{userPassword}",
-                    temporary = false, // Contraseña no temporal
-                },
-            }
+                    temporary = false  // Contraseña no temporal
+                }
+            },
+                    attributes = new Dictionary<string, object>
+                    {
+                        { "phone", new[] { userPhone ?? "" } },
+                        { "address", new[] { userAddress ?? "" } }
+                    }
                 };
 
                 // Serializar el objeto a JSON
                 var jsonBody = JsonSerializer.Serialize(userData);
                 var contentJson = new StringContent(jsonBody, Encoding.UTF8, "application/json");
+
+                // Enviar solicitud para crear el usuario
                 var createUserResponse = await _httpClient.PostAsync("http://localhost:18080/admin/realms/auth-demo/users", contentJson);
 
                 if (!createUserResponse.IsSuccessStatusCode)
@@ -144,15 +153,9 @@ namespace AuthMs.Infrastructure
                 var createdUserLocation = createUserResponse.Headers.Location.ToString();
                 var userId = createdUserLocation.Split('/').Last();
                 Console.WriteLine($"Created User Location: {userId}");
-                // Generar y enviar el enlace de activación por correo
-                var activationResponse = await SendActivationEmail(userId, userEmail);
 
-                /*if (!activationResponse.IsSuccessStatusCode)
-                {
-                    // Si falla el envío del correo, eliminar al usuario creado
-                    await _httpClient.DeleteAsync("admin/realms/auth-demo/users/{userId}");
-                    throw new Exception("Error enviando el enlace de activación.");
-                }*/
+                // Enviar enlace de activación por correo
+                var activationResponse = await SendActivationEmail(userId, userEmail);
 
                 return "Usuario creado y enlace de activación enviado con éxito.";
             }

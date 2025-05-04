@@ -35,6 +35,16 @@ public class UserAddressValueConverter : ValueConverter<UserAddress, string>
     { }
 }
 
+public class UserLastNameValueConverter : ValueConverter<UserLastName, string>
+{
+    public UserLastNameValueConverter() : base(
+        v => v.Value, // Convierte UserPassword a string
+        v => UserLastName.Create(v) // Convierte string a UserPassword
+    )
+    { }
+}
+
+
 public class UserNameValueConverter : ValueConverter<UserName, string>
 {
     public UserNameValueConverter() : base(

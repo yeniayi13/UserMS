@@ -1,5 +1,5 @@
 ﻿using UserMs.Commoon.Dtos;
-using UserMs.Common.Dtos.Users.Request;
+using UserMs.Commoon.Dtos.Users.Request;
 
 namespace UserMs.Core
 {
@@ -8,7 +8,7 @@ namespace UserMs.Core
        // Task<string> GetTokenAsync();
         Task<string> LoginAsync(string username, string password);
         Task<string> LogOutAsync();
-        Task<string> CreateUserAsync(string userEmail, string userPassword);
+        Task<string> CreateUserAsync(string userEmail, string userPassword,string userName, string userLastName, string userPhone, string userAddress);
         Task<string> DeleteUserAsync(Guid userId);
 
         Task AssignClientRoleToUser(

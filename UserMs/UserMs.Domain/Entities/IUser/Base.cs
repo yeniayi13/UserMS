@@ -11,12 +11,13 @@ namespace UserMs.Domain.Entities
         public UserAddress? UserAddress { get; private set; }
         public UserPhone? UserPhone { get; private set; }
         public UserName UserName { get; private set; }
+        public UserLastName UserLastName { get; private set; }
         public DateTime CreatedAt { get; set; }
         public string? CreatedBy { get; set; }
         public DateTime? UpdatedAt { get; set; }
         public string? UpdatedBy { get; set; }
 
-        protected Base(UserId userId, UserEmail userEmail, UserPassword userPassword,UserName userName, UserPhone userPhone, UserAddress userAddress)
+        protected Base(UserId userId, UserEmail userEmail, UserPassword userPassword,UserName userName, UserPhone userPhone, UserAddress userAddress, UserLastName userLastName)
         {
             UserId = userId;
             UserEmail = userEmail;
@@ -24,6 +25,7 @@ namespace UserMs.Domain.Entities
             UserName = userName;
             UserPhone = userPhone;
             UserAddress = userAddress;
+            UserLastName = userLastName;
 
         }
 
@@ -57,6 +59,11 @@ namespace UserMs.Domain.Entities
         public void SetUserName(UserName userName)
         {
             UserName = userName;
+        }
+
+        public void SetUserLastName(UserLastName userLastName)
+        {
+            UserLastName = userLastName;
         }
 
     }

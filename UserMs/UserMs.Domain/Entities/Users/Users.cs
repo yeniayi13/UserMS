@@ -9,8 +9,8 @@ namespace UserMs.Domain.Entities
         public UserAvailable UserAvailable { get; private set; }
 
         [JsonConstructor]
-        public Users(UserId userId, UserEmail userEmail, UserPassword userPassword,UserName userName,UserPhone userPhone,UserAddress userAddress,UsersType usersType, UserAvailable userAvailable)
-            : base(userId, userEmail, userPassword,userName,userPhone,userAddress)
+        public Users(UserId userId, UserEmail userEmail, UserPassword userPassword,UserName userName,UserPhone userPhone,UserAddress userAddress, UserLastName userLastName, UsersType usersType, UserAvailable userAvailable)
+            : base(userId, userEmail, userPassword,userName,userPhone,userAddress,userLastName)
         {
             UsersType = usersType;
             UserAvailable = userAvailable;
