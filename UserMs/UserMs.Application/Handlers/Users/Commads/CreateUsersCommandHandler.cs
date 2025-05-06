@@ -44,15 +44,17 @@ namespace UserMs.Application.Handlers.User.Commands
                 var usersLastNameValue = request.Users.UserLastName;
                 var usersPhoneValue = request.Users.UserPhone;
                 var usersAddressValue = request.Users.UserAddress;
+                var usersDeleteValue = request.Users.UserDelete;
                 //var usersDepartamentValue = request.Users.ProviderDepartmentId;
 
 
-                 await _keycloakMsService.CreateUserAsync(usersEmailValue!, usersPasswordValue, usersNameValue, usersLastNameValue, usersPhoneValue, usersAddressValue);
+                await _keycloakMsService.CreateUserAsync(usersEmailValue!, usersPasswordValue, usersNameValue, usersLastNameValue, usersPhoneValue, usersAddressValue);
                  var Id = await _keycloakMsService.GetUserByUserName(usersEmailValue);
                 // await _authMsService.AssignClientRoleToUser(userId, request.Users.UsersType.ToString()!);
 
                 var users = new Users(
-                    UserId.Create(Id),
+                    Id,
+                    //UserId.Create(Id),
                     UserEmail.Create(usersEmailValue ),
                     UserPassword.Create(usersPasswordValue ),
                     UserName.Create(usersNameValue ),
@@ -60,13 +62,14 @@ namespace UserMs.Application.Handlers.User.Commands
                     UserAddress.Create(usersAddressValue),
                     UserLastName.Create(request.Users.UserLastName),
                     Enum.Parse<UsersType>(request.Users.UsersType.ToString()!),
-                    Enum.Parse<UserAvailable>(request.Users.UserAvailable.ToString()!)
+                    Enum.Parse<UserAvailable>(request.Users.UserAvailable.ToString()!),
+                    UserDelete.Create(usersDeleteValue)
                 );
 
 
 
                 request.Users.UserId = Id;
-                //var existingUser = await _usersRepository.GetUsersByEmail(users.UserEmail);
+               //var existingUser = await _usersRepository.GetUsersByEmail(users.UserEmail);
               //  if (existingUser != null)
                // {
                 //    throw new Exception("Este Correo ya se encuentra registrado en el sistema.");
@@ -76,7 +79,7 @@ namespace UserMs.Application.Handlers.User.Commands
 
                 await _usersRepository.AddAsync(users);
 
-                await _eventBus.PublishMessageAsync(request.Users, "userQueue");
+                await _eventBus.PublishMessageAsync(request.Users, "userQueue", "USER_CREATED");
 
                 if (request.Users.UsersType == null)
                 {

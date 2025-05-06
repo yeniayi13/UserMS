@@ -72,8 +72,8 @@ namespace UserMs.Controllers
         {
             try
             {
-                UserId userId = UserId.Create(usersId);
-                var query = new GetUsersByIdQuery(userId);
+                //UserId userId = UserId.Create(usersId);
+                var query = new GetUsersByIdQuery(usersId);
                 var users = await _mediator.Send(query);
                 return Ok(users);
             }

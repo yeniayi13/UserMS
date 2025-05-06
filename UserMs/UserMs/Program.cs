@@ -6,6 +6,7 @@ using MongoDB.Bson;
 using MongoDB.Bson.Serialization;
 using MongoDB.Bson.Serialization.Serializers;
 using UserMs;
+using UserMs.Application.Dtos.Users.Response;
 using UserMs.Application.Handlers.User.Commands;
 using UserMs.Application.Handlers.User.Queries;
 using UserMs.Commoon.AutoMapper;
@@ -38,8 +39,7 @@ builder.Services.AddCors(options =>
 });
 
 // Registrar el serializador de GUID
-BsonSerializer.RegisterSerializer(new GuidSerializer(GuidRepresentation.Standard));
-
+BsonSerializer.RegisterSerializer(typeof(Guid), new GuidSerializer(GuidRepresentation.Standard));
 // Registro de los perfiles de AutoMapper
 var profileTypes = new[]
 {
@@ -117,6 +117,19 @@ builder.Services.AddSingleton<IEventBus<CreateUsersDto>>(provider =>
 {
     var rabbitMQConnection = provider.GetRequiredService<RabbitMQConnection>();
     return new RabbitMQProducer<CreateUsersDto>(rabbitMQConnection);
+});
+
+builder.Services.AddSingleton<IEventBus<UpdateUsersDto>>(provider =>
+{
+    var rabbitMQConnection = provider.GetRequiredService<RabbitMQConnection>();
+    return new RabbitMQProducer<UpdateUsersDto>(rabbitMQConnection);
+});
+
+
+builder.Services.AddSingleton<IEventBus<GetUsersDto>>(provider =>
+{
+    var rabbitMQConnection = provider.GetRequiredService<RabbitMQConnection>();
+    return new RabbitMQProducer<GetUsersDto>(rabbitMQConnection);
 });
 
 //  Usa la misma instancia de `RabbitMQConnection` para el Consumer

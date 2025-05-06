@@ -1,10 +1,14 @@
+using MongoDB.Bson;
+using MongoDB.Bson.Serialization.Attributes;
 using UserMs.Domain.Entities.IUser.ValueObjects;
 
 namespace UserMs.Domain.Entities
 {
     public class Base
     {
-        public UserId UserId { get; private set; } // Make it private to enforce immutability
+        //   [BsonRepresentation(BsonType.String)]
+        //[BsonElement("UserId")]
+        public UserId UserId { get;  set; } // Make it private to enforce immutability
         public UserEmail UserEmail { get; private set; }
         public UserPassword UserPassword { get; private set; }
         public UserDelete? UserDelete { get; private set; }
@@ -17,9 +21,33 @@ namespace UserMs.Domain.Entities
         public DateTime? UpdatedAt { get; set; }
         public string? UpdatedBy { get; set; }
 
-        protected Base(UserId userId, UserEmail userEmail, UserPassword userPassword,UserName userName, UserPhone userPhone, UserAddress userAddress, UserLastName userLastName)
+        protected Base(UserId userId, UserEmail userEmail, UserPassword userPassword,UserName userName, UserPhone userPhone, UserAddress userAddress, UserLastName userLastName, UserDelete userDelete)
         {
             UserId = userId;
+            UserEmail = userEmail;
+            UserPassword = userPassword;
+            UserName = userName;
+            UserPhone = userPhone;
+            UserAddress = userAddress;
+            UserLastName = userLastName;
+            UserDelete = userDelete;
+
+        }
+
+        protected Base(UserId userId, UserEmail userEmail, UserPassword userPassword, UserName userName, UserPhone userPhone, UserAddress userAddress, UserLastName userLastName)
+        {
+            UserId = userId;
+            UserEmail = userEmail;
+            UserPassword = userPassword;
+            UserName = userName;
+            UserPhone = userPhone;
+            UserAddress = userAddress;
+            UserLastName = userLastName;
+           
+
+        }
+        protected Base(UserEmail userEmail, UserPassword userPassword, UserName userName, UserPhone userPhone, UserAddress userAddress, UserLastName userLastName)
+        {
             UserEmail = userEmail;
             UserPassword = userPassword;
             UserName = userName;
@@ -29,7 +57,19 @@ namespace UserMs.Domain.Entities
 
         }
 
-       
+        protected Base(UserId userId)
+        { 
+            UserId = userId;
+        }
+        protected Base()
+        {
+            
+        }
+
+        public void SetUserId(UserId userId)
+        {
+            UserId = userId;
+        }
 
         public void SetUserEmail(UserEmail userEmail)
         {

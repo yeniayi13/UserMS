@@ -8,8 +8,8 @@ namespace UserMs.Application.Dtos.Users.Response{
         public string? UserName { get; set; } = String.Empty;
         public string? UserPhone { get; set; } = String.Empty;
         public string? UserAddress { get; set; } = String.Empty;
-        public string? UsersAvailable { get; init; }
+        public string? UserAvailable { get; init; }
         public string? UserLastName { get; set; } = String.Empty;
-
+        public bool UserDelete { get; set; } = false;
     }
 }

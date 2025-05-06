@@ -32,24 +32,31 @@ namespace UserMs.Infrastructure.RabbitMQ
             _rabbitMQConnection = rabbitMQConnection;
         }
 
-        public async Task PublishMessageAsync(T message, string queueName)
+        public async Task PublishMessageAsync(T data, string queueName, string eventType)
         {
             var channel = _rabbitMQConnection.GetChannel();
 
             // Declaramos la cola de manera asincrónica
             await channel.QueueDeclareAsync(queue: queueName, durable: true, exclusive: false, autoDelete: false);
 
-            // Serializamos el mensaje y lo convertimos en un ReadOnlyMemory<byte>
-            var messageBody = Newtonsoft.Json.JsonConvert.SerializeObject(message);
+            // 🔹 Envolver el mensaje con su tipo de evento
+            var eventMessage = new
+            {
+                EventType = eventType, // "USER_CREATED" o "USER_UPDATED" o "USER_DELETED"
+                Data = data
+            };
+
+            // 🔹 Serializar el mensaje en formato JSON
+            var messageBody = Newtonsoft.Json.JsonConvert.SerializeObject(eventMessage);
             var body = new ReadOnlyMemory<byte>(Encoding.UTF8.GetBytes(messageBody));
 
-            // Creamos las propiedades básicas
+            // 🔹 Crear propiedades básicas
             var basicProperties = new BasicProperties
             {
                 ContentType = "application/json"
             };
 
-            // Publicamos el mensaje especificando explícitamente el tipo para TProperties
+            // 🔹 Publicar el mensaje con el tipo de evento
             await channel.BasicPublishAsync<BasicProperties>(
                 exchange: "",
                 routingKey: queueName,
@@ -59,9 +66,7 @@ namespace UserMs.Infrastructure.RabbitMQ
                 cancellationToken: CancellationToken.None
             );
 
-            Console.WriteLine($"Mensaje publicado en la cola '{queueName}': {messageBody}");
+            Console.WriteLine($"Mensaje publicado en '{queueName}' con evento '{eventType}': {messageBody}");
         }
-
-
     }
 }

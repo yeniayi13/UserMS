@@ -8,6 +8,6 @@ namespace UserMs.Core.RabbitMQ
 {
     public interface IEventBus<T>
     {
-         Task  PublishMessageAsync(T message, string queueName);
+        Task PublishMessageAsync(T data, string queueName, string eventType);
     }
 }

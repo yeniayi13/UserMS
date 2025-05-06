@@ -54,6 +54,10 @@
             "Microsoft.EntityFrameworkCore": {
               "target": "Package",
               "version": "[9.0.4, )"
+            },
+            "MongoDB.Bson": {
+              "target": "Package",
+              "version": "[3.3.0, )"
             }
           },
           "imports": [

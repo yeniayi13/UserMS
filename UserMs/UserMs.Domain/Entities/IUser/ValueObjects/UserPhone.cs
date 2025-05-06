@@ -18,7 +18,7 @@ namespace UserMs.Domain.Entities.IUser.ValueObjects
             try
             {
                 //if (string.IsNullOrEmpty(value)) throw new NullAtributeException("User phone is required");
-                if (!PhoneNumberRegex().IsMatch(value)) throw new InvalidCastException("User phone is invalid");
+                //if (!PhoneNumberRegex().IsMatch(value)) throw new InvalidCastException("User phone is invalid");
 
                 return new UserPhone(value);
             }

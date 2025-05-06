@@ -13,6 +13,7 @@ namespace UserMs.Commoon.Dtos.Users.Request
         public string? UserPhone { get; set; } = String.Empty;
         public string? UserAddress { get; set; } = String.Empty;
         public string? UserLastName { get; set; } = String.Empty;
+        public bool UserDelete { get; set; } = false;
 
     }
 }
