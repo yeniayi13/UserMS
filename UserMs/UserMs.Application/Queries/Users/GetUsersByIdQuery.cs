@@ -7,9 +7,9 @@ namespace UserMs.Application.Queries.User
 {
     public class GetUsersByIdQuery : IRequest<GetUsersDto>
     {
-        public UserId Id { get; set; }
+        public Guid Id { get; set; }
 
-        public GetUsersByIdQuery(UserId id)
+        public GetUsersByIdQuery(Guid id)
         {
             Id = id;
         }

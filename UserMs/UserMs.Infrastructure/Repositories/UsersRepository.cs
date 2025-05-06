@@ -5,6 +5,9 @@ using Microsoft.EntityFrameworkCore;
 using UserMs.Core.Database;
 using MongoDB.Driver;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
+using UserMs.Domain.Entities.IUser.ValueObjects;
+using UserMs.Application.Dtos.Users.Response;
+using MongoDB.Bson;
 
 namespace UserMs.Infrastructure.Repositories
 {
@@ -26,18 +29,46 @@ namespace UserMs.Infrastructure.Repositories
                 throw new ArgumentNullException(nameof(context.Database));
             }
 
-           // _collection = context.Database.GetCollection<Users>("Company");
+            _collection = context.Database.GetCollection<Users>("Users");
             //?? //throw new ArgumentNullException(nameof(context.Database.GetCollection<StatusProvider>));
         }
 
-        public async Task<List<Users>> GetUsersAsync()
+        public async Task<List<GetUsersDto>> GetUsersAsync()
         {
-            return await _collection.Find(Builders<Users>.Filter.Empty).ToListAsync();
+            var projection = Builders<Users>.Projection.Exclude("_id"); // Excluir _id
+
+            Console.WriteLine("Consulta en proceso...");
+
+            var users = await _collection
+                .Find(Builders<Users>.Filter.Empty)
+                .Project<GetUsersDto>(projection) //  Convierte los datos al DTO
+                .ToListAsync()
+                .ConfigureAwait(false);
+
+            return users;
+
         }
 
-        public async Task<Users?> GetUsersById(UserId userId)
+        public async Task<GetUsersDto?> GetUsersById(Guid userId)
         {
-            return await _collection.Find(user => user.UserId == userId).FirstOrDefaultAsync();
+            Console.WriteLine($"Buscando usuario con ID: {userId}");
+
+            // Crear el filtro para buscar por UserId
+            var filter = Builders<Users>.Filter.Eq("UserId", userId);
+
+            // Excluir el campo _id de la consulta
+            var projection = Builders<Users>.Projection
+                            .Exclude("_id");
+                            
+            // Ejecutar la consulta en MongoDB y proyectar al DTO
+            var userDocument = await _collection
+                .Find(filter)
+                .Project<GetUsersDto>(projection)  // Convertir el resultado al DTO
+                .FirstOrDefaultAsync()
+                .ConfigureAwait(false);
+            Console.WriteLine(userDocument != null ? $"Usuario encontrado: {userDocument}" : "Usuario no encontrado.");
+
+            return userDocument;
         }
 
         public async Task<Users?> GetUsersByEmail(UserEmail userEmail)
@@ -53,9 +84,9 @@ namespace UserMs.Infrastructure.Repositories
 
         public async Task<Users?> UpdateUsersAsync(UserId userId, Users users)
         {
-            var existingUsers = await _dbContext.Users.FindAsync(userId);
+            _dbContext.Users.Update(users);
             await _dbContext.SaveEfContextChanges("");
-            return existingUsers;
+            return users;
         }
 
         public async Task<Users?> DeleteUsersAsync(UserId userId)

@@ -22,6 +22,7 @@ namespace UserMs.Infrastructure.Database.Configuration.Postgres
             builder.Property(s => s.UserAddress).IsRequired();
             builder.Property(s => s.UsersType).IsRequired().HasMaxLength(50).HasConversion<string>();
             builder.Property(s => s.UserAvailable).IsRequired().HasMaxLength(50).HasConversion<string>();
+            builder.Property(s => s.UserLastName).IsRequired();
 
         }
     }

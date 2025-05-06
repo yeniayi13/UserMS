@@ -19,24 +19,12 @@ namespace UserMs.Application.Handlers.User.Queries
         public async Task<GetUsersDto> Handle(GetUsersByIdQuery request, CancellationToken cancellationToken)
         {
             var users = await _usersRepository.GetUsersById(request.Id);
+            //if (users == null || users.UserDelete.Value)
+            // throw new UserNotFoundException("User not found.");
 
-            if (users == null)
-               throw new UserNotFoundException("User not found.");
 
-            if (users.UserDelete.Value)
-                throw new UserNotFoundException("User not found.");
-
-            return new GetUsersDto
-            {
-                UserId = users.UserId.Value,
-                UserEmail = users.UserEmail.Value,
-                UserPassword = users.UserPassword.Value,
-                UserName = users.UserName.Value,
-                UserPhone = users.UserPhone.Value,
-                UserAddress = users.UserAddress.Value,
-                UsersType = users.GetUsersTypeString(),
-               
-            };
+            return users;
         }
+        
     }
 }

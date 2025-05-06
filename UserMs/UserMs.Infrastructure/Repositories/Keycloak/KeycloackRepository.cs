@@ -433,7 +433,14 @@ namespace AuthMs.Infrastructure
             {
                 var userData = new
                 {
-                    email = user.Email,
+                    email = user.UserEmail,
+                    firstName = user.UserName,
+                    lastName = user.UserLastName,
+                    attributes = new Dictionary<string, object>
+                    {
+                        { "phone", new[] { user.UserPhone ?? "" } },
+                        { "address", new[] { user.UserAddress ?? "" } }
+                    },
                     enabled = true
                 };
 

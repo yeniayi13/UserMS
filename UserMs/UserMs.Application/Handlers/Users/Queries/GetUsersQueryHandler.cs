@@ -17,15 +17,9 @@ namespace UserMs.Application.Handlers.User.Queries
         public async Task<List<GetUsersDto>> Handle(GetUsersQuery request, CancellationToken cancellationToken)
         {
             var users = await _usersRepository.GetUsersAsync();
-            var activeUsers = users.Where(u => !u.UserDelete.Value).ToList();
+            //var activeUsers = users.Where(u => !u.UserDelete.Value).ToList();
 
-            return activeUsers.Select(users => new GetUsersDto
-            {
-                UserId = users.UserId.Value,
-                UserEmail = users.UserEmail.Value,
-                UserPassword = users.UserPassword.Value,
-                UsersType = users.GetUsersTypeString(),
-            }).ToList();
+            return users;
         }
     }
 }
