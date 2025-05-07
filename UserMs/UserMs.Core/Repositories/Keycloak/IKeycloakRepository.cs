@@ -13,7 +13,6 @@ namespace UserMs.Core
 
         Task AssignClientRoleToUser(
             Guid userId,
-            string clientId,
             string roleName
         );
         Task<Guid> GetUserByUserName(string userName);
@@ -22,5 +21,7 @@ namespace UserMs.Core
         //Task AssignClientRoleToUserMobile(Guid userId, string clientId, string roleName);
         // Task<string> GetUserNameById(Guid userId);
         // Task<bool> ValidateUserExists(Guid userId);
+
+        Task<bool> SendPasswordResetEmailAsync(string userId);
     }
 }

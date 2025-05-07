@@ -12,6 +12,8 @@ using UserMs.Commoon.Dtos;
 using UserMs.Infrastructure.Exceptions;
 using UserMs.Commoon.Dtos.Users.Request;
 using UserMs.Infrastructure;
+using UserMs.Domain.Entities;
+using System.Data;
 
 namespace AuthMs.Infrastructure
 {
@@ -61,10 +63,10 @@ namespace AuthMs.Infrastructure
             new FormUrlEncodedContent(new Dictionary<string, string>
             {
                  { "grant_type", "password" },
-                 { "client_id", "confidential-client" },
+                 { "client_id", "public-client" },
                  { "username", username },
                  {"password", password},
-                //{"client_secret", "REdOcKznwuvtZ54jVVt9ebc3nCz6uqMy" }
+                 {"client_secret", "QfhngLkKbk6xixmYEzGkXiJc3nvhU0w2" }
             }));
 
             response.EnsureSuccessStatusCode();
@@ -289,16 +291,31 @@ namespace AuthMs.Infrastructure
             }
         }
 
-        public async Task AssignClientRoleToUser(Guid userId, string clientId, string roleName)
+        public async Task AssignClientRoleToUser(Guid userId, string roleName)
         {
             try
             {
-                //* La Client Id es un guid
-                //var ClientId = "f49adac8-b4f4-4791-9266-9d097c5875ff";
-                var ClientId = this.GetClientId(clientId).Result.ToString();
+                 var role = String.Empty;
+                if (roleName == "Administrador")
+                {
+                    role = "Administrator";
+                }
+                else if (roleName == "Subastador")
+                {
+                    role = "Auctioneer";
+                }
+                else if (roleName == "Postor")
+                {
+                    role = "Bidder";
+                }
+                else
+                {
+                    role = "Support";
+                }
+                var ClientId = this.GetClientId("admin-client").Result.ToString();
 
-                var rolId = this.GetClientRolesId(ClientId, userId.ToString(), roleName).Result;
-                var roles = new[] { new { id = rolId, name = roleName } };
+                var rolId = this.GetClientRolesId(ClientId, userId.ToString(), role).Result;
+                var roles = new[] { new { id = rolId, name = role } };
                 var userData = new { };
 
                 // Serializar el objeto a JSON
@@ -475,5 +492,34 @@ namespace AuthMs.Infrastructure
             }
         }
 
+        public async Task<bool> SendPasswordResetEmailAsync(string userId)
+        {
+            try
+            {
+                // Define la acción de actualización de contraseña
+                var actions = new[] { "UPDATE_PASSWORD" };
+
+                // Serializar el contenido a JSON
+                var jsonBody = JsonSerializer.Serialize(actions);
+                var contentJson = new StringContent(jsonBody, Encoding.UTF8, "application/json");
+
+                // Enviar solicitud a Keycloak
+                var response = await _httpClient.PutAsync($"admin/realms/auth-demo/users/{userId}/execute-actions-email", contentJson);
+
+                // Verificar la respuesta
+                if (!response.IsSuccessStatusCode)
+                {
+                    var errorContent = await response.Content.ReadAsStringAsync();
+                    throw new Exception($"Error en la solicitud: {response.StatusCode} - {errorContent}");
+                }
+
+                return true;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error: {ex.Message}");
+                return false;
+            }
+        }
     }
 }
