@@ -29,7 +29,7 @@ namespace UserMs.Application.Handlers.User.Commands
 
 
 
-        public async Task<UserId> Handle(CreateUsersCommand request, CancellationToken cancellationToken)
+        public async Task<UserId> Handle(CreateUsersCommand request,CancellationToken cancellationToken)
         {
             try
             {
@@ -50,7 +50,7 @@ namespace UserMs.Application.Handlers.User.Commands
 
                 await _keycloakMsService.CreateUserAsync(usersEmailValue!, usersPasswordValue, usersNameValue, usersLastNameValue, usersPhoneValue, usersAddressValue);
                  var Id = await _keycloakMsService.GetUserByUserName(usersEmailValue);
-                // await _authMsService.AssignClientRoleToUser(userId, request.Users.UsersType.ToString()!);
+                 await _keycloakMsService.AssignClientRoleToUser(Id,request.Users.UsersType.ToString()!);
 
                 var users = new Users(
                     Id,
