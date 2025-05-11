@@ -10,8 +10,8 @@ namespace UserMs.Core.Repositories
 {
     public interface IUserRepository
     {
-        Task<List<GetUsersDto>> GetUsersAsync();
-        Task<GetUsersDto?> GetUsersById(Guid userId);
+        Task<List<Users>> GetUsersAsync();
+        Task<Users?> GetUsersById(Guid userId);
         Task AddAsync(Users users);
         Task<Users?> UpdateUsersAsync(UserId userId, Users users);
         Task<Users?> DeleteUsersAsync(UserId userId);

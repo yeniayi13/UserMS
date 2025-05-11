@@ -1,0 +1,12 @@
+C:\Users\LENOVO\UserMS\UserMs\UserMs.Test\bin\Debug\net8.0\UserMs.Test.deps.json
+C:\Users\LENOVO\UserMS\UserMs\UserMs.Test\bin\Debug\net8.0\UserMs.Test.dll
+C:\Users\LENOVO\UserMS\UserMs\UserMs.Test\bin\Debug\net8.0\UserMs.Test.pdb
+C:\Users\LENOVO\UserMS\UserMs\UserMs.Test\obj\Debug\net8.0\UserMs.Test.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\LENOVO\UserMS\UserMs\UserMs.Test\obj\Debug\net8.0\UserMs.Test.AssemblyInfoInputs.cache
+C:\Users\LENOVO\UserMS\UserMs\UserMs.Test\obj\Debug\net8.0\UserMs.Test.AssemblyInfo.cs
+C:\Users\LENOVO\UserMS\UserMs\UserMs.Test\obj\Debug\net8.0\UserMs.Test.csproj.CoreCompileInputs.cache
+C:\Users\LENOVO\UserMS\UserMs\UserMs.Test\obj\Debug\net8.0\UserMs.Test.sourcelink.json
+C:\Users\LENOVO\UserMS\UserMs\UserMs.Test\obj\Debug\net8.0\UserMs.Test.dll
+C:\Users\LENOVO\UserMS\UserMs\UserMs.Test\obj\Debug\net8.0\refint\UserMs.Test.dll
+C:\Users\LENOVO\UserMS\UserMs\UserMs.Test\obj\Debug\net8.0\UserMs.Test.pdb
+C:\Users\LENOVO\UserMS\UserMs\UserMs.Test\obj\Debug\net8.0\ref\UserMs.Test.dll

@@ -11,8 +11,13 @@
 using System;
 using System.Reflection;
 
-[assembly: Microsoft.AspNetCore.Mvc.ApplicationParts.ApplicationPartAttribute("Microsoft.AspNetCore.OpenApi")]
-[assembly: Microsoft.AspNetCore.Mvc.ApplicationParts.ApplicationPartAttribute("Swashbuckle.AspNetCore.SwaggerGen")]
+[assembly: System.Reflection.AssemblyCompanyAttribute("UserMs.Test")]
+[assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
+[assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+c020299178ce94f28eeb56425a081a2a8b621fea")]
+[assembly: System.Reflection.AssemblyProductAttribute("UserMs.Test")]
+[assembly: System.Reflection.AssemblyTitleAttribute("UserMs.Test")]
+[assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
 
 // Generado por la clase WriteCodeFragment de MSBuild.
 

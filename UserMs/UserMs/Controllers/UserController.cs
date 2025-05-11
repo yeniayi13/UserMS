@@ -39,9 +39,6 @@ namespace UserMs.Controllers
                 var command = new CreateUsersCommand(createUsersDto);
                 var userId = await _mediator.Send(command);
 
-               
-              
-
                 return Ok(userId);
             }
             catch (Exception e)
