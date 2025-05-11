@@ -308,3 +308,8 @@
 /UserMs/UserMs/obj/Debug/net8.0/UserMs.csproj.CoreCompileInputs.cache
 /UserMs/UserMs/obj/Debug/net8.0/UserMs.csproj.FileListAbsolute.txt
 /UserMs/UserMs/obj/UserMs.csproj.nuget.g.props
+/UserMs/UserMs.Test/obj/Debug/net8.0/.NETCoreApp,Version=v8.0.AssemblyAttributes.cs
+/UserMs/UserMs.Test/obj/Debug/net8.0/UserMs.Test.AssemblyInfo.cs
+/UserMs/UserMs.Test/obj/Debug/net8.0/UserMs.Test.AssemblyInfoInputs.cache
+/UserMs/UserMs.Test/obj/Debug/net8.0/UserMs.Test.GeneratedMSBuildEditorConfig.editorconfig
+/UserMs/UserMs.Test/obj/Debug/net8.0/UserMs.Test.GlobalUsings.g.cs
