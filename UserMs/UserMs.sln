@@ -15,6 +15,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UserMs.Infrastructure", "Us
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UserMs.Commoon", "UserMs.Commoon\UserMs.Commoon.csproj", "{9FAB9DE6-F82A-4781-A504-8327CDCC1D0D}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UserMs.Test", "UserMs.Test\UserMs.Test.csproj", "{7D32C41C-5197-4994-9E4F-03C36A995937}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -45,6 +47,10 @@ Global
 		{9FAB9DE6-F82A-4781-A504-8327CDCC1D0D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9FAB9DE6-F82A-4781-A504-8327CDCC1D0D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9FAB9DE6-F82A-4781-A504-8327CDCC1D0D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7D32C41C-5197-4994-9E4F-03C36A995937}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7D32C41C-5197-4994-9E4F-03C36A995937}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7D32C41C-5197-4994-9E4F-03C36A995937}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7D32C41C-5197-4994-9E4F-03C36A995937}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
