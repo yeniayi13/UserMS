@@ -1,9 +1,11 @@
 ﻿using UserMs.Core.Database;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
+using System.Diagnostics.CodeAnalysis;
 
 namespace UserMs.Infrastructure.Database
 {
+    [ExcludeFromCodeCoverage]
     public class DbContextTransactionProxy : IDbContextTransactionProxy
     {
 

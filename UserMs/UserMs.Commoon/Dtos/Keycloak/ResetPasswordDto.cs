@@ -8,7 +8,7 @@ namespace UserMs.Commoon.Dtos.Keycloak
 {
     public class ResetPasswordDto
     {
-        public string UserId { get; set; }
+        public string UserEmail { get; set; }
 
     }
 }

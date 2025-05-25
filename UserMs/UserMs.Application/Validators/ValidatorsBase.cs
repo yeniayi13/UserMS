@@ -1,5 +1,6 @@
 ﻿
 using FluentValidation;
+using UserMs.Infrastructure.Exceptions;
 
 namespace UserMs.Application.Validators
 {
@@ -11,7 +12,7 @@ namespace UserMs.Application.Validators
             if (!result.IsValid)
             {
                 var errorMessage = string.Join(", ", result.Errors.Select(e => e.ErrorMessage));
-                //throw new ValidatorException(errorMessage);
+                throw new ValidatorException(errorMessage);
             }
 
             return result.IsValid;

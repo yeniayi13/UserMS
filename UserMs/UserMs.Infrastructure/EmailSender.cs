@@ -1,10 +1,16 @@
-﻿using System.Net.Mail;
+﻿using AuthMs.Common.Exceptions;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Net.Mail;
 using System.Net;
-using AuthMs.Common.Exceptions;
+using System.Text;
+using System.Threading.Tasks;
+using UserMs.Core;
 
-namespace AuthMs.Infrastructure
+namespace UserMs.Infrastructure
 {
-    public class EmailSender
+    public class EmailSender: IEmailSender
     {
         public async Task SendEmailAsync(string toEmail, string subject, string body)
         {

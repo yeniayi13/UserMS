@@ -2,13 +2,16 @@
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using UserMs.Domain.Entities;
+using UserMs.Domain.Entities.UserEntity;
 
 namespace UserMs.Infrastructure.Database.Configuration.Postgres
 {
+    [ExcludeFromCodeCoverage]
     public class UsersConfiguration : IEntityTypeConfiguration<Users>
     {
         public void Configure(EntityTypeBuilder<Users> builder)
@@ -23,6 +26,14 @@ namespace UserMs.Infrastructure.Database.Configuration.Postgres
             builder.Property(s => s.UsersType).IsRequired().HasMaxLength(50).HasConversion<string>();
             builder.Property(s => s.UserAvailable).IsRequired().HasMaxLength(50).HasConversion<string>();
             builder.Property(s => s.UserLastName).IsRequired();
+
+
+            builder.HasMany(s => s.UserRoles)
+                .WithOne(ur => ur.User)
+                .HasForeignKey(ur => ur.UserId);
+
+            
+
 
         }
     }

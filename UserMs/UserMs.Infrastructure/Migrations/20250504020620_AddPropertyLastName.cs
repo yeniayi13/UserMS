@@ -1,9 +1,12 @@
 ﻿using Microsoft.EntityFrameworkCore.Migrations;
+using System.Diagnostics.CodeAnalysis;
 
 #nullable disable
 
 namespace UserMs.Infrastructure.Migrations
 {
+
+    [ExcludeFromCodeCoverage]
     /// <inheritdoc />
     public partial class AddPropertyLastName : Migration
     {

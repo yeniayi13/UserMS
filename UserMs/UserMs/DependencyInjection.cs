@@ -1,156 +1,143 @@
-using AuthMs.Infrastructure;
+
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
+using System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder;
+using System.Diagnostics.CodeAnalysis;
 using System.Net.Http.Headers;
+using System.Text.Json;
 using UserMs.Core;
 using UserMs.Core.Interface;
-using UserMs.Infrastructure;
+using UserMs.Core.Service.Keycloak;
+using UserMs.Infrastructure.Service.Keycloak;
 
 namespace UserMs
 {
-    internal static class DependencyInjection
+    [ExcludeFromCodeCoverage]
+    public static class DependencyInjection
     {
-        internal static IServiceCollection KeycloakConfiguration(
+        public static IServiceCollection KeycloakConfiguration(
             this IServiceCollection services,
             IConfiguration configuration)
         {
-            // Configura la autenticación basada en JWT para validar los tokens emitidos por Keycloak 
+            // Configurar autenticación basada en JWT con Keycloak
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(options =>
                 {
                     options.RequireHttpsMetadata = false;
                     options.Audience = configuration["Authentication:Audience"];
-                    options.MetadataAddress = configuration["Authentication:MetadataAddress"]!;
+                    options.MetadataAddress = configuration.GetValue<string>("Authentication:MetadataAddress");
                     options.TokenValidationParameters = new TokenValidationParameters
                     {
-                        ValidIssuer = configuration["Authentication:ValidateIssuer"],
+                        ValidateIssuer = true,
+                        ValidIssuer = configuration["Authentication:ValidIssuer"],
+                        ValidateAudience = true,
+                        ValidAudiences = new[] { "account", "realm-management" },
+                        ValidateLifetime = true,
+                        ClockSkew = TimeSpan.Zero
+                    };
+
+                    // Agregar eventos para depuración
+                    options.Events = new JwtBearerEvents
+                    {
+                        OnMessageReceived = context =>
+                        {
+                            var token = context.Request.Headers["Authorization"].FirstOrDefault()?.Replace("Bearer ", "").Trim();
+                            Console.WriteLine($"Token recibido: {token}");
+                            return Task.CompletedTask;
+                        },
+                        OnAuthenticationFailed = context =>
+                        {
+                            Console.WriteLine($"Error de autenticación: {context.Exception}");
+                            return Task.CompletedTask;
+                        }
                     };
                 });
 
+            // Configurar políticas de autorización basadas en roles de Keycloak
             services.AddAuthorization(o =>
             {
+                o.AddPolicy("AdministradorPolicy", policy =>
+                    policy.RequireAuthenticatedUser()
+                        .RequireAssertion(context =>
+                        {
+                            var resourceAccess = context.User.FindFirst("resource_access")?.Value;
+                            if (string.IsNullOrEmpty(resourceAccess)) return false;
 
+                            var resourceAccessJson = JsonDocument.Parse(resourceAccess);
+                            if (resourceAccessJson.RootElement.TryGetProperty("admin-client", out var webClientAccess))
+                            {
+                                return webClientAccess.GetProperty("roles").EnumerateArray()
+                                    .Any(role => role.GetString() == "Administrator");
+                            }
 
-                o.AddPolicy("AdminWebOnly", policy =>
-         policy.RequireAuthenticatedUser()
-               .RequireAssertion(context =>
-               {
-                   var resourceAccess = context.User.FindFirst("resource_access")?.Value;
-                   if (string.IsNullOrEmpty(resourceAccess))
-                       return false;
+                            return false;
+                        }));
 
-                   // Parsear el JSON de resource_access
-                   var resourceAccessJson = System.Text.Json.JsonDocument.Parse(resourceAccess);
-                   if (resourceAccessJson.RootElement.TryGetProperty("webclient", out var webClientAccess))
-                   {
-                       var rol = webClientAccess.GetProperty("roles").EnumerateArray()
-                                             .Any(role => role.GetString() == "Administrator" || role.GetString() == "Auctioneer" || role.GetString() == "Bidder" || role.GetString() == "Support");
-                       Console.WriteLine("Rol:" + rol);
-                       return rol;
-                   }
+                o.AddPolicy("PostorPolicy", policy =>
+                    policy.RequireAuthenticatedUser()
+                        .RequireAssertion(context =>
+                        {
+                            var resourceAccess = context.User.FindFirst("resource_access")?.Value;
+                            if (string.IsNullOrEmpty(resourceAccess)) return false;
 
-                   return false;
-               }));
+                            var resourceAccessJson = JsonDocument.Parse(resourceAccess);
+                            if (resourceAccessJson.RootElement.TryGetProperty("admin-client", out var webClientAccess))
+                            {
+                                return webClientAccess.GetProperty("roles").EnumerateArray()
+                                    .Any(role => role.GetString() == "Auctioneer");
+                            }
 
+                            return false;
+                        }));
+
+                o.AddPolicy("SubastadorPolicy", policy =>
+                    policy.RequireAuthenticatedUser()
+                        .RequireAssertion(context =>
+                        {
+                            var resourceAccess = context.User.FindFirst("resource_access")?.Value;
+                            if (string.IsNullOrEmpty(resourceAccess)) return false;
+
+                            var resourceAccessJson = JsonDocument.Parse(resourceAccess);
+                            if (resourceAccessJson.RootElement.TryGetProperty("admin-client", out var webClientAccess))
+                            {
+                                return webClientAccess.GetProperty("roles").EnumerateArray()
+                                    .Any(role => role.GetString() == "Bidder");
+                            }
+
+                            return false;
+                        }));
+
+                o.AddPolicy("SoportePolicy", policy =>
+                    policy.RequireAuthenticatedUser()
+                        .RequireAssertion(context =>
+                        {
+                            var resourceAccess = context.User.FindFirst("resource_access")?.Value;
+                            if (string.IsNullOrEmpty(resourceAccess)) return false;
+
+                            var resourceAccessJson = JsonDocument.Parse(resourceAccess);
+                            if (resourceAccessJson.RootElement.TryGetProperty("admin-client", out var webClientAccess))
+                            {
+                                return webClientAccess.GetProperty("roles").EnumerateArray()
+                                    .Any(role => role.GetString() == "Support");
+                            }
+
+                            return false;
+                        }));
             });
 
-            services.AddAuthorization(o =>
-            {
-
-
-                o.AddPolicy("AuctioneerBidderOnly", policy =>
-         policy.RequireAuthenticatedUser()
-               .RequireAssertion(context =>
-               {
-                   var resourceAccess = context.User.FindFirst("resource_access")?.Value;
-                   if (string.IsNullOrEmpty(resourceAccess))
-                       return false;
-
-                   // Parsear el JSON de resource_access
-                   var resourceAccessJson = System.Text.Json.JsonDocument.Parse(resourceAccess);
-                   if (resourceAccessJson.RootElement.TryGetProperty("webclient", out var webClientAccess))
-                   {
-                       var rol = webClientAccess.GetProperty("roles").EnumerateArray()
-                                             .Any(role =>  role.GetString() == "Auctioneer" || role.GetString() == "Bidder" );
-                       Console.WriteLine("Rol:" + rol);
-                       return rol;
-                   }
-
-                   return false;
-               }));
-
-            });
-
-
-
-            services.AddAuthorization(o =>
-            {
-
-
-                o.AddPolicy("AdminSupportOnly", policy =>
-         policy.RequireAuthenticatedUser()
-               .RequireAssertion(context =>
-               {
-                   var resourceAccess = context.User.FindFirst("resource_access")?.Value;
-                   if (string.IsNullOrEmpty(resourceAccess))
-                       return false;
-
-                   // Parsear el JSON de resource_access
-                   var resourceAccessJson = System.Text.Json.JsonDocument.Parse(resourceAccess);
-                   if (resourceAccessJson.RootElement.TryGetProperty("webclient", out var webClientAccess))
-                   {
-                       var rol = webClientAccess.GetProperty("roles").EnumerateArray()
-                                             .Any(role => role.GetString() == "Administrator" || role.GetString() == "Support");
-                       Console.WriteLine("Rol:" + rol);
-                       return rol;
-                   }
-
-                   return false;
-               }));
-
-            });
-
-            services.AddAuthorization(o =>
-            {
-
-
-                o.AddPolicy("BidderOnly", policy =>
-         policy.RequireAuthenticatedUser()
-               .RequireAssertion(context =>
-               {
-                   var resourceAccess = context.User.FindFirst("resource_access")?.Value;
-                   if (string.IsNullOrEmpty(resourceAccess))
-                       return false;
-
-                   // Parsear el JSON de resource_access
-                   var resourceAccessJson = System.Text.Json.JsonDocument.Parse(resourceAccess);
-                   if (resourceAccessJson.RootElement.TryGetProperty("webclient", out var webClientAccess))
-                   {
-                       var rol = webClientAccess.GetProperty("roles").EnumerateArray()
-                                             .Any(role => role.GetString() == "Bidder");
-                       Console.WriteLine("Rol:" + rol);
-                       return rol;
-                   }
-
-                   return false;
-               }));
-            });
-
-
-            // Agrega IHttpContextAccessor (necesario para acceder al contexto HTTP)
+            // Agregar IHttpContextAccessor (necesario para acceder al contexto HTTP)
             services.AddHttpContextAccessor();
-            // Registra el DelegatingHandler
 
-            // Configura HttpClient para IKeycloakRepository
-            services.AddHttpClient<IKeycloakRepository, KeycloakRepository>()
-            .ConfigureHttpClient(client =>
-            {
-                client.BaseAddress = new Uri("https://localhost:18080/");
-                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-            });
-
+            // Configurar HttpClient para acceder a Keycloak
+            services.AddHttpClient<IKeycloakService, KeycloakService>()
+                .ConfigureHttpClient(client =>
+                {
+                    client.BaseAddress = new Uri("https://localhost:18080/");
+                    client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                });
 
             return services;
         }
     }
+
 }

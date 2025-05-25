@@ -8,9 +8,11 @@ using System.Threading.Tasks;
 using UserMs.Domain.Entities.IUser.ValueObjects;
 using UserMs.Infrastructure.Exceptions;
 using UserMs.Domain.Entities;
+using System.Diagnostics.CodeAnalysis;
 
 namespace UserMs.Infrastructure.JsonConverter.IUser
 {
+    [ExcludeFromCodeCoverage]
     public class UserPhoneJsonConverter : JsonConverter<UserPhone>
     {
         public override UserPhone Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)

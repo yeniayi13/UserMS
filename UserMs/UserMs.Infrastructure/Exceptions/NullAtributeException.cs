@@ -1,5 +1,8 @@
+using System.Diagnostics.CodeAnalysis;
+
 namespace UserMs.Infrastructure.Exceptions
 {
+    [ExcludeFromCodeCoverage]
     public class NullAtributeException : Exception
     {
         public NullAtributeException() { }

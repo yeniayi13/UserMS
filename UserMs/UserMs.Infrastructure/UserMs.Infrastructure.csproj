@@ -16,6 +16,7 @@
     </PackageReference>
     <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="9.0.4" />
     <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="9.0.4" />
+    <PackageReference Include="Microsoft.IdentityModel.Tokens" Version="7.0.3" />
     <PackageReference Include="MongoDB.Driver" Version="3.3.0" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
     <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="9.0.4" />
@@ -27,6 +28,10 @@
     <ProjectReference Include="..\UserMs.Commoon\UserMs.Commoon.csproj" />
     <ProjectReference Include="..\UserMs.Core\UserMs.Core.csproj" />
     <ProjectReference Include="..\UserMs.Domain\UserMs.Domain.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Database\Factory\Mongo\" />
   </ItemGroup>
 
 </Project>

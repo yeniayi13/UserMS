@@ -7,38 +7,62 @@ using UserMs.Commoon.Dtos;
 using AuthMs.Common.Exceptions;
 using UserMs.Infrastructure.Exceptions;
 using UserMs.Commoon.Dtos.Keycloak;
+using UserMs.Core.Service.Keycloak;
+using System.Net.Http;
+using System.Text;
+using Newtonsoft.Json;
+using UserMs.Domain.Entities.UserEntity;
+using System.Net.Http.Headers;
+using UserMs.Infrastructure.Service.Keycloak;
+using UserMs.Commoon.Dtos.Users.Response.ActivityHistory;
+using UserMs.Core.RabbitMQ;
+using UserMs.Core.Repositories.ActivityHistoryRepo;
+using MediatR;
+using UserMs.Application.Commands.ActivityHistory;
+using UserMs.Application.Commands.Keycloak;
 
 
-namespace AuthenticationMs
+namespace UserMs.Controllers
 {
 
     [ApiController]
-    [Route("auth")]
-
-
+    [Route("user/auth")]
     public class AuthController : ControllerBase
     {
         private readonly ILogger<AuthController> _logger;
-        private readonly IKeycloakRepository _keycloakRepository;
+        private readonly IMediator _mediator;
 
-        public AuthController(ILogger<AuthController> logger, IKeycloakRepository keycloakRepository)
+        public AuthController(ILogger<AuthController> logger, IMediator mediator)
         {
-            _logger = logger;
-            _keycloakRepository = keycloakRepository;
+            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+            _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
         }
 
         [HttpPost("login")]
-        public async Task<IActionResult> LoginAsync([FromBody] LoginDto loginDto)
+        public async Task<IActionResult> LoginAsync([FromBody] LoginDto request)
         {
+            if (request == null)
+            {
+                _logger.LogWarning("Solicitud de inicio de sesión con cuerpo vacío.");
+                return BadRequest("El cuerpo de la solicitud no puede estar vacío.");
+            }
+
             try
             {
-                var token = await _keycloakRepository.LoginAsync(loginDto.Username, loginDto.Password);
+                var command = new LoginCommand(request);
+                var token = await _mediator.Send(command);
+
                 return Ok(token);
+            }
+            catch (UnauthorizedAccessException ex)
+            {
+                _logger.LogError(ex, "Credenciales incorrectas.");
+                return Unauthorized("Credenciales incorrectas.");
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Controller error");
-                return StatusCode(500, ex.Message);
+                _logger.LogError(ex, "Error inesperado al intentar iniciar sesión.");
+                return StatusCode(StatusCodes.Status500InternalServerError, "Error interno al procesar el inicio de sesión.");
             }
         }
 
@@ -47,177 +71,43 @@ namespace AuthenticationMs
         {
             try
             {
-                var result = await _keycloakRepository.LogOutAsync();
-                return Ok(result);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Controller error");
-                return StatusCode(500, ex.Message);
-            }
-        }
+                var command = new LogOutCommand();
+                var result = await _mediator.Send(command);
 
-        // [Authorize(Policy = "AdminOnly")]
-        // [HttpPost("token")]
-        // public async Task<IActionResult> GetTokenAsync()
-        // {
-        //     try
-        //     {
-        //         var token = await _keycloakRepository.GetTokenAsync();
-        //         return Ok(token);
-        //     }
-        //     catch (Exception ex)
-        //     {
-        //         _logger.LogError(ex, "Controller error");
-        //         return StatusCode(500, ex.Message);
-        //     }
-        // }
-
-        [Authorize(Policy = "AdminProviderOnly")]
-        [HttpPost("createUser")]
-        public async Task<IActionResult> CreateUserAsync([FromBody] CreateUserDto user)
-        {
-            try
-            {
-                //var token = await _keycloakRepository.CreateUserAsync(user);
-                return Ok();
-            }
-            catch (UserExistException ex)
-            {
-                _logger.LogError(ex, ex.Message);
-                return StatusCode(409, ex.Message);
-            }
-            catch (KeycloakException ex)
-            {
-                _logger.LogError(ex, ex.Message);
-                return StatusCode(400, ex.Message);
+                return Ok("Sesión cerrada correctamente.");
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Internal server error");
-                return StatusCode(500, ex.Message);
-            }
-        }
-
-        //[Authorize(Policy = "AdminProviderOnly")]
-        [HttpDelete]
-        [Route("deleteUser/{userId}")]
-        public async Task<IActionResult> DeleteUserAsync([FromRoute] Guid userId)
-        {
-            try
-            {
-                var token = await _keycloakRepository.DeleteUserAsync(new Guid(userId.ToString()));
-                return Ok(token);
-            }
-            catch (UserNotFoundException ex)
-            {
-                _logger.LogError(ex, ex.Message);
-                return StatusCode(404, ex.Message);
-            }
-            catch (KeycloakException ex)
-            {
-                _logger.LogError(ex, ex.Message);
-                return StatusCode(400, ex.Message);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Internal server error");
-                return StatusCode(500, ex.Message);
-            }
-        }
-
-      //  [Authorize(Policy = "AdminProviderOnly")]
-        [HttpGet("{username}")]
-        public async Task<IActionResult> GetUserByUserNameAsync([FromRoute] string username)
-        {
-            try
-            {
-                Console.WriteLine("userName: " + username);
-                var token = await _keycloakRepository.GetUserByUserName(username);
-                return Ok(token);
-                //TODO: USER NOt FOUND
-            }
-            catch (KeycloakException ex)
-            {
-                _logger.LogError(ex, ex.Message);
-                return StatusCode(400, ex.Message);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Internal server error");
-                return StatusCode(500, ex.Message);
-            }
-        }
-
-      //  [Authorize(Policy = "AdminProviderOnly")]
-        [HttpPost("assingRole")]
-        public async Task<IActionResult> AssingRoleAsync([FromBody] AssingRoleDto role)
-        {
-            try
-            {
-                //await _keycloakRepository.AssignClientRoleToUser(role.UserId, role.ClientId, role.RoleName);
-                // if (role.ClientId == "webclient") await _keycloakRepository.AssignClientRoleToUser(role.UserId, role.ClientId, role.RoleName);
-                // else await _keycloakRepository.AssignClientRoleToUserMobile(role.UserId, role.ClientId, role.RoleName);
-                return Ok();
-            }
-            catch (KeycloakException ex)
-            {
-                _logger.LogError(ex, ex.Message);
-                return StatusCode(400, ex.Message);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Internal server error");
-                return StatusCode(500, ex.Message);
-            }
-        }
-       // [Authorize(Policy = "AdminProviderOnly")]
-        [HttpPut("{id}")]
-        public async Task<IActionResult> AssingRoleAsync([FromRoute] Guid id, [FromBody] UpdateUserDto user)
-        {
-            try
-            {
-                await _keycloakRepository.UpdateUser(id, user);
-                return Ok();
-            }
-            catch (UserNotFoundException ex)
-            {
-                _logger.LogError(ex, ex.Message);
-                return StatusCode(404, ex.Message);
-            }
-            catch (UserExistException ex)
-            {
-                _logger.LogError(ex, ex.Message);
-                return StatusCode(409, ex.Message);
-            }
-            catch (KeycloakException ex)
-            {
-                _logger.LogError(ex, ex.Message);
-                return StatusCode(400, ex.Message);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Internal server error");
-                return StatusCode(500, ex.Message);
+                _logger.LogError(ex, "Error inesperado al cerrar sesión.");
+                return StatusCode(StatusCodes.Status500InternalServerError, "Error interno al cerrar sesión.");
             }
         }
 
         [HttpPost("reset-password")]
-        public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordDto request)
+        public async Task<IActionResult> ResetPasswordAsync([FromBody] ResetPasswordDto request)
         {
+            if (request == null || string.IsNullOrWhiteSpace(request.UserEmail))
+            {
+                _logger.LogWarning("Solicitud de restablecimiento de contraseña con datos inválidos.");
+                return BadRequest("El correo electrónico no puede estar vacío.");
+            }
+
             try
             {
-                bool result = await _keycloakRepository.SendPasswordResetEmailAsync(request.UserId);
-                if (!result)
-                {
-                    return BadRequest("No se pudo enviar el correo de recuperación.");
-                }
+                var command = new ResetPasswordCommand(request);
+                var result = await _mediator.Send(command);
 
                 return Ok("Correo de recuperación enviado exitosamente.");
             }
+            catch (KeyNotFoundException ex)
+            {
+                _logger.LogError(ex, $"El correo electrónico {request.UserEmail} no está registrado.");
+                return NotFound("El correo electrónico ingresado no está registrado.");
+            }
             catch (Exception ex)
             {
-                return StatusCode(500, $"Error interno: {ex.Message}");
+                _logger.LogError(ex, "Error inesperado al restablecer la contraseña.");
+                return StatusCode(StatusCodes.Status500InternalServerError, "Error interno al procesar el restablecimiento de contraseña.");
             }
         }
     }

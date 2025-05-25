@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -7,6 +8,7 @@ using UserMs.Domain.Entities;
 
 namespace UserMs.Core.Interface
 {
+  
     public interface IAuthMsService
     {
         Task<string> CreateUserAsync(string userEmail, string userPassword);

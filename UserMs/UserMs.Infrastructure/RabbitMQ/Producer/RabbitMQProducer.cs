@@ -56,6 +56,7 @@ namespace UserMs.Infrastructure.RabbitMQ
                 ContentType = "application/json"
             };
 
+
             // 🔹 Publicar el mensaje con el tipo de evento
             await channel.BasicPublishAsync<BasicProperties>(
                 exchange: "",

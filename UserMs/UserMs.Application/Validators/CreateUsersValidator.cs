@@ -1,6 +1,6 @@
 
 using FluentValidation;
-using UserMs.Commoon.Dtos.Users.Request;
+using UserMs.Commoon.Dtos.Users.Request.User;
 
 namespace UserMs.Application.Validators
 {

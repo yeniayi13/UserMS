@@ -1,6 +1,5 @@
 using UserMs.Application.Commands.User;
 using UserMs.Application.Validators;
-using UserMs.Core.Repositories;
 using UserMs.Domain.Entities;
 using MediatR;
 using UserMs.Core.Interface;
@@ -9,7 +8,12 @@ using UserMs.Infrastructure.Exceptions;
 using UserMs.Core;
 using UserMs.Core.RabbitMQ;
 using UserMs.Commoon.Dtos;
-using UserMs.Commoon.Dtos.Users.Request;
+using UserMs.Commoon.Dtos.Users.Request.User;
+using UserMs.Core.Repositories.UserRepo;
+using UserMs.Domain.Entities.UserEntity;
+using UserMs.Core.Service.Keycloak;
+using AuthMs.Common.Exceptions;
+using FluentValidation;
 
 
 namespace UserMs.Application.Handlers.User.Commands
@@ -17,14 +21,16 @@ namespace UserMs.Application.Handlers.User.Commands
     public class CreateUsersCommandHandler : IRequestHandler<CreateUsersCommand, UserId>
     {
         private readonly IUserRepository _usersRepository;
-        private readonly IKeycloakRepository _keycloakMsService;
+        private readonly IUserRepositoryMongo _usersRepositoryMongo;
+        private readonly IKeycloakService _keycloakMsService;
         private readonly IEventBus<CreateUsersDto> _eventBus;
 
-        public CreateUsersCommandHandler(IUserRepository usersRepository, IKeycloakRepository keycloakMsService, IEventBus<CreateUsersDto> eventBus)
+        public CreateUsersCommandHandler(IUserRepositoryMongo usersRepositoryMongo,IUserRepository usersRepository, IKeycloakService keycloakMsService, IEventBus<CreateUsersDto> eventBus)
         {
             _usersRepository = usersRepository;
             _keycloakMsService = keycloakMsService;
             _eventBus = eventBus;
+            _usersRepositoryMongo = usersRepositoryMongo;
         }
 
 
@@ -33,10 +39,12 @@ namespace UserMs.Application.Handlers.User.Commands
         {
             try
             {
-                
+
 
                 var validator = new CreateUsersValidator();
-                await validator.ValidateRequest(request.Users);
+                var validationResult = await validator.ValidateAsync(request.Users, cancellationToken);
+                if (!validationResult.IsValid)
+                    throw new ValidationException(validationResult.Errors);
                 //var userId = request.Users.UserId;
                 var usersEmailValue = request.Users.UserEmail;
                 var usersPasswordValue = request.Users.UserPassword;
@@ -45,6 +53,7 @@ namespace UserMs.Application.Handlers.User.Commands
                 var usersPhoneValue = request.Users.UserPhone;
                 var usersAddressValue = request.Users.UserAddress;
                 var usersDeleteValue = request.Users.UserDelete;
+                string hashedPassword = BCrypt.Net.BCrypt.HashPassword(usersPasswordValue);
                 //var usersDepartamentValue = request.Users.ProviderDepartmentId;
 
 
@@ -56,7 +65,7 @@ namespace UserMs.Application.Handlers.User.Commands
                     Id,
                     //UserId.Create(Id),
                     UserEmail.Create(usersEmailValue ),
-                    UserPassword.Create(usersPasswordValue ),
+                    UserPassword.Create(hashedPassword),
                     UserName.Create(usersNameValue ),
                     UserPhone.Create(usersPhoneValue ),
                     UserAddress.Create(usersAddressValue),
@@ -69,11 +78,11 @@ namespace UserMs.Application.Handlers.User.Commands
 
 
                 request.Users.UserId = Id;
-               //var existingUser = await _usersRepository.GetUsersByEmail(users.UserEmail);
-              //  if (existingUser != null)
-               // {
-                //    throw new Exception("Este Correo ya se encuentra registrado en el sistema.");
-                //}
+               var existingUser = await _usersRepositoryMongo.GetUsersByEmail(users.UserEmail.Value);
+               if (existingUser != null)
+                {
+                   throw new UserExistException("Este Correo ya se encuentra registrado en el sistema.");
+                }
                 // Publicamos el mensaje en RabbitMQ
 
 
@@ -88,6 +97,16 @@ namespace UserMs.Application.Handlers.User.Commands
 
 
                 return users.UserId;
+            }
+            catch (ValidationException ex)
+            {
+
+                throw;
+            }
+            catch (UserExistException ex)
+            {
+
+                throw;
             }
             catch (Exception ex)
             {

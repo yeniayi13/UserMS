@@ -20,12 +20,18 @@ namespace UserMs.Infrastructure.RabbitMQ.Connection
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
-            Console.WriteLine(" Esperando la inicialización de RabbitMQ...");
+            Console.WriteLine("Esperando la inicialización de RabbitMQ...");
 
             await Task.Delay(3000); // Pequeño retraso para asegurar la inicialización
-            await _rabbitMQConsumer.ConsumeMessagesAsync("userQueue");
 
-            Console.WriteLine(" Consumidor de RabbitMQ iniciado.");
+            var queues = new List<string> { "userQueue", "supportQueue", "bidderQueue", "auctioneerQueue", "userRoleQueue","roleQueue","rolePermissionQueue", "activityHistoryQueue" };
+
+            foreach (var queueName in queues)
+            {
+                _ = Task.Run(() => _rabbitMQConsumer.ConsumeMessagesAsync(queueName), stoppingToken);
+            }
+
+            Console.WriteLine("Todos los consumidores de RabbitMQ han sido iniciados.");
         }
     }
 }

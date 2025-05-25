@@ -1,10 +1,13 @@
+using System.Diagnostics.CodeAnalysis;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using UserMs.Domain.Entities;
 using UserMs.Infrastructure.Exceptions;
 
+[ExcludeFromCodeCoverage]
 public class UserEmailJsonConverter : JsonConverter<UserEmail>
 {
+   
     public override UserEmail Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
     {
         var value = reader.GetString();

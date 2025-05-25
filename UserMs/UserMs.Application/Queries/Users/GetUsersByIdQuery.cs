@@ -1,6 +1,6 @@
 
 using MediatR;
-using UserMs.Application.Dtos.Users.Response;
+using UserMs.Commoon.Dtos.Users.Response.User;
 using UserMs.Domain.Entities;
 
 namespace UserMs.Application.Queries.User

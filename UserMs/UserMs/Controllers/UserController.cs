@@ -4,10 +4,10 @@ using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using UserMs.Domain.Entities;
 using Microsoft.AspNetCore.Authorization;
-using UserMs.Commoon.Dtos.Users.Request;
 using UserMs.Core.RabbitMQ;
 using UserMs.Domain.Entities.IUser.ValueObjects;
 using UserMs.Commoon.Dtos;
+using UserMs.Commoon.Dtos.Users.Request.User;
 
 
 namespace UserMs.Controllers
@@ -19,101 +19,68 @@ namespace UserMs.Controllers
     {
         private readonly ILogger<UsersController> _logger;
         private readonly IMediator _mediator;
-       
-
 
         public UsersController(ILogger<UsersController> logger, IMediator mediator)
         {
-            _logger = logger;
-            _mediator = mediator;
-            
+            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+            _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
         }
 
-        // [Authorize(Policy = "AuctioneerBidderOnly")]
-        [HttpPost]
-        public async Task<IActionResult> CreateUsers(CreateUsersDto createUsersDto)
-        {
-            try
-            {
-                // Enviamos el comando para agregar al usuario en PostgreSQL
-                var command = new CreateUsersCommand(createUsersDto);
-                var userId = await _mediator.Send(command);
+       // [Authorize(Policy = "AdministradorPolicy")]
+        
 
-                return Ok(userId);
-            }
-            catch (Exception e)
-            {
-                _logger.LogError("An error occurred while trying to create a User: {Message}", e.Message);
-                return StatusCode(500, "An error occurred while trying to create a User");
-            }
-        }
-
-        [HttpGet]
+        //[Authorize(Policy = "AdministradorPolicy")]
+        [HttpGet("All")]
         public async Task<IActionResult> GetUsers()
         {
             try
             {
-                // Obtenemos todos los usuarios usando una consulta
                 var query = new GetUsersQuery();
                 var users = await _mediator.Send(query);
+
+                if (users == null || !users.Any())
+                {
+                    _logger.LogWarning("No se encontraron usuarios en el sistema.");
+                    return NotFound("No se encontraron usuarios.");
+                }
+
                 return Ok(users);
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
-                _logger.LogError("An error occurred while getting Users: {Message}", e.Message);
-                return StatusCode(500, "An error occurred while getting Users");
+                _logger.LogError(ex, "Error inesperado al obtener los usuarios.");
+                return StatusCode(StatusCodes.Status500InternalServerError, "Error interno al obtener los usuarios.");
             }
         }
 
         [HttpGet("{usersId}")]
         public async Task<IActionResult> GetUsersById([FromRoute] Guid usersId)
         {
+            if (usersId == Guid.Empty)
+            {
+                _logger.LogWarning("Solicitud con ID de usuario vacío.");
+                return BadRequest("El ID del usuario no puede estar vacío.");
+            }
+
             try
             {
-                //UserId userId = UserId.Create(usersId);
                 var query = new GetUsersByIdQuery(usersId);
                 var users = await _mediator.Send(query);
+
+                if (users == null)
+                {
+                    _logger.LogWarning($"No se encontró un usuario con ID: {usersId}");
+                    return NotFound($"No se encontró un usuario con ID: {usersId}");
+                }
+
                 return Ok(users);
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
-                _logger.LogError("An error occurred while getting one User: {Message}", e.Message);
-                return StatusCode(500, "An error occurred while getting one User");
+                _logger.LogError(ex, $"Error inesperado al obtener el usuario con ID: {usersId}");
+                return StatusCode(StatusCodes.Status500InternalServerError, "Error interno al buscar el usuario.");
             }
         }
 
-        [HttpPut("{usersId}")]
-        public async Task<IActionResult> UpdateUsers([FromRoute] Guid usersId, [FromBody] UpdateUsersDto usersDto)
-        {
-            try
-            {
-                UserId userId = UserId.Create(usersId);
-                var command = new UpdateUsersCommand(userId, usersDto);
-                var users = await _mediator.Send(command);
-                return Ok(users);
-            }
-            catch (Exception e)
-            {
-                _logger.LogError("An error occurred while trying to update a User: {Message}", e.Message);
-                return StatusCode(500, "An error occurred while trying to update a User");
-            }
-        }
-
-        [HttpDelete("{usersId}")]
-        public async Task<IActionResult> DeleteUsers(Guid usersId)
-        {
-            try
-            {
-                UserId userId = UserId.Create(usersId);
-                var command = new DeleteUsersCommand(userId);
-                var users = await _mediator.Send(command);
-                return Ok(users);
-            }
-            catch (Exception e)
-            {
-                _logger.LogError("An error occurred while trying to delete a User: {Message}", e.Message);
-                return StatusCode(500, "An error occurred while trying to delete a User");
-            }
-        }
     }
 }

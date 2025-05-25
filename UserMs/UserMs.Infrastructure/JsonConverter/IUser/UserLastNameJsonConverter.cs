@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text;
 using System.Text.Json;
@@ -10,6 +11,7 @@ using UserMs.Domain.Entities.IUser.ValueObjects;
 
 namespace UserMs.Infrastructure.JsonConverter.IUser
 {
+    [ExcludeFromCodeCoverage]
     public class UserLastNameJsonConverter : JsonConverter<UserLastName>
     {
         public override UserLastName Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)

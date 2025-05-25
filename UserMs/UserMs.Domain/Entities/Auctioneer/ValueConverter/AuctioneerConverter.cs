@@ -31,3 +31,25 @@ public class AuctioneerUserIdValueConverter : ValueConverter<AuctioneerUserId, G
     { }
 
 }
+
+public class AuctioneerBirthdayValueConverter : ValueConverter<AuctioneerBirthday, DateOnly>
+{
+    public AuctioneerBirthdayValueConverter() : base(
+        v => v.Value, // Convierte UserPassword a string
+        v => AuctioneerBirthday.Create(v) // Convierte string a UserPassword
+    )
+    { }
+
+
+}
+
+
+public class AuctioneerDeleteConverter : ValueConverter<AuctioneerDelete, bool>
+{
+    public AuctioneerDeleteConverter() : base(
+        u => u.Value,
+        b => AuctioneerDelete.Create(b)
+    )
+    { }
+}
+
