@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace UserMs.Test.Infrastructure.Repositories
+namespace UserMs.Commoon.Service
 {
-    internal class UserRoleRepositoryTests
+    internal class Class1
     {
     }
 }

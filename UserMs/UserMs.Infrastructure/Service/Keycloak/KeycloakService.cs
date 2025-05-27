@@ -22,7 +22,7 @@ namespace UserMs.Infrastructure.Service.Keycloak
     {
         private readonly HttpClient _httpClient;
         private readonly IHttpContextAccessor _httpContextAccessor;
-       private readonly IEmailSender _emailSender;
+       
         private readonly string _httpClientUrl;
         private readonly string _realm = "auth-demo";
         private readonly string _baseUrl = "http://localhost:18080";
@@ -31,7 +31,7 @@ namespace UserMs.Infrastructure.Service.Keycloak
 
 
 
-        public KeycloakService(HttpClient httpClient, IHttpContextAccessor httpContextAccessor, IOptions<HttpClientUrl> httpClientUrl, IEmailSender emailSender)
+        public KeycloakService(HttpClient httpClient, IHttpContextAccessor httpContextAccessor, IOptions<HttpClientUrl> httpClientUrl)
         {
             _httpClient = httpClient;
             _httpContextAccessor = httpContextAccessor;
@@ -42,7 +42,7 @@ namespace UserMs.Infrastructure.Service.Keycloak
             _httpClient.BaseAddress = new Uri(_httpClientUrl);
             _httpClient.DefaultRequestHeaders.Add("Authorization", $"Bearer {headerToken}");
 
-            _emailSender = new EmailSender();
+           
 
         }
         //* Me retorna el Authorization TOKEN

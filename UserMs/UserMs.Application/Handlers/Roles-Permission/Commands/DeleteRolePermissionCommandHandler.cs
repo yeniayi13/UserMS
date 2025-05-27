@@ -12,6 +12,7 @@ using UserMs.Core.Repositories.RolePermissionRepo;
 using UserMs.Domain.Entities.Role_Permission.ValueObjects;
 using UserMs.Domain.Entities;
 using UserMs.Core.Repositories.ActivityHistoryRepo;
+using UserMs.Infrastructure.Exceptions;
 
 namespace UserMs.Application.Handlers.Roles_Permission.Commands
 {
@@ -45,15 +46,10 @@ namespace UserMs.Application.Handlers.Roles_Permission.Commands
 
                 return request.RolePermissionId;
             }
-            catch (InvalidOperationException ex)
-            {
-                
-                throw;
-            }
             catch (Exception ex)
             {
-                
-                throw new ApplicationException("Ocurrió un error al eliminar el permiso de rol.", ex);
+                ExceptionHandlerService.HandleException(ex);
+                throw;
             }
         }
     }

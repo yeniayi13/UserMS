@@ -28,7 +28,12 @@ namespace UserMs.Domain.Entities.Role
             RoleName = roleName;
             IsDeleted = isDeleted;
         }
-
+        public Roles(RoleId roleId, RoleName roleName)
+        {
+            RoleId = roleId;
+            RoleName = roleName;
+           
+        }
         public Roles()
         {
         }

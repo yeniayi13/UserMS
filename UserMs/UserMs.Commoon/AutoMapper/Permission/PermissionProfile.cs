@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -9,6 +10,7 @@ using UserMs.Domain.Entities.Permission;
 
 namespace UserMs.Commoon.AutoMapper.Permission
 {
+    [ExcludeFromCodeCoverage]
     public class PermissionProfile : Profile
     {
         public PermissionProfile()

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using UserMs.Domain.Entities.Support.ValueObjects;
 
@@ -17,6 +18,6 @@ namespace UserMs.Commoon.Dtos.Users.Request.Support
         public string UserPassword { get; set; }
         public string SupportDni { get;  set; }
         public string SupportSpecialization { get;  set; }
-        public bool SupportDelete { get; set; } = false;
+        [JsonIgnore] public bool SupportDelete { get; set; } = false;
     }
 }

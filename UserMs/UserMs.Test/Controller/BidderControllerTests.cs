@@ -20,6 +20,7 @@ using UserMs.Domain.Entities;
 using UserMs.Domain.Entities.Bidder.ValueObjects;
 using UserMs.Domain.Entities.IUser.ValueObjects;
 using Xunit;
+using UserMs.Commoon.Dtos.Users.Response.Support;
 
 namespace UserMs.Test.Controller
 {
@@ -155,15 +156,19 @@ namespace UserMs.Test.Controller
             var bidderName = UserName.Create("Name");
             var bidderDto = new UpdateBidderDto {  UserName = "Name" };
             var bidderEntity = new Bidders { UserId = bidderId, UserName = bidderName };
+            var dto = new GetBidderDto
+            {
+                UserId = bidderEntity.UserId.Value,
 
+            };
             _mockMediator.Setup(m => m.Send(It.IsAny<UpdateBidderCommand>(), default))
-                         .ReturnsAsync(bidderEntity);
+                         .ReturnsAsync(dto);
 
             var result = await _controller.UpdateBidder(bidderId, bidderDto) as OkObjectResult;
 
             Assert.NotNull(result);
             Assert.Equal(200, result.StatusCode);
-            Assert.Equal(bidderEntity, result.Value);
+            Assert.Equal(dto, result.Value);
         }
 
         [Fact]

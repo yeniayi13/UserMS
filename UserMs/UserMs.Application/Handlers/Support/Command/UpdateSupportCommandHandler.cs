@@ -32,7 +32,7 @@ using UserMs.Infrastructure.Repositories;
 
 namespace UserMs.Application.Handlers.Support.Command
 {
-    public class UpdateSupportCommandHandler : IRequestHandler<UpdateSupportCommand, Supports>
+    public class UpdateSupportCommandHandler : IRequestHandler<UpdateSupportCommand, GetSupportDto>
     {
         private readonly ISupportRepository _supportRepository;
         private readonly IEventBus<GetSupportDto> _eventBus;
@@ -69,103 +69,114 @@ namespace UserMs.Application.Handlers.Support.Command
         }
 
 
-        public async Task<Supports?> Handle(UpdateSupportCommand request, CancellationToken cancellationToken)
+        public async Task<GetSupportDto?> Handle(UpdateSupportCommand request, CancellationToken cancellationToken)
         {
             try
             {
-                var existingSupport = await _supportRepositoryMongo.GetSupportByIdAsync(UserId.Create(request.SupportId));
-                var existingUsers = await _usersRepositoryMongo.GetUsersById(request.SupportId.Value);
+                await ValidateSupportRequest(request, cancellationToken);
 
-                // Validación del ENUM SupportSpecialization
-                if (!Enum.TryParse<SupportSpecialization>(request.Support.SupportSpecialization,
-                        out var supportSpecialization))
-                {
-                    throw new ArgumentException("Invalid SupportSpecialization");
-                }
+                var existingSupport = await GetExistingSupport(request.SupportId);
+                var existingUsers = await GetExistingUser(request.SupportId.Value);
+                var supportSpecialization = ValidateSupportSpecialization(request.Support.SupportSpecialization);
 
+                UpdateSupportEntity(existingSupport, request.Support, existingUsers, supportSpecialization);
+                var updatedUser = CreateUpdatedUserEntity(request.Support, existingUsers);
 
-                if (existingSupport == null)
-                    throw new UserNotFoundException("Auctioneer not found.");
-
-                var validator = new UpdateSupportValidator();
-                var validationResult = await validator.ValidateAsync(request.Support, cancellationToken);
-
-                if (!validationResult.IsValid)
-                    throw new ValidationException(validationResult.Errors);
-
-                // Actualización de datos del Support
-                existingSupport.SetSupportDni(SupportDni.Create(request.Support.SupportDni));
-                existingSupport.SetSupportSpecialization(supportSpecialization);
-                existingSupport.SetUserEmail(UserEmail.Create(request.Support.UserEmail));
-                existingSupport.SetUserPassword(UserPassword.Create(request.Support.UserPassword));
-                existingSupport.SetUserName(UserName.Create(request.Support.UserName));
-                existingSupport.SetUserLastName(UserLastName.Create(request.Support.UserLastName));
-                existingSupport.SetUserPhone(UserPhone.Create(request.Support.UserPhone));
-                existingSupport.SetUserAddress(UserAddress.Create(request.Support.UserAddress));
-                existingSupport.SetSupportDelete(SupportDelete.Create(request.Support.SupportDelete));
-
-                var users = new Users(
-                    UserId.Create(request.SupportId.Value),
-                    UserEmail.Create(request.Support.UserEmail),
-                    UserPassword.Create(request.Support.UserPassword),
-                    UserName.Create(request.Support.UserName),
-                    UserPhone.Create(request.Support.UserPhone),
-                    UserAddress.Create(request.Support.UserAddress),
-                    UserLastName.Create(request.Support.UserLastName)
-                );
-
-                var updateU = _mapper.Map<UpdateUserDto>(users);
-
+                await SaveUpdatedEntities(existingSupport, updatedUser);
+                await PublishUpdateEvents(existingSupport, updatedUser, request.SupportId.Value);
                 var supportDto = _mapper.Map<GetSupportDto>(existingSupport);
-
-                // Actualización en Keycloak y bases de datos
-                _keycloakRepository.UpdateUser(existingSupport.UserId, updateU);
-                await _supportRepository.UpdateAsync(existingSupport.UserId, existingSupport);
-                await _eventBus.PublishMessageAsync(supportDto, "supportQueue", "SUPPORT_UPDATED");
-
-                await _usersRepository.UpdateUsersAsync(existingUsers.UserId, users);
-                var usersDto = _mapper.Map<GetUsersDto>(users);
-                await _eventBusUser.PublishMessageAsync(usersDto, "userQueue", "USER_UPDATED");
-
-                var activity = new Domain.Entities.ActivityHistory.ActivityHistory(
-                    Guid.NewGuid(),
-                    usersDto.UserId,
-                    "Actualizó perfil de un trabajador de soporte",
-                    DateTime.UtcNow
-                );
-                await _activityHistoryRepository.AddAsync(activity);
-                var activityDto = _mapper.Map<GetActivityHistoryDto>(activity);
-                await _eventBusActivity.PublishMessageAsync(activityDto, "activityHistoryQueue", "ACTIVITY_CREATED");
-
-                return existingSupport;
-            }
-            catch (ArgumentException ex)
-            {
-
-                throw;
-            }
-            catch (NullAtributeException ex)
-            {
-
-                throw;
-            }
-            catch (ValidationException ex)
-            {
-                // Manejo de errores de validación específicos
-
-                throw;
-            }
-            catch (UserNotFoundException ex)
-            {
-
-                throw;
+                return supportDto;
             }
             catch (Exception ex)
             {
-
-                throw new ApplicationException("Ocurrió un error inesperado al actualizar el trabajador de soporte.",
-                    ex);
+                ExceptionHandlerService.HandleException(ex);
+                throw;
             }
+        }
+
+        private async Task ValidateSupportRequest(UpdateSupportCommand request, CancellationToken cancellationToken)
+        {
+            var validator = new UpdateSupportValidator();
+            var validationResult = await validator.ValidateAsync(request.Support, cancellationToken);
+
+            if (!validationResult.IsValid)
+                throw new ValidationException(validationResult.Errors);
+        }
+
+        private async Task<Supports?> GetExistingSupport(UserId supportId)
+        {
+            var existingSupport = await _supportRepositoryMongo.GetSupportByIdAsync(supportId);
+            if (existingSupport == null)
+                throw new UserNotFoundException("Support not found.");
+
+            return existingSupport;
+        }
+
+        private async Task<Users?> GetExistingUser(Guid userId)
+        {
+            return await _usersRepositoryMongo.GetUsersById(userId);
+        }
+        private SupportSpecialization ValidateSupportSpecialization(string specialization)
+        {
+            if (!Enum.TryParse<SupportSpecialization>(specialization, out var supportSpecialization))
+                throw new ArgumentException("Invalid SupportSpecialization");
+
+            return supportSpecialization;
+        }
+
+        private void UpdateSupportEntity(Supports existingSupport, UpdateSupportDto supportDto, Users existingUsers, SupportSpecialization specialization)
+        {
+            existingSupport.SetSupportDni(SupportDni.Create(supportDto.SupportDni));
+            existingSupport.SetSupportSpecialization(specialization);
+            existingSupport.SetUserEmail(UserEmail.Create(supportDto.UserEmail));
+            existingSupport.SetUserPassword(UserPassword.Create(existingUsers.UserPassword.Value));
+            existingSupport.SetUserName(UserName.Create(supportDto.UserName));
+            existingSupport.SetUserLastName(UserLastName.Create(supportDto.UserLastName));
+            existingSupport.SetUserPhone(UserPhone.Create(supportDto.UserPhone));
+            existingSupport.SetUserAddress(UserAddress.Create(supportDto.UserAddress));
+            existingSupport.SetSupportDelete(SupportDelete.Create(supportDto.SupportDelete));
+        }
+
+        private Users CreateUpdatedUserEntity(UpdateSupportDto supportDto, Users existingUsers)
+        {
+            return new Users(
+                UserId.Create(existingUsers.UserId.Value),
+                UserEmail.Create(supportDto.UserEmail),
+                UserPassword.Create(existingUsers.UserPassword.Value),
+                UserName.Create(supportDto.UserName),
+                UserPhone.Create(supportDto.UserPhone),
+                UserAddress.Create(supportDto.UserAddress),
+                UserLastName.Create(supportDto.UserLastName)
+            );
+        }
+
+        private async Task SaveUpdatedEntities(Supports updatedSupport, Users updatedUser)
+        {
+            var updateUserDto = _mapper.Map<UpdateUserDto>(updatedUser);
+            _keycloakRepository.UpdateUser(updatedSupport.UserId, updateUserDto);
+
+            await _supportRepository.UpdateAsync(updatedSupport.UserId, updatedSupport);
+            await _usersRepository.UpdateUsersAsync(updatedUser.UserId, updatedUser);
+        }
+
+        private async Task PublishUpdateEvents(Supports updatedSupport, Users updatedUser, Guid supportId)
+        {
+            var supportDto = _mapper.Map<GetSupportDto>(updatedSupport);
+            await _eventBus.PublishMessageAsync(supportDto, "supportQueue", "SUPPORT_UPDATED");
+
+            var usersDto = _mapper.Map<GetUsersDto>(updatedUser);
+            await _eventBusUser.PublishMessageAsync(usersDto, "userQueue", "USER_UPDATED");
+
+            var activity = new Domain.Entities.ActivityHistory.ActivityHistory(
+                Guid.NewGuid(),
+                supportId,
+                "Actualizó perfil de un trabajador de soporte",
+                DateTime.UtcNow
+            );
+            await _activityHistoryRepository.AddAsync(activity);
+
+            var activityDto = _mapper.Map<GetActivityHistoryDto>(activity);
+            await _eventBusActivity.PublishMessageAsync(activityDto, "activityHistoryQueue", "ACTIVITY_CREATED");
         }
     }
 }

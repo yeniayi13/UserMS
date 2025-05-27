@@ -100,15 +100,20 @@ namespace UserMs.Test.Controller
             Guid supportId = Guid.NewGuid();
             var supportDto = new UpdateSupportDto();
             var expectedSupport = new Supports { UserId = supportId };
+            var dto = new GetSupportDto
+            {
+                UserId = expectedSupport.UserId.Value,
+                
+            };
 
             _mockMediator.Setup(m => m.Send(It.IsAny<UpdateSupportCommand>(), default))
-                .ReturnsAsync(expectedSupport);
+                .ReturnsAsync(dto);
 
             var result = await _controller.UpdateSupport(supportId, supportDto) as OkObjectResult;
 
             Assert.NotNull(result);
             Assert.Equal(200, result.StatusCode);
-            Assert.Equal(expectedSupport, result.Value);
+            Assert.Equal(dto, result.Value);
         }
 
         [Fact]

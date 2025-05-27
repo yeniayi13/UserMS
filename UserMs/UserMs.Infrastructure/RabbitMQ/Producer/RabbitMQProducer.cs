@@ -25,15 +25,20 @@ namespace UserMs.Infrastructure.RabbitMQ
 
     public class RabbitMQProducer<T> : IEventBus<T>
     {
-        private readonly RabbitMQConnection _rabbitMQConnection;
+        private readonly IConnectionRabbbitMQ _rabbitMQConnection;
 
-        public RabbitMQProducer(RabbitMQConnection rabbitMQConnection)
+        public RabbitMQProducer(IConnectionRabbbitMQ rabbitMQConnection)
         {
             _rabbitMQConnection = rabbitMQConnection;
         }
 
         public async Task PublishMessageAsync(T data, string queueName, string eventType)
         {
+            if (data == null)
+            {
+                throw new ArgumentNullException(nameof(data), "El mensaje no puede ser nulo."); // 🔥 Lanzar excepción
+            }
+
             var channel = _rabbitMQConnection.GetChannel();
 
             // Declaramos la cola de manera asincrónica

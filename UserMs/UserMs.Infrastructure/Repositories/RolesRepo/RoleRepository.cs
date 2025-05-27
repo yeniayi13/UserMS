@@ -16,13 +16,13 @@ namespace UserMs.Infrastructure.Repositories.RolesRepo
 {
     public class RoleRepository: IRolesRepository
     {
-        private readonly IUserDbContext _dbContext;
+       
         private readonly IMongoCollection<Roles> _collection;
         private readonly IMapper _mapper;
 
-        public RoleRepository(IUserDbContext dbContext, IUserDbContextMongo context, IMapper mapper)
+        public RoleRepository( IUserDbContextMongo context, IMapper mapper)
         {
-            _dbContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
+           
             if (context == null)
             {
                 throw new ArgumentNullException(nameof(context));
@@ -122,12 +122,7 @@ namespace UserMs.Infrastructure.Repositories.RolesRepo
         }
 
 
-        public async Task<Roles?> DeleteRolesAsync(RoleId roleId)
-        {
-            var existingRoles = await _dbContext.Roles.FindAsync(roleId);
-            await _dbContext.SaveEfContextChanges("");
-            return existingRoles;
-        }
+      
 
     }
     

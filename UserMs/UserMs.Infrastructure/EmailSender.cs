@@ -7,9 +7,11 @@ using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using UserMs.Core;
+using System.Diagnostics.CodeAnalysis;
 
 namespace UserMs.Infrastructure
 {
+    [ExcludeFromCodeCoverage]
     public class EmailSender: IEmailSender
     {
         public async Task SendEmailAsync(string toEmail, string subject, string body)

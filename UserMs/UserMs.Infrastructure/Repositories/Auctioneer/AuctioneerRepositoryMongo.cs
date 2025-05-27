@@ -34,7 +34,8 @@ namespace UserMs.Infrastructure.Repositories.Auctioneer
 
         public async Task<List<Auctioneers>> GetAuctioneerAllAsync()
         {
-            var projection = Builders<Auctioneers>.Projection.Exclude("_id").Exclude("IsDeleted").Exclude("CreatedAt").Exclude("CreatedBy");
+            var projection = Builders<Auctioneers>.Projection.Exclude("_id").Exclude("IsDeleted").Exclude("CreatedAt")
+                .Exclude("CreatedBy").Exclude("UserPassword").Exclude("AuctioneerDelete");
 
             var auctioneerDto = await _collection.Find(Builders<Auctioneers>.Filter.Empty)
                 .Project<GetAuctioneerDto>(projection)
@@ -47,7 +48,8 @@ namespace UserMs.Infrastructure.Repositories.Auctioneer
         public async Task<Auctioneers?> GetAuctioneerByIdAsync(UserId auctioneerId)
         {
             var filter = Builders<Auctioneers>.Filter.Eq("UserId", auctioneerId.Value);
-            var projection = Builders<Auctioneers>.Projection.Exclude("_id").Exclude("IsDeleted").Exclude("CreatedAt").Exclude("CreatedBy");
+            var projection = Builders<Auctioneers>.Projection.Exclude("_id").Exclude("IsDeleted").Exclude("CreatedAt")
+                .Exclude("CreatedBy").Exclude("UserPassword").Exclude("AuctioneerDelete");
 
             var auctioneerDto = await _collection.Find(filter).Project<GetAuctioneerDto>(projection).FirstOrDefaultAsync().ConfigureAwait(false);
             return _mapper.Map<Auctioneers>(auctioneerDto);
@@ -56,7 +58,8 @@ namespace UserMs.Infrastructure.Repositories.Auctioneer
         public async Task<Auctioneers?> GetAuctioneerByEmailAsync(UserEmail auctioneerUserId)
         {
             var filter = Builders<Auctioneers>.Filter.Eq("UserEmail", auctioneerUserId.Value);
-            var projection = Builders<Auctioneers>.Projection.Exclude("_id").Exclude("IsDeleted").Exclude("CreatedAt").Exclude("CreatedBy");
+            var projection = Builders<Auctioneers>.Projection.Exclude("_id").Exclude("IsDeleted").Exclude("CreatedAt")
+                .Exclude("CreatedBy").Exclude("UserPassword").Exclude("AuctioneerDelete");
 
             var auctioneerDto = await _collection.Find(filter).Project<GetAuctioneerDto>(projection).FirstOrDefaultAsync().ConfigureAwait(false);
             return _mapper.Map<Auctioneers>(auctioneerDto);

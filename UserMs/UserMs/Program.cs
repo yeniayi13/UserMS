@@ -90,6 +90,9 @@ using UserMs.Infrastructure.Repositories.ActivityHistory;
 using UserMs.Infrastructure.Repositories.Bidders;
 using UserMs.Infrastructure.Repositories.Supports;
 using UserMs.Infrastructure.Repositories.Users;
+using RabbitMQ.Client;
+
+
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -293,15 +296,27 @@ builder.Services.AddControllers().AddJsonOptions(options =>
 // *********************Configuracion de RabbitMQ*********************
 
 // Configura la dependencia en tu contenedor 
-
+builder.Services.AddSingleton<IRabbitMQConsumer, RabbitMQConsumer>();
+builder.Services.AddSingleton<IConnectionRabbbitMQ, RabbitMQConnection>();
 builder.Services.AddSingleton(typeof(IEventBus<>), typeof(RabbitMQProducer<>));
-builder.Services.AddSingleton<RabbitMQConnection>(provider =>
+builder.Services.AddSingleton<IConnectionFactory>(provider =>
 {
-    var rabbitMQConnection = new RabbitMQConnection();
-    rabbitMQConnection.InitializeAsync().Wait(); //  Inicialización segura
-    return rabbitMQConnection;
+    return new ConnectionFactory
+    {
+        HostName = "localhost",
+        Port = 5672,
+        UserName = "guest",
+        Password = "guest",
+    };
 });
 
+builder.Services.AddSingleton<IConnectionRabbbitMQ>(provider =>
+{
+    var connectionFactory = provider.GetRequiredService<IConnectionFactory>();
+    var rabbitMQConnection = new RabbitMQConnection(connectionFactory);
+    rabbitMQConnection.InitializeAsync().Wait(); // ?? Ejecutar inicialización antes de inyectarlo
+    return rabbitMQConnection;
+}); builder.Services.AddSingleton<IRabbitMQConsumer, RabbitMQConsumer>();
 // Usa la misma instancia de `RabbitMQConnection` para el Producer
 
 
@@ -393,7 +408,7 @@ builder.Services.AddSingleton<IEventBus<GetSupportDto>>(provider =>
 //  Usa la misma instancia de `RabbitMQConnection` para el Consumer
 builder.Services.AddSingleton<RabbitMQConsumer>(provider =>
 {
-    var rabbitMQConnection = provider.GetRequiredService<RabbitMQConnection>();
+    var rabbitMQConnection = provider.GetRequiredService<IConnectionRabbbitMQ>();
     return new RabbitMQConsumer(rabbitMQConnection);
 });
 

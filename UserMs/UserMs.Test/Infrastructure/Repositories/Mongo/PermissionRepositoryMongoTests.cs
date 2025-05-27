@@ -13,19 +13,19 @@ using UserMs.Domain.Entities.Permission.ValueObjects;
 using UserMs.Infrastructure.Repositories.PermissionsRepo;
 using Xunit;
 
-namespace UserMs.Test.Infrastructure.Repositories
+namespace UserMs.Test.Infrastructure.Repositories.Mongo
 {
-    public class PermissionRepositoryTests
+    public class PermissionRepositoryMongoTests
     {
-        private Mock<IUserDbContext> _dbContextMock;
+    
         private Mock<IUserDbContextMongo> _mongoContextMock;
         private Mock<IMongoCollection<Permissions>> _mongoCollectionMock;
         private Mock<IMapper> _mapperMock;
         private PermissionRepository _repository;
 
-        public PermissionRepositoryTests()
+        public PermissionRepositoryMongoTests()
         {
-            _dbContextMock = new Mock<IUserDbContext>();
+            
             _mongoContextMock = new Mock<IUserDbContextMongo>();
             _mongoCollectionMock = new Mock<IMongoCollection<Permissions>>();
             _mapperMock = new Mock<IMapper>();
@@ -36,32 +36,28 @@ namespace UserMs.Test.Infrastructure.Repositories
 
             _mongoContextMock.Setup(m => m.Database).Returns(mockDatabase.Object);
 
-            _repository = new PermissionRepository(_dbContextMock.Object, _mongoContextMock.Object, _mapperMock.Object);
+            _repository = new PermissionRepository(_mongoContextMock.Object, _mapperMock.Object);
         }
 
-        [Fact]
-        public void Constructor_ShouldThrowException_WhenDbContextIsNull()
-        {
-            Assert.Throws<ArgumentNullException>(() => new PermissionRepository(null, _mongoContextMock.Object, _mapperMock.Object));
-        }
+      
 
         [Fact]
         public void Constructor_ShouldThrowException_WhenMongoContextIsNull()
         {
-            Assert.Throws<ArgumentNullException>(() => new PermissionRepository(_dbContextMock.Object, null, _mapperMock.Object));
+            Assert.Throws<ArgumentNullException>(() => new PermissionRepository( null, _mapperMock.Object));
         }
 
         [Fact]
         public void Constructor_ShouldThrowException_WhenMongoDatabaseIsNull()
         {
             _mongoContextMock.Setup(m => m.Database).Returns((IMongoDatabase)null);
-            Assert.Throws<ArgumentNullException>(() => new PermissionRepository(_dbContextMock.Object, _mongoContextMock.Object, _mapperMock.Object));
+            Assert.Throws<ArgumentNullException>(() => new PermissionRepository( _mongoContextMock.Object, _mapperMock.Object));
         }
 
         [Fact]
         public void Constructor_ShouldThrowException_WhenMapperIsNull()
         {
-            Assert.Throws<ArgumentNullException>(() => new PermissionRepository(_dbContextMock.Object, _mongoContextMock.Object, null));
+            Assert.Throws<ArgumentNullException>(() => new PermissionRepository( _mongoContextMock.Object, null));
         }
 
         [Fact]

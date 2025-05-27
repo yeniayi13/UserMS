@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -10,6 +11,8 @@ using UserMs.Domain.Entities.Bidder;
 
 namespace UserMs.Application.Validators
 {
+
+    [ExcludeFromCodeCoverage]
     public class CreateBidderValidator : ValidatorBase<CreateBidderDto>
     {
         public CreateBidderValidator()

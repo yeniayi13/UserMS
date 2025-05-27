@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 using MongoDB.Driver;
 using Moq;
 using System;
@@ -9,26 +10,24 @@ using System.Threading.Tasks;
 using UserMs.Commoon.Dtos.Users.Response.Auctioneer;
 using UserMs.Core.Database;
 using UserMs.Domain.Entities.Auctioneer;
-using UserMs.Domain.Entities;
-using UserMs.Domain.Entities.Auctioneer.ValueObjects;
 using UserMs.Domain.Entities.IUser.ValueObjects;
+using UserMs.Domain.Entities;
 using UserMs.Infrastructure.Repositories.Auctioneer;
 using Xunit;
-using Microsoft.EntityFrameworkCore.ChangeTracking;
 
-namespace UserMs.Test.Infrastructure.Repositories
+namespace UserMs.Test.Infrastructure.Repositories.Mongo
 {
-    public class AuctioneerRepositoryTests
+    public class AuctioneerRepositoryMongoTests
     {
-        private Mock<IUserDbContext> _dbContextMock;
+        
         private Mock<IUserDbContextMongo> _mongoContextMock;
         private Mock<IMongoCollection<Auctioneers>> _mongoCollectionMock;
         private Mock<IMapper> _mapperMock;
-        private AuctioneerRepository _repository;
+        private AuctioneerRepositoryMongo _repository;
 
-        public AuctioneerRepositoryTests()
+        public AuctioneerRepositoryMongoTests()
         {
-            _dbContextMock = new Mock<IUserDbContext>();
+          
             _mongoContextMock = new Mock<IUserDbContextMongo>();
             _mongoCollectionMock = new Mock<IMongoCollection<Auctioneers>>();
             _mapperMock = new Mock<IMapper>();
@@ -39,119 +38,31 @@ namespace UserMs.Test.Infrastructure.Repositories
 
             _mongoContextMock.Setup(m => m.Database).Returns(mockDatabase.Object);
 
-           // _repository = new AuctioneerRepository(_dbContextMock.Object, _mongoContextMock.Object, _mapperMock.Object);
+             _repository = new AuctioneerRepositoryMongo( _mongoContextMock.Object, _mapperMock.Object);
         }
 
         // 🔹 Validación del Constructor
-        [Fact]
-        public void Constructor_ShouldThrowException_WhenDbContextIsNull()
-        {
-           // Assert.Throws<ArgumentNullException>(() => new AuctioneerRepository(null, _mongoContextMock.Object, _mapperMock.Object));
-        }
-
+       
         [Fact]
         public void Constructor_ShouldThrowException_WhenMongoContextIsNull()
         {
-          //  Assert.Throws<ArgumentNullException>(() => new AuctioneerRepository(_dbContextMock.Object, null, _mapperMock.Object));
+              Assert.Throws<ArgumentNullException>(() => new AuctioneerRepositoryMongo( null, _mapperMock.Object));
         }
 
         [Fact]
         public void Constructor_ShouldThrowException_WhenMongoDatabaseIsNull()
         {
             _mongoContextMock.Setup(m => m.Database).Returns((IMongoDatabase)null);
-           // Assert.Throws<ArgumentNullException>(() => new AuctioneerRepository(_dbContextMock.Object, _mongoContextMock.Object, _mapperMock.Object));
+             Assert.Throws<ArgumentNullException>(() => new AuctioneerRepositoryMongo( _mongoContextMock.Object, _mapperMock.Object));
         }
 
         [Fact]
         public void Constructor_ShouldThrowException_WhenMapperIsNull()
         {
-           // Assert.Throws<ArgumentNullException>(() => new AuctioneerRepository(_dbContextMock.Object, _mongoContextMock.Object, null));
+             Assert.Throws<ArgumentNullException>(() => new AuctioneerRepositoryMongo( _mongoContextMock.Object, null));
         }
 
-        [Fact]
-        public async Task AddAsync_ShouldAddAuctioneerSuccessfully()
-        {
-            var auctioneer = new Auctioneers
-            {
-                UserId = UserId.Create(Guid.NewGuid()),
-                UserName = UserName.Create("Jose")
-            };
-
-            // Simular `EntityEntry<Auctioneers>`
-            var mockEntityEntry = new Mock<EntityEntry<Auctioneers>>();
-            mockEntityEntry.Setup(e => e.Entity).Returns(auctioneer);
-
-            // Simular `AddAsync`
-            _dbContextMock.Setup(db => db.Auctioneers.AddAsync(auctioneer, default))
-                .ReturnsAsync((EntityEntry<Auctioneers>)null); // EF no devuelve resultado en pruebas
-
-            // Simular `SaveEfContextChanges`
-            _dbContextMock.Setup(db => db.SaveEfContextChanges(It.IsAny<string>(), It.IsAny<CancellationToken>()))
-                .ReturnsAsync(true);
-
-            await _repository.AddAsync(auctioneer);
-
-            // Verificar `AddAsync`
-            _dbContextMock.Verify(db => db.Auctioneers.AddAsync(auctioneer, default), Times.Once);
-
-            // Verificar `SaveEfContextChanges`
-            _dbContextMock.Verify(db => db.SaveEfContextChanges(It.IsAny<string>(), It.IsAny<CancellationToken>()), Times.Once);
-        }
-
-        [Fact]
-        public async Task UpdateAsync_ShouldUpdateAuctioneerSuccessfully()
-        {
-            var auctioneerId = UserId.Create(Guid.NewGuid());
-            var auctionerName = UserName.Create("Updated Name");
-            var auctioneer = new Auctioneers { UserId = auctioneerId, UserName = auctionerName };
-
-            // Simular `Update()`
-            _dbContextMock.Setup(db => db.Auctioneers.Update(auctioneer));
-
-            // Simular `SaveEfContextChanges`
-            _dbContextMock.Setup(db => db.SaveEfContextChanges(It.IsAny<string>(), It.IsAny<CancellationToken>()))
-                .ReturnsAsync(true);
-
-            var result = await _repository.UpdateAsync(auctioneerId, auctioneer);
-
-            // Validar que la entidad fue actualizada correctamente
-            Assert.NotNull(result);
-            Assert.Equal("Updated Name", result.UserName.Value);
-
-            // Verificar `Update()`
-            _dbContextMock.Verify(db => db.Auctioneers.Update(auctioneer), Times.Once);
-
-            // Verificar `SaveEfContextChanges`
-            _dbContextMock.Verify(db => db.SaveEfContextChanges(It.IsAny<string>(), It.IsAny<CancellationToken>()), Times.Once);
-        }
-
-        [Fact]
-        public async Task DeleteAsync_ShouldDeleteAuctioneerSuccessfully()
-        {
-            var auctioneerId = UserId.Create(Guid.NewGuid());
-            var auctionerName = UserName.Create("Jose");
-            var existingAuctioneer = new Auctioneers { UserId = auctioneerId, UserName = auctionerName };
-
-            // Simular `FindAsync`
-            _dbContextMock.Setup(db => db.Auctioneers.FindAsync(auctioneerId))
-                .ReturnsAsync(existingAuctioneer);
-
-            // Simular `SaveEfContextChanges`
-            _dbContextMock.Setup(db => db.SaveEfContextChanges(It.IsAny<string>(), It.IsAny<CancellationToken>()))
-                .ReturnsAsync(true);
-
-            var result = await _repository.DeleteAsync(auctioneerId);
-
-            // Validar que el resultado es el esperado
-            Assert.NotNull(result);
-            Assert.Equal(auctioneerId.Value, result.UserId.Value);
-
-            // Verificar `FindAsync`
-            _dbContextMock.Verify(db => db.Auctioneers.FindAsync(auctioneerId), Times.Once);
-
-            // Verificar `SaveEfContextChanges`
-            _dbContextMock.Verify(db => db.SaveEfContextChanges(It.IsAny<string>(), It.IsAny<CancellationToken>()), Times.Once);
-        }
+        
 
         [Fact]
         public async Task GetAuctioneerByEmailAsync_ShouldReturnNull_WhenAuctioneerNotFound()
@@ -172,9 +83,9 @@ namespace UserMs.Test.Infrastructure.Repositories
             _mapperMock.Setup(m => m.Map<Auctioneers>(It.IsAny<GetAuctioneerDto>()))
                 .Returns((Auctioneers)null); // 🔹 Simula que no hay datos
 
-            /*var result = await _repository.GetAuctioneerByEmailAsync(auctioneerEmail);
+            var result = await _repository.GetAuctioneerByEmailAsync(auctioneerEmail);
 
-            Assert.Null(result); // ✅ Validación final*/
+            Assert.Null(result); // ✅ Validación final
         }
 
         [Fact]
@@ -185,7 +96,7 @@ namespace UserMs.Test.Infrastructure.Repositories
             var auctionerName = UserName.Create("Name");
 
             var auctioneerDto = new GetAuctioneerDto { UserId = Guid.NewGuid(), UserName = "John Doe", UserEmail = auctioneerEmail.Value };
-            var auctioneer = new Auctioneers {UserId = auctioneerDto.UserId,UserName = auctionerName, UserEmail = auctioneerEmail};
+            var auctioneer = new Auctioneers { UserId = auctioneerDto.UserId, UserName = auctionerName, UserEmail = auctioneerEmail };
 
             var mockCursor = new Mock<IAsyncCursor<GetAuctioneerDto>>();
             mockCursor.SetupSequence(c => c.MoveNextAsync(It.IsAny<CancellationToken>()))
@@ -201,12 +112,12 @@ namespace UserMs.Test.Infrastructure.Repositories
 
             _mapperMock.Setup(m => m.Map<Auctioneers>(auctioneerDto)).Returns(auctioneer);
 
-            /*var result = await _repository.GetAuctioneerByEmailAsync(auctioneerEmail);
+            var result = await _repository.GetAuctioneerByEmailAsync(auctioneerEmail);
 
             Assert.NotNull(result);
             Assert.Equal(auctioneerDto.UserId, result.UserId.Value);
             Assert.Equal("Name", result.UserName.Value);
-            Assert.Equal(auctioneerEmail, result.UserEmail);*/
+            Assert.Equal(auctioneerEmail, result.UserEmail);
         }
 
 
@@ -228,10 +139,10 @@ namespace UserMs.Test.Infrastructure.Repositories
             _mapperMock.Setup(m => m.Map<List<Auctioneers>>(It.IsAny<List<GetAuctioneerDto>>()))
                 .Returns(new List<Auctioneers>());
 
-          /*  var result = await _repository.GetAuctioneerAllAsync();
+              var result = await _repository.GetAuctioneerAllAsync();
 
-            Assert.NotNull(result);
-            Assert.Empty(result);*/
+              Assert.NotNull(result);
+              Assert.Empty(result);
         }
 
         [Fact]
@@ -264,22 +175,21 @@ namespace UserMs.Test.Infrastructure.Repositories
                 .ReturnsAsync(mockCursor.Object);
 
             _mapperMock.Setup(m => m.Map<List<Auctioneers>>(auctioneerDtos)).Returns(auctioneerEntities);
+              var result = await _repository.GetAuctioneerAllAsync();
 
-          /*  var result = await _repository.GetAuctioneerAllAsync();
-
-            Assert.NotNull(result);
-            Assert.Equal(2, result.Count);
-            Assert.Equal(auctioneerDtos[0].UserId, result[0].UserId.Value);
-            Assert.Equal("Jose", result[0].UserName.Value);
-            Assert.Equal(auctioneerDtos[1].UserId, result[1].UserId.Value);
-            Assert.Equal("Maria", result[1].UserName.Value);*/
+              Assert.NotNull(result);
+              Assert.Equal(2, result.Count);
+              Assert.Equal(auctioneerDtos[0].UserId, result[0].UserId.Value);
+              Assert.Equal("Jose", result[0].UserName.Value);
+              Assert.Equal(auctioneerDtos[1].UserId, result[1].UserId.Value);
+              Assert.Equal("Maria", result[1].UserName.Value);
         }
 
         // 🔹 Validación de `GetAuctioneerByIdAsync()`
         [Fact]
         public async Task GetAuctioneerByIdAsync_ShouldReturnNull_WhenAuctioneerNotFound()
         {
-            var auctioneerId =UserId.Create(Guid.NewGuid());
+            var auctioneerId = UserId.Create(Guid.NewGuid());
 
             var mockCursor = new Mock<IAsyncCursor<GetAuctioneerDto>>();
             mockCursor.SetupSequence(c => c.MoveNextAsync(It.IsAny<CancellationToken>()))
@@ -292,9 +202,9 @@ namespace UserMs.Test.Infrastructure.Repositories
                     It.IsAny<CancellationToken>()))
                 .ReturnsAsync(mockCursor.Object); // 🔹 Evita que `FindAsync()` retorne `null`
 
-           /* var result = await _repository.GetAuctioneerByIdAsync(auctioneerId);
+             var result = await _repository.GetAuctioneerByIdAsync(auctioneerId);
 
-            Assert.Null(result);*/
+             Assert.Null(result);
         }
 
         [Fact]
@@ -302,7 +212,7 @@ namespace UserMs.Test.Infrastructure.Repositories
         {
             var auctioneerId = UserId.Create(Guid.NewGuid());
             var auctioneerName = UserName.Create("Jose");
-            var auctioneerDto = new GetAuctioneerDto { UserId = auctioneerId.Value, UserName = auctioneerName.Value};
+            var auctioneerDto = new GetAuctioneerDto { UserId = auctioneerId.Value, UserName = auctioneerName.Value };
             var auctioneerEntity = new Auctioneers { UserId = auctioneerId.Value, UserName = auctioneerName };
 
             var mockCursor = new Mock<IAsyncCursor<GetAuctioneerDto>>();
@@ -319,11 +229,11 @@ namespace UserMs.Test.Infrastructure.Repositories
 
             _mapperMock.Setup(m => m.Map<Auctioneers>(auctioneerDto)).Returns(auctioneerEntity);
 
-          /*  var result = await _repository.GetAuctioneerByIdAsync(auctioneerId);
+              var result = await _repository.GetAuctioneerByIdAsync(auctioneerId);
 
-            Assert.NotNull(result);
-            Assert.Equal(auctioneerId.Value, result.UserId.Value);
-            Assert.Equal("Jose", result.UserName.Value);*/
+              Assert.NotNull(result);
+              Assert.Equal(auctioneerId.Value, result.UserId.Value);
+              Assert.Equal("Jose", result.UserName.Value);
         }
     }
 }

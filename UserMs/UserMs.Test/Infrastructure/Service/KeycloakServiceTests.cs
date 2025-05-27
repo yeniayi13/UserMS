@@ -21,7 +21,7 @@ namespace UserMs.Test.Infrastructure.Service
 {
     public class KeycloakServiceTests
     {
-       /* private HttpClient _httpClient;
+        private HttpClient _httpClient;
         private Mock<IHttpContextAccessor> _httpContextAccessorMock;
         private Mock<IOptions<HttpClientUrl>> _httpClientUrlMock;
         private KeycloakService _keycloakService;
@@ -804,7 +804,7 @@ namespace UserMs.Test.Infrastructure.Service
             await Assert.ThrowsAsync<KeycloakException>(() => _keycloakService.AssignClientRoleToUser(userId, roleName));
         }
 
-        /*[Fact]
+        [Fact]
         public async Task AssignClientRoleToUser_ShouldThrowException_WhenTimeoutOccurs()
         {
             var userId = Guid.NewGuid();
@@ -817,7 +817,7 @@ namespace UserMs.Test.Infrastructure.Service
             };
             _keycloakService = new KeycloakService(_httpClient, _httpContextAccessorMock.Object, _httpClientUrlMock.Object);
 
-            await Assert.ThrowsAsync<TaskCanceledException>(() => _keycloakService.AssignClientRoleToUser(userId, roleName));
+            await Assert.ThrowsAsync<Exception>(() => _keycloakService.AssignClientRoleToUser(userId, roleName));
         }
         
         [Fact]
@@ -1345,20 +1345,60 @@ namespace UserMs.Test.Infrastructure.Service
         // Pruebas para `SendPasswordResetEmailAsync`
 
 
-        [Fact]
+       /* [Fact]
         public async Task SendPasswordResetEmailAsync_ShouldReturnTrue_WhenSuccessful()
         {
-            var userId = "user123";
-            var mockResponse = new HttpResponseMessage(HttpStatusCode.OK); // 🔹 Simula éxito
+            // ✅ Datos de prueba
+            var userEmail = "user@example.com";
+            var userId = Guid.NewGuid();
+
+            // ✅ Simulación de la respuesta HTTP con JSON válido
+            var mockResponse = new HttpResponseMessage(HttpStatusCode.OK)
+            {
+                Content = new StringContent("[\"UPDATE_PASSWORD\"]", Encoding.UTF8, "application/json") // 🔹 JSON válido en formato de array
+            };
             var fakeHandler = new MockHttpMessageHandler(mockResponse);
 
             _httpClient = new HttpClient(fakeHandler);
             _keycloakService = new KeycloakService(_httpClient, _httpContextAccessorMock.Object, _httpClientUrlMock.Object);
 
-            var result = await _keycloakService.SendPasswordResetEmailAsync(userId);
+            // ✅ Ejecución del método
+            var result = await _keycloakService.SendPasswordResetEmailAsync(userEmail);
 
-            Assert.True(result); // 🔹 Verifica que devuelve `true`
+            // ✅ Validaciones
+            Assert.True(result);
+        }*/
+
+        // ✅ Prueba: Error cuando el `userEmail` es nulo o vacío
+        [Fact]
+        public async Task SendPasswordResetEmailAsync_ShouldThrowException_WhenEmailIsNullOrEmpty()
+        {
+            _httpClient = new HttpClient();
+            _keycloakService = new KeycloakService(_httpClient, _httpContextAccessorMock.Object, _httpClientUrlMock.Object);
+
+            await Assert.ThrowsAsync<ArgumentNullException>(() => _keycloakService.SendPasswordResetEmailAsync(""));
         }
+
+       
+
+        // ✅ Prueba: Error cuando la solicitud `PUT` falla
+        [Fact]
+        public async Task SendPasswordResetEmailAsync_ShouldThrowHttpRequestException_WhenPutFails()
+        {
+            var userEmail = "user@example.com";
+            var userId = Guid.NewGuid();
+            var mockErrorResponse = new HttpResponseMessage(HttpStatusCode.InternalServerError)
+            {
+                Content = new StringContent("Error interno de servidor")
+            };
+            var fakeHandler = new MockHttpMessageHandler(mockErrorResponse);
+
+            _httpClient = new HttpClient(fakeHandler);
+            _keycloakService = new KeycloakService(_httpClient, _httpContextAccessorMock.Object, _httpClientUrlMock.Object);
+
+            await Assert.ThrowsAsync<KeycloakException>(() => _keycloakService.SendPasswordResetEmailAsync(userEmail));
+        }
+
 
 
         [Fact]
@@ -1374,7 +1414,7 @@ namespace UserMs.Test.Infrastructure.Service
             _httpClient = new HttpClient(fakeHandler);
             _keycloakService = new KeycloakService(_httpClient, _httpContextAccessorMock.Object, _httpClientUrlMock.Object);
 
-            await Assert.ThrowsAsync<HttpRequestException>(() => _keycloakService.SendPasswordResetEmailAsync(userId));
+            await Assert.ThrowsAsync<KeycloakException>(() => _keycloakService.SendPasswordResetEmailAsync(userId));
         }
 
         [Fact]
@@ -1408,7 +1448,7 @@ namespace UserMs.Test.Infrastructure.Service
             _httpClient = new HttpClient(fakeHandler);
             _keycloakService = new KeycloakService(_httpClient, _httpContextAccessorMock.Object, _httpClientUrlMock.Object);
 
-            await Assert.ThrowsAsync<HttpRequestException>(() => _keycloakService.SendPasswordResetEmailAsync(userId));
+            await Assert.ThrowsAsync<KeycloakException>(() => _keycloakService.SendPasswordResetEmailAsync(userId));
         }
 
         [Fact]
@@ -1424,7 +1464,7 @@ namespace UserMs.Test.Infrastructure.Service
             _httpClient = new HttpClient(fakeHandler);
             _keycloakService = new KeycloakService(_httpClient, _httpContextAccessorMock.Object, _httpClientUrlMock.Object);
 
-            await Assert.ThrowsAsync<HttpRequestException>(() => _keycloakService.SendPasswordResetEmailAsync(userId));
+            await Assert.ThrowsAsync<KeycloakException>(() => _keycloakService.SendPasswordResetEmailAsync(userId));
         }
 
         [Fact]
@@ -1440,7 +1480,7 @@ namespace UserMs.Test.Infrastructure.Service
             _httpClient = new HttpClient(fakeHandler);
             _keycloakService = new KeycloakService(_httpClient, _httpContextAccessorMock.Object, _httpClientUrlMock.Object);
 
-            await Assert.ThrowsAsync<HttpRequestException>(() => _keycloakService.SendPasswordResetEmailAsync(userId));
+            await Assert.ThrowsAsync<KeycloakException>(() => _keycloakService.SendPasswordResetEmailAsync(userId));
         }
 
         [Fact]
@@ -1456,7 +1496,7 @@ namespace UserMs.Test.Infrastructure.Service
             _httpClient = new HttpClient(fakeHandler);
             _keycloakService = new KeycloakService(_httpClient, _httpContextAccessorMock.Object, _httpClientUrlMock.Object);
 
-            await Assert.ThrowsAsync<HttpRequestException>(() => _keycloakService.SendPasswordResetEmailAsync(userId));
+            await Assert.ThrowsAsync<KeycloakException>(() => _keycloakService.SendPasswordResetEmailAsync(userId));
         }
         [Fact]
         public async Task SendPasswordResetEmailAsync_ShouldThrowException_WhenUserIdIsNull()
@@ -1489,13 +1529,13 @@ namespace UserMs.Test.Infrastructure.Service
             _httpClient = new HttpClient(fakeHandler);
             _keycloakService = new KeycloakService(_httpClient, _httpContextAccessorMock.Object, _httpClientUrlMock.Object);
 
-            await Assert.ThrowsAsync<HttpRequestException>(() => _keycloakService.SendPasswordResetEmailAsync(userId));
+            await Assert.ThrowsAsync<KeycloakException>(() => _keycloakService.SendPasswordResetEmailAsync(userId));
         }
 
         
 
        
-      */
+      
 
 
     }

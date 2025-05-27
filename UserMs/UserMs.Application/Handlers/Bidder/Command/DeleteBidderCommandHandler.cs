@@ -98,16 +98,10 @@ namespace UserMs.Application.Handlers.Bidder.Command
 
                 return request.BidderId;
             }
-            catch (UserNotFoundException ex)
-            {
-               
-                throw;
-            }
-          
             catch (Exception ex)
             {
-                
-                throw new ApplicationException("Ocurrió un error inesperado al eliminar el postor.", ex);
+                ExceptionHandlerService.HandleException(ex);
+                throw;
             }
         }
     }

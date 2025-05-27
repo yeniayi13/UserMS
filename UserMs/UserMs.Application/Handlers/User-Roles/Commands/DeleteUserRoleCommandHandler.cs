@@ -80,15 +80,10 @@ namespace UserMs.Application.Handlers.User_Roles.Commands
 
                 return userRole.UserId;
             }
-            catch (UserNotFoundException ex)
-            {
-                
-                throw;
-            }
             catch (Exception ex)
             {
-               
-                throw new ApplicationException("Ocurrió un error inesperado al eliminar el rol del usuario.", ex);
+                ExceptionHandlerService.HandleException(ex);
+                throw;
             }
         }
     }

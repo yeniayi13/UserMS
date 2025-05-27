@@ -39,15 +39,7 @@ namespace UserMs.Application.Handlers.Bidder.Queries
                     Console.WriteLine("No se encontraron postores.");
                     return new List<GetBidderDto>(); // Retornar lista vacía en lugar de `null`
                 }
-                var activity = new Domain.Entities.ActivityHistory.ActivityHistory(
-                    Guid.NewGuid(),
-                    request.BidderId,
-                    "Busco Postores",
-                    DateTime.UtcNow
-                );
-                await _activityHistoryRepository.AddAsync(activity);
-                var activityDto = _mapper.Map<GetActivityHistoryDto>(activity);
-                await _eventBusActivity.PublishMessageAsync(activityDto, "activityHistoryQueue", "ACTIVITY_CREATED");
+              
                 return _mapper.Map<List<GetBidderDto>>(bidders);
                 
             }

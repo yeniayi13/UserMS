@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace UserMs.Commoon.Dtos.Users.Request.Bidder
@@ -14,7 +15,8 @@ namespace UserMs.Commoon.Dtos.Users.Request.Bidder
         public string UserLastName { get; set; }
         public string UserPhone { get; set; }
         public string UserAddress { get; set; }
-      //  public string UserPassword { get; set; }
+        [JsonIgnore]
+        public string UserPassword { get; set; }
         public string BidderDni { get;  set; }
         public DateOnly BidderBirthday { get;  set; }
 

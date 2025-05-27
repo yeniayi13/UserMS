@@ -5,15 +5,16 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using UserMs.Core.RabbitMQ;
 using UserMs.Infrastructure.RabbitMQ.Consumer;
 
 namespace UserMs.Infrastructure.RabbitMQ.Connection
 {
     public class RabbitMQBackgroundService : BackgroundService
     {
-        private readonly RabbitMQConsumer _rabbitMQConsumer;
+        private readonly IRabbitMQConsumer _rabbitMQConsumer;
 
-        public RabbitMQBackgroundService(RabbitMQConsumer rabbitMQConsumer)
+        public RabbitMQBackgroundService(IRabbitMQConsumer rabbitMQConsumer)
         {
             _rabbitMQConsumer = rabbitMQConsumer;
         }

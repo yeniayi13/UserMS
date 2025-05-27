@@ -15,6 +15,6 @@ namespace UserMs.Core.Repositories.RolesRepo
         Task<List<Roles>> GetRolesAllQueryAsync();
         Task<Roles?> GetRolesByIdQuery(Guid userId);
         Task<Roles?> GetRolesByNameQuery(string roleName);
-        Task<Roles?> DeleteRolesAsync(RoleId roleId);
+       
     }
 }

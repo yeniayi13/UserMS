@@ -23,7 +23,8 @@ namespace UserMs.Infrastructure.Repositories
         public UsersRepository(IUserDbContext dbContext,IMapper mapper)
         {
             _dbContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
-  
+            _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
+
         }
 
         public async Task AddAsync(Domain.Entities.UserEntity.Users users)

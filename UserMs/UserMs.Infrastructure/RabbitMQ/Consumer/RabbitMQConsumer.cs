@@ -21,13 +21,14 @@ using UserMs.Commoon.Dtos.Users.Response.Bidder;
 using UserMs.Commoon.Dtos.Users.Response.Role_Permission;
 using UserMs.Commoon.Dtos.Users.Response.Support;
 using UserMs.Commoon.Dtos.Users.Response.UserRole;
+using UserMs.Core.RabbitMQ;
 
 namespace UserMs.Infrastructure.RabbitMQ.Consumer
 {
-    public class RabbitMQConsumer
+    public class RabbitMQConsumer:IRabbitMQConsumer
     {
-        private readonly RabbitMQConnection _rabbitMQConnection;
-        private readonly MongoClient _mongoClient;
+        private readonly IConnectionRabbbitMQ _rabbitMQConnection;
+        private readonly IMongoClient _mongoClient;
         private readonly IMongoDatabase _database;
         private readonly IMongoCollection<GetUsersDto> _collection;
         private readonly IMongoCollection<GetSupportDto> _collectionS;
@@ -40,7 +41,10 @@ namespace UserMs.Infrastructure.RabbitMQ.Consumer
 
         /*private readonly IMongoCollection<UpdateUsersDto> _collectionU;
         private readonly IMongoCollection<GetUsersDto> _collectionG;*/
-        public RabbitMQConsumer(RabbitMQConnection rabbitMQConnection)
+        
+        
+        
+        public RabbitMQConsumer(IConnectionRabbbitMQ rabbitMQConnection)
         {
             _rabbitMQConnection = rabbitMQConnection;
 
@@ -294,7 +298,7 @@ namespace UserMs.Infrastructure.RabbitMQ.Consumer
 
                 case "AUCTIONEER_DELETED":
                     var deleteAuctioneerFilter =
-                        Builders<GetAuctioneerDto>.Filter.Eq("AuctioneerUserId", eventMessage.Data.UserId);
+                        Builders<GetAuctioneerDto>.Filter.Eq("UserId", eventMessage.Data.UserId);
                     await _collectionA.DeleteOneAsync(deleteAuctioneerFilter);
                     Console.WriteLine($"Auctioneer eliminado en MongoDB con ID: {eventMessage.Data.UserId}");
                     break;

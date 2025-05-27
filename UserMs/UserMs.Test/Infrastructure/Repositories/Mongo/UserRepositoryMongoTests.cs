@@ -12,22 +12,22 @@ using UserMs.Core.Database;
 using UserMs.Domain.Entities.IUser.ValueObjects;
 using UserMs.Domain.Entities.UserEntity;
 using UserMs.Domain.Entities;
-using UserMs.Infrastructure.Repositories;
 using Xunit;
+using UserMs.Infrastructure.Repositories;
+using UserMs.Infrastructure.Repositories.Users;
 
-namespace UserMs.Test.Infrastructure.Repositories
+namespace UserMs.Test.Infrastructure.Repositories.Mongo
 {
-    public class UsersRepositoryTests
+    public class UserRepositoryMongoTests
     {
-        private Mock<IUserDbContext> _dbContextMock;
+       
         private Mock<IUserDbContextMongo> _mongoContextMock;
         private Mock<IMongoCollection<Users>> _mongoCollectionMock;
         private Mock<IMapper> _mapperMock;
-        private UsersRepository _repository;
-
-        public UsersRepositoryTests()
+        private UsersRepositoryMongo _repository;
+        public UserRepositoryMongoTests()
         {
-            _dbContextMock = new Mock<IUserDbContext>();
+            
             _mongoContextMock = new Mock<IUserDbContextMongo>();
             _mongoCollectionMock = new Mock<IMongoCollection<Users>>();
             _mapperMock = new Mock<IMapper>();
@@ -38,26 +38,22 @@ namespace UserMs.Test.Infrastructure.Repositories
 
             _mongoContextMock.Setup(m => m.Database).Returns(mockDatabase.Object);
 
-          //  _repository = new UsersRepository(_dbContextMock.Object, _mongoContextMock.Object, _mapperMock.Object);
+              _repository = new UsersRepositoryMongo( _mongoContextMock.Object, _mapperMock.Object);
         }
 
         // 🔹 Validación del Constructor
-        [Fact]
-        public void Constructor_ShouldThrowException_WhenDbContextIsNull()
-        {
-            //Assert.Throws<ArgumentNullException>(() => new UsersRepository(null, _mongoContextMock.Object, _mapperMock.Object));
-        }
+        
 
         [Fact]
         public void Constructor_ShouldThrowException_WhenMongoContextIsNull()
         {
-          //  Assert.Throws<ArgumentNullException>(() => new UsersRepository(_dbContextMock.Object, null, _mapperMock.Object));
+              Assert.Throws<ArgumentNullException>(() => new UsersRepository( null, _mapperMock.Object));
         }
 
         [Fact]
         public void Constructor_ShouldThrowException_WhenMapperIsNull()
         {
-          //  Assert.Throws<ArgumentNullException>(() => new UsersRepository(_dbContextMock.Object, _mongoContextMock.Object, null));
+              Assert.Throws<ArgumentNullException>(() => new UsersRepositoryMongo(_mongoContextMock.Object, null));
         }
 
         // 🔹 Validación de `GetUsersAsync()`
@@ -78,10 +74,10 @@ namespace UserMs.Test.Infrastructure.Repositories
             _mapperMock.Setup(m => m.Map<List<Users>>(It.IsAny<List<GetUsersDto>>()))
                 .Returns(new List<Users>());
 
-          /*  var result = await _repository.GetUsersAsync();
+              var result = await _repository.GetUsersAsync();
 
-            Assert.NotNull(result);
-            Assert.Empty(result);*/
+              Assert.NotNull(result);
+              Assert.Empty(result);
         }
         [Fact]
         public async Task GetUsersAsync_ShouldReturnUsers_WhenFound()
@@ -112,14 +108,14 @@ namespace UserMs.Test.Infrastructure.Repositories
 
             _mapperMock.Setup(m => m.Map<List<Users>>(usersDtos)).Returns(usersEntities);
 
-           /* var result = await _repository.GetUsersAsync();
+             var result = await _repository.GetUsersAsync();
 
-            Assert.NotNull(result);
-            Assert.Equal(2, result.Count);
-            Assert.Equal(usersDtos[0].UserId, result[0].UserId.Value);
-            Assert.Equal("Maria", result[0].UserName.Value);
-            Assert.Equal(usersDtos[1].UserId, result[1].UserId.Value);
-            Assert.Equal("Jose", result[1].UserName.Value);*/
+             Assert.NotNull(result);
+             Assert.Equal(2, result.Count);
+             Assert.Equal(usersDtos[0].UserId, result[0].UserId.Value);
+             Assert.Equal("Maria", result[0].UserName.Value);
+             Assert.Equal(usersDtos[1].UserId, result[1].UserId.Value);
+             Assert.Equal("Jose", result[1].UserName.Value);
         }
 
 
@@ -144,11 +140,11 @@ namespace UserMs.Test.Infrastructure.Repositories
 
             _mapperMock.Setup(m => m.Map<Users>(userDto)).Returns(userEntity);
 
-           /* var result = await _repository.GetUsersById(userId);
+             var result = await _repository.GetUsersById(userId);
 
-            Assert.NotNull(result);
-            Assert.Equal(userId, result.UserId.Value);
-            Assert.Equal("Jose", result.UserName.Value);*/
+             Assert.NotNull(result);
+             Assert.Equal(userId, result.UserId.Value);
+             Assert.Equal("Jose", result.UserName.Value);
         }
 
         [Fact]
@@ -170,95 +166,67 @@ namespace UserMs.Test.Infrastructure.Repositories
             _mapperMock.Setup(m => m.Map<Users>(It.IsAny<GetUsersDto>()))
                 .Returns((Users)null); //  Simula que no hay usuario encontrado
 
-           /* var result = await _repository.GetUsersById(userId);
+             var result = await _repository.GetUsersById(userId);
 
-            Assert.Null(result); //  Validación final*/
+             Assert.Null(result); //  Validación final
         }
 
-        //  Validación de `AddAsync()`
         [Fact]
-        public async Task AddAsync_ShouldAddUserSuccessfully()
+        public async Task GetUsersByEmail_ShouldReturnUser_WhenUserExists()
         {
-            var user = new Users
-            {
-                UserId = UserId.Create(Guid.NewGuid()),
-                UserName = UserName.Create("New User")
-            };
+            var userEmail = "user@example.com";
+            var userDto = new GetUsersDto { UserId = Guid.NewGuid(), UserEmail = userEmail, UserName = "Test User" };
 
-            var mockEntityEntry = new Mock<EntityEntry<Users>>();
-            mockEntityEntry.Setup(e => e.Entity).Returns(user);
+            var mockCursor = new Mock<IAsyncCursor<GetUsersDto>>();
+            mockCursor.SetupSequence(c => c.MoveNextAsync(It.IsAny<CancellationToken>()))
+                .ReturnsAsync(true)
+                .ReturnsAsync(false);
+            mockCursor.SetupGet(c => c.Current).Returns(new List<GetUsersDto> { userDto });
 
-            _dbContextMock.Setup(db => db.Users.AddAsync(user, default))
-                .ReturnsAsync((EntityEntry<Users>)null);
+            _mongoCollectionMock.Setup(c => c.FindAsync(
+                It.IsAny<FilterDefinition<Domain.Entities.UserEntity.Users>>(),
+                It.IsAny<FindOptions<Domain.Entities.UserEntity.Users, GetUsersDto>>(),
+                It.IsAny<CancellationToken>()))
+                .ReturnsAsync(mockCursor.Object);
 
-            _dbContextMock.Setup(db => db.SaveEfContextChanges(It.IsAny<string>(), It.IsAny<CancellationToken>()))
-                .ReturnsAsync(true);
+            _mapperMock.Setup(m => m.Map<Domain.Entities.UserEntity.Users>(userDto))
+                .Returns(new Domain.Entities.UserEntity.Users
+                {
+                    UserId = UserId.Create(userDto.UserId),
+                    UserEmail = UserEmail.Create(userDto.UserEmail),
+                    UserName = UserName.Create(userDto.UserName)
+                });
 
-            await _repository.AddAsync(user);
+            var result = await _repository.GetUsersByEmail(userEmail);
 
-            _dbContextMock.Verify(db => db.Users.AddAsync(user, default), Times.Once);
-            _dbContextMock.Verify(db => db.SaveEfContextChanges(It.IsAny<string>(), It.IsAny<CancellationToken>()), Times.Once);
-        }
-
-        // 🔹 Validación de `UpdateAsync()`
-        [Fact]
-        public async Task UpdateUsersAsync_ShouldUpdateUserSuccessfully()
-        {
-            var userId = UserId.Create(Guid.NewGuid());
-            var userName = UserName.Create("Updated User");
-            var userEmail = UserEmail.Create("updated@example.com");
-
-            var user = new Users
-            {
-                UserId = userId,
-                UserName = userName,
-                UserEmail = userEmail
-            };
-
-            // Simular `Update()`
-            _dbContextMock.Setup(db => db.Users.Update(user));
-
-            // Simular `SaveEfContextChanges`
-            _dbContextMock.Setup(db => db.SaveEfContextChanges(It.IsAny<string>(), It.IsAny<CancellationToken>()))
-                .ReturnsAsync(true);
-
-            var result = await _repository.UpdateUsersAsync(userId, user);
-
-            // ✅ Validaciones
             Assert.NotNull(result);
-            Assert.Equal("Updated User", result.UserName.Value);
-            Assert.Equal("updated@example.com", result.UserEmail.Value);
-            Assert.Equal(userId.Value, result.UserId.Value);
-
-            // ✅ Verificaciones
-            _dbContextMock.Verify(db => db.Users.Update(user), Times.Once);
-            _dbContextMock.Verify(db => db.SaveEfContextChanges(It.IsAny<string>(), It.IsAny<CancellationToken>()), Times.Once);
+            Assert.Equal(userEmail, result.UserEmail.Value);
+            Assert.Equal("Test User", result.UserName.Value);
         }
 
+        // ✅ Prueba: `GetUsersByEmail()` cuando el usuario no existe
         [Fact]
-        public async Task DeleteUsersAsync_ShouldDeleteUserSuccessfully()
+        public async Task GetUsersByEmail_ShouldReturnNull_WhenUserNotFound()
         {
-            var userId = UserId.Create(Guid.NewGuid());
-            var existingUser = new Users { UserId = userId, UserName = UserName.Create("John Doe") };
+            var userEmail = "user@example.com";
 
-            // Simular `FindAsync()`
-            _dbContextMock.Setup(db => db.Users.FindAsync(userId))
-                .ReturnsAsync(existingUser);
+            var mockCursor = new Mock<IAsyncCursor<GetUsersDto>>();
+            mockCursor.SetupSequence(c => c.MoveNextAsync(It.IsAny<CancellationToken>()))
+                .ReturnsAsync(false);
+            mockCursor.SetupGet(c => c.Current).Returns(new List<GetUsersDto>());
 
-            // Simular `SaveEfContextChanges()`
-            _dbContextMock.Setup(db => db.SaveEfContextChanges(It.IsAny<string>(), It.IsAny<CancellationToken>()))
-                .ReturnsAsync(true);
+            _mongoCollectionMock.Setup(c => c.FindAsync(
+                It.IsAny<FilterDefinition<Domain.Entities.UserEntity.Users>>(),
+                It.IsAny<FindOptions<Domain.Entities.UserEntity.Users, GetUsersDto>>(),
+                It.IsAny<CancellationToken>()))
+                .ReturnsAsync(mockCursor.Object);
 
-            var result = await _repository.DeleteUsersAsync(userId);
+            var result = await _repository.GetUsersByEmail(userEmail);
 
-            //  Validaciones
-            Assert.NotNull(result);
-            Assert.Equal(userId.Value, result.UserId.Value);
-            Assert.Equal("John Doe", result.UserName.Value);
-
-            //  Verificaciones
-            _dbContextMock.Verify(db => db.Users.FindAsync(userId), Times.Once);
-            _dbContextMock.Verify(db => db.SaveEfContextChanges(It.IsAny<string>(), It.IsAny<CancellationToken>()), Times.Once);
+            Assert.Null(result);
         }
+
+
+
     }
 }

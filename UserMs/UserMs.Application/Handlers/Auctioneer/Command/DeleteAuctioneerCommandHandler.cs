@@ -96,15 +96,10 @@ namespace UserMs.Application.Handlers.Auctioneer.Command
 
                 return request.AuctioneerId;
             }
-            catch (UserNotFoundException ex)
-            {
-
-                throw;
-            }
             catch (Exception ex)
             {
-
-                throw new ApplicationException("Ocurrió un error al eliminar el subastador.", ex);
+                ExceptionHandlerService.HandleException(ex);
+                throw;
             }
         }
     }

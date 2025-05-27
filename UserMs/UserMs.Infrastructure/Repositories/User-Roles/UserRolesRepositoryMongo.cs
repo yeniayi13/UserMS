@@ -16,7 +16,7 @@ namespace UserMs.Infrastructure.Repositories.User_Roles
 {
     public class UserRolesRepositoryMongo : IUserRoleRepositoryMongo
     {
-
+        
     
         private readonly IMongoCollection<GetUserRoleDto> _collection;
         private readonly IMapper _mapper;

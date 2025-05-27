@@ -16,6 +16,7 @@ using UserMs.Core.Repositories.RolesRepo;
 using UserMs.Domain.Entities.Role_Permission;
 using UserMs.Domain.Entities.Role_Permission.ValueObjects;
 using UserMs.Domain.Entities.UserEntity;
+using UserMs.Infrastructure.Exceptions;
 
 namespace UserMs.Application.Handlers.Roles_Permission.Commands
 {
@@ -88,8 +89,8 @@ namespace UserMs.Application.Handlers.Roles_Permission.Commands
             }
             catch (Exception ex)
             {
-                
-                throw new ApplicationException("Ocurrió un error al crear el permiso de rol.", ex);
+                ExceptionHandlerService.HandleException(ex);
+                throw;
             }
         }
     }

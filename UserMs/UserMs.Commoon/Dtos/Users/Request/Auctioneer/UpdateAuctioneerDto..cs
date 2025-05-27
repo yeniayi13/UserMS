@@ -15,6 +15,7 @@ namespace UserMs.Commoon.Dtos.Users.Request.Auctioneer
         public string UserPhone { get; set; }
         public string UserAddress { get; set; }
         
+
         //public string UserPassword { get; set; }
 
         public string AuctioneerDni { get;  set; }

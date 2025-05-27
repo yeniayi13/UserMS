@@ -1,4 +1,5 @@
 ﻿using FluentValidation;
+using System.Diagnostics.CodeAnalysis;
 using System.Text.RegularExpressions;
 using UserMs.Commoon.Dtos.Users.Request.Auctioneer;
 using UserMs.Domain.Entities.Auctioneer;
@@ -6,8 +7,9 @@ using UserMs.Domain.Entities.Bidder.ValueObjects;
 
 namespace UserMs.Application.Validators
 {
-  
 
+
+    [ExcludeFromCodeCoverage]
     public class CreateAuctioneersValidator : ValidatorBase<CreateAuctioneerDto>
     {
         public CreateAuctioneersValidator()

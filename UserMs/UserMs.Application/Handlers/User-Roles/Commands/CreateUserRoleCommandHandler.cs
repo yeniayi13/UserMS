@@ -17,6 +17,7 @@ using UserMs.Core.Repositories.UserRoleRepo;
 using UserMs.Core.Service.Keycloak;
 using UserMs.Domain.User_Roles;
 using UserMs.Domain.User_Roles.ValueObjects;
+using UserMs.Infrastructure.Exceptions;
 using UserMs.Infrastructure.RabbitMQ.Consumer;
 
 namespace UserMs.Application.Handlers.User_Roles.Commands
@@ -117,15 +118,10 @@ namespace UserMs.Application.Handlers.User_Roles.Commands
 
                 return userRole.UserRoleId;
             }
-            catch (InvalidOperationException ex)
-            {
-              
-                throw;
-            }
             catch (Exception ex)
             {
-                
-                throw new ApplicationException("Ocurrió un error inesperado al asignar un rol al usuario.", ex);
+                ExceptionHandlerService.HandleException(ex);
+                throw;
             }
         }
     }

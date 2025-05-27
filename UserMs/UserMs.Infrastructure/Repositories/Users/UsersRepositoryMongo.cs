@@ -38,7 +38,7 @@ namespace UserMs.Infrastructure.Repositories.Users
 
         public async Task<List<Domain.Entities.UserEntity.Users>> GetUsersAsync()
         {
-            var projection = Builders<Domain.Entities.UserEntity.Users>.Projection.Exclude("_id"); // Excluir _id
+            var projection = Builders<Domain.Entities.UserEntity.Users>.Projection.Exclude("_id").Exclude("UserPassword").Exclude("UserAvailable"); // Excluir _id
 
             Console.WriteLine("Consulta en proceso...");
 
@@ -50,7 +50,7 @@ namespace UserMs.Infrastructure.Repositories.Users
 
             if (usersDto == null || usersDto.Count == 0)
             {
-                Console.WriteLine("No se encontraron categorías.");
+                Console.WriteLine("No se encontraron usuarios.");
                 return new List<Domain.Entities.UserEntity.Users>(); // Retorna una lista vacía en lugar de `null` para evitar errores
             }
 
@@ -69,7 +69,7 @@ namespace UserMs.Infrastructure.Repositories.Users
 
             // Excluir el campo _id de la consulta
             var projection = Builders<Domain.Entities.UserEntity.Users>.Projection
-                .Exclude("_id");
+                .Exclude("_id").Exclude("UserPassword").Exclude("UserAvailable");
 
             // Ejecutar la consulta en MongoDB y proyectar al DTO
             var userDto = await _collection
@@ -94,7 +94,7 @@ namespace UserMs.Infrastructure.Repositories.Users
 
             // Excluir el campo _id de la consulta
             var projection = Builders<Domain.Entities.UserEntity.Users>.Projection
-                .Exclude("_id");
+                .Exclude("_id").Exclude("UserPassword").Exclude("UserAvailable");
 
             // Ejecutar la consulta en MongoDB y proyectar al DTO
             var userDto = await _collection

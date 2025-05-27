@@ -20,6 +20,7 @@ using UserMs.Controllers;
 using UserMs.Domain.Entities.Auctioneer.ValueObjects;
 using UserMs.Domain.Entities.IUser.ValueObjects;
 using Xunit;
+using UserMs.Commoon.Dtos.Users.Response.Bidder;
 
 namespace UserMs.Test.Controller
 {
@@ -151,15 +152,20 @@ namespace UserMs.Test.Controller
          
             var auctionerName = UserName.Create("Jose");
             var existingAuctioneer = new Auctioneers { UserId = auctioneerId, UserName = auctionerName };
+            var dto = new GetAuctioneerDto
+            {
+                UserId = existingAuctioneer.UserId.Value,
+                UserName = existingAuctioneer.UserName.Value,
 
+            };
             _mockMediator.Setup(m => m.Send(It.IsAny<UpdateAuctioneerCommand>(), default))
-                .ReturnsAsync(existingAuctioneer);
+                .ReturnsAsync(dto);
 
             var result = await _controller.UpdateAuctioneer(auctioneerId, auctioneerDto) as OkObjectResult;
 
             Assert.NotNull(result);
             Assert.Equal(200, result.StatusCode);
-            Assert.Equal(existingAuctioneer, result.Value); // Comparación correcta del objeto Auctioneers
+            Assert.Equal(dto, result.Value); // Comparación correcta del objeto Auctioneers
         }
 
         [Fact]

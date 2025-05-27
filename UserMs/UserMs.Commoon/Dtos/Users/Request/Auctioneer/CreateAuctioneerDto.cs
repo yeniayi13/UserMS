@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace UserMs.Commoon.Dtos.Users.Request.Auctioneer
@@ -17,6 +18,7 @@ namespace UserMs.Commoon.Dtos.Users.Request.Auctioneer
         //public Guid AuctioneerUserId { get;  set; }
         public string AuctioneerDni { get;  set; }
         public DateOnly AuctioneerBirthday { get;  set; }
+        [JsonIgnore]
         public bool AuctioneerDelete { get; set; } = false;
     }
 }

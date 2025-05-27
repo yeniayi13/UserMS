@@ -20,15 +20,14 @@ namespace UserMs.Infrastructure.Repositories.PermissionsRepo
     public class PermissionRepository : IPermissionRepositoryMongo
     {
 
-        private readonly IUserDbContext _dbContext;
+     
         private readonly IMongoCollection<Permissions> _collection;
         private readonly IMapper _mapper;
 
 
-        public PermissionRepository(IUserDbContext dbContext, IUserDbContextMongo context, IMapper mapper)
+        public PermissionRepository( IUserDbContextMongo context, IMapper mapper)
         {
 
-            _dbContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
            
             if (context == null)
             {

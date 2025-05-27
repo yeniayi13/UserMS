@@ -19,7 +19,7 @@ namespace UserMs.Infrastructure.Repositories.Bidders
         private readonly IMongoCollection<Domain.Entities.Bidder.Bidders> _collection;
         private readonly IMapper _mapper;
 
-        public BidderRepositoryMongo(IUserDbContext dbContext, IUserDbContextMongo context, IMapper mapper)
+        public BidderRepositoryMongo( IUserDbContextMongo context, IMapper mapper)
         {
            
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
@@ -34,7 +34,8 @@ namespace UserMs.Infrastructure.Repositories.Bidders
 
         public async Task<List<Domain.Entities.Bidder.Bidders>> GetBidderAllAsync()
         {
-            var projection = Builders<Domain.Entities.Bidder.Bidders>.Projection.Exclude("_id").Exclude("IsDeleted").Exclude("CreatedAt").Exclude("CreatedBy");
+            var projection = Builders<Domain.Entities.Bidder.Bidders>.Projection.Exclude("_id").Exclude("IsDeleted")
+                .Exclude("CreatedAt").Exclude("CreatedBy").Exclude("UserPassword").Exclude("BidderDelete");
 
             var bidderDto = await _collection.Find(Builders<Domain.Entities.Bidder.Bidders>.Filter.Empty)
                 .Project<GetBidderDto>(projection)
@@ -47,7 +48,8 @@ namespace UserMs.Infrastructure.Repositories.Bidders
         public async Task<Domain.Entities.Bidder.Bidders?> GetBidderByIdAsync(UserId bidderId)
         {
             var filter = Builders<Domain.Entities.Bidder.Bidders>.Filter.Eq("UserId", bidderId.Value);
-            var projection = Builders<Domain.Entities.Bidder.Bidders>.Projection.Exclude("_id").Exclude("IsDeleted").Exclude("CreatedAt").Exclude("CreatedBy");
+            var projection = Builders<Domain.Entities.Bidder.Bidders>.Projection.Exclude("_id").Exclude("IsDeleted")
+                .Exclude("CreatedAt").Exclude("CreatedBy").Exclude("UserPassword").Exclude("BidderDelete");
 
             var bidderDto = await _collection.Find(filter).Project<GetBidderDto>(projection).FirstOrDefaultAsync().ConfigureAwait(false);
             return _mapper.Map<Domain.Entities.Bidder.Bidders>(bidderDto);
@@ -56,7 +58,8 @@ namespace UserMs.Infrastructure.Repositories.Bidders
         public async Task<Domain.Entities.Bidder.Bidders?> GetBidderByEmailAsync(UserEmail bidderUserId)
         {
             var filter = Builders<Domain.Entities.Bidder.Bidders>.Filter.Eq("UserEmail", bidderUserId.Value);
-            var projection = Builders<Domain.Entities.Bidder.Bidders>.Projection.Exclude("_id").Exclude("IsDeleted").Exclude("CreatedAt").Exclude("CreatedBy");
+            var projection = Builders<Domain.Entities.Bidder.Bidders>.Projection.Exclude("_id").Exclude("IsDeleted")
+                .Exclude("CreatedAt").Exclude("CreatedBy").Exclude("UserPassword").Exclude("BidderDelete");
 
             var bidderDto = await _collection.Find(filter).Project<GetBidderDto>(projection).FirstOrDefaultAsync().ConfigureAwait(false);
             return _mapper.Map<Domain.Entities.Bidder.Bidders>(bidderDto);

@@ -10,9 +10,11 @@ using UserMs.Core.Database;
 using UserMs.Core.Repositories.RolePermissionRepo;
 using UserMs.Domain.Entities.Role_Permission.ValueObjects;
 using UserMs.Domain.Entities.Role_Permission;
+using System.Diagnostics.CodeAnalysis;
 
 namespace UserMs.Infrastructure.Repositories.Roles_Permission
 {
+    [ExcludeFromCodeCoverage]
     public class RolePermissionRepositoryMongo : IRolePermissionRepositoryMongo
     {
 
@@ -28,7 +30,9 @@ namespace UserMs.Infrastructure.Repositories.Roles_Permission
             }
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
             _collection = context.Database.GetCollection<GetRolePermissionDto>("RolePermissions");
-            //?? //throw new ArgumentNullException(nameof(context.Database.GetCollection<StatusProvider>));
+
+
+
         }
 
        

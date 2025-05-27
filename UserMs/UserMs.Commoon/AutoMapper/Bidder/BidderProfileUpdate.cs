@@ -1,20 +1,23 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using AutoMapper;
+using UserMs.Commoon.Dtos.Users.Request.Bidder;
 using UserMs.Commoon.Dtos.Users.Response.Bidder;
 using UserMs.Domain.Entities.Bidder;
 
 namespace UserMs.Commoon.AutoMapper.Bidder
 {
+    [ExcludeFromCodeCoverage]
     public class BidderProfileUpdate : Profile
     {
         public BidderProfileUpdate()
         {
-            CreateMap<Bidders, GetBidderDto>()
-                .ForMember(dest => dest.UserId, opt => opt.MapFrom(src => src.UserId.Value))
+            CreateMap<Bidders, UpdateBidderDto>()
+                //.ForMember(dest => dest.UserId, opt => opt.MapFrom(src => src.UserId.Value))
                 .ForMember(dest => dest.UserEmail, opt => opt.MapFrom(src => src.UserEmail.Value))
                 // .ForMember(dest => dest.UserPassword, opt => opt.MapFrom(src => src.UserPassword.Value)) // ⚠️ Considera encriptar antes de almacenar
                 .ForMember(dest => dest.UserAddress, opt => opt.MapFrom(src => src.UserAddress.Value))

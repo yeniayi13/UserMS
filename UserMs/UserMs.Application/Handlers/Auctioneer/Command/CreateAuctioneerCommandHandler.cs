@@ -37,6 +37,7 @@ using UserMs.Application.Validators;
 using BCrypt.Net;
 
 
+
 namespace UserMs.Application.Handlers.Auctioneer.Command
 {
     public class CreateAuctioneerCommandHandler : IRequestHandler<CreateAuctioneerCommand, UserId>
@@ -90,124 +91,153 @@ namespace UserMs.Application.Handlers.Auctioneer.Command
             }
         
 
-        public async Task<UserId> Handle(CreateAuctioneerCommand request, CancellationToken cancellationToken)
-        {
-            try
+       
+            public async Task<UserId> Handle(CreateAuctioneerCommand request, CancellationToken cancellationToken)
             {
-                // Validación de datos de entrada
+                try
+                {
+                    var userEmailValue = request.Auctioneer.UserEmail;
+                    var userPasswordValue = request.Auctioneer.UserPassword;
+                    var usersNameValue = request.Auctioneer.UserName;
+                    var usersLastNameValue = request.Auctioneer.UserLastName;
+                    var usersPhoneValue = request.Auctioneer.UserPhone;
+                    var usersAddressValue = request.Auctioneer.UserAddress;
+                    string hashedPassword = BCrypt.Net.BCrypt.HashPassword(userPasswordValue);
+
+                    // ✅ Validación de datos de entrada
+                    await ValidateAuctioneerRequest(request, cancellationToken);
+
+                    // ✅ Creación y verificación del usuario
+                    var Id = await CreateUserInKeycloak(userEmailValue, hashedPassword, usersNameValue, usersLastNameValue, usersPhoneValue, usersAddressValue);
+
+                    // ✅ Creación de entidades
+                    var auctioneer = CreateAuctioneerEntity(request.Auctioneer, Id);
+                    var users = CreateUserEntity(request.Auctioneer, Id);
+                    var userRole = await CreateUserRoleEntity(Id, request.Auctioneer.UserEmail);
+
+                    // ✅ Almacenamiento en repositorios
+                    await SaveEntities(users, auctioneer, userRole);
+
+                    // ✅ Publicación de eventos
+                    await PublishEvents(auctioneer, users, userRole, Id);
+
+                    return auctioneer.UserId;
+                }
+                catch (Exception ex)
+                {
+                    ExceptionHandlerService.HandleException(ex);
+                    throw;
+                }
+
+            }
+            private async Task ValidateAuctioneerRequest(CreateAuctioneerCommand request, CancellationToken cancellationToken)
+            {
                 var validator = new CreateAuctioneersValidator();
                 var validationResult = await validator.ValidateAsync(request.Auctioneer, cancellationToken);
+
                 if (!validationResult.IsValid)
                     throw new ValidationException(validationResult.Errors);
 
-                var userEmailValue = request.Auctioneer.UserEmail;
-                var userPasswordValue = request.Auctioneer.UserPassword;
-                var usersNameValue = request.Auctioneer.UserName;
-                var usersLastNameValue = request.Auctioneer.UserLastName;
-                var usersPhoneValue = request.Auctioneer.UserPhone;
-                var usersAddressValue = request.Auctioneer.UserAddress;
-                string hashedPassword = BCrypt.Net.BCrypt.HashPassword(userPasswordValue);
-
-                // Validar si el usuario ya existe
-                var userExists =
-                    await _auctioneerRepositoryMongo.GetAuctioneerByEmailAsync(UserEmail.Create(userEmailValue));
+                var userExists = await _auctioneerRepositoryMongo.GetAuctioneerByEmailAsync(UserEmail.Create(request.Auctioneer.UserEmail));
                 if (userExists != null)
                     throw new UserExistException("El usuario ya existe");
+            }
 
-                // Creación del usuario en Keycloak
-                await _keycloakMsService.CreateUserAsync(userEmailValue!, userPasswordValue, usersNameValue,
-                    usersLastNameValue, usersPhoneValue, usersAddressValue);
-                var Id = await _keycloakMsService.GetUserByUserName(userEmailValue);
-                await _keycloakMsService.AssignClientRoleToUser(Id, "Subastador");
+            private async Task<Guid> CreateUserInKeycloak(string userEmail, string userPassword, string userName, string userLastName, string userPhone, string userAddress)
+            {
+                await _keycloakMsService.CreateUserAsync(userEmail, userPassword, userName, userLastName, userPhone, userAddress);
 
-                var auctioneer = new Auctioneers(
-                    UserId.Create(Id),
-                    UserEmail.Create(userEmailValue ?? string.Empty),
-                    UserPassword.Create(userPasswordValue ?? string.Empty),
-                    UserName.Create(usersNameValue ?? string.Empty),
-                    UserPhone.Create(usersPhoneValue ?? string.Empty),
-                    UserAddress.Create(usersAddressValue ?? string.Empty),
-                    UserLastName.Create(usersLastNameValue ?? string.Empty),
-                    AuctioneerDni.Create(request.Auctioneer.AuctioneerDni),
-                    AuctioneerBirthday.Create(request.Auctioneer.AuctioneerBirthday)
+                var userId = await _keycloakMsService.GetUserByUserName(userEmail);
+
+                if (userId == Guid.Empty)
+                    throw new Exception("No se pudo obtener el ID del usuario desde Keycloak.");
+
+                await _keycloakMsService.AssignClientRoleToUser(userId, "Subastador");
+
+                return userId;
+            }
+
+            private Auctioneers CreateAuctioneerEntity(CreateAuctioneerDto auctioneerDto, Guid userId)
+            {
+                return new Auctioneers(
+                    UserId.Create(userId),
+                    UserEmail.Create(auctioneerDto.UserEmail ?? string.Empty),
+                    UserPassword.Create(BCrypt.Net.BCrypt.HashPassword(auctioneerDto.UserPassword) ?? string.Empty),
+                    UserName.Create(auctioneerDto.UserName ?? string.Empty),
+                    UserPhone.Create(auctioneerDto.UserPhone ?? string.Empty),
+                    UserAddress.Create(auctioneerDto.UserAddress ?? string.Empty),
+                    UserLastName.Create(auctioneerDto.UserLastName ?? string.Empty),
+                    AuctioneerDni.Create(auctioneerDto.AuctioneerDni),
+                    AuctioneerBirthday.Create(auctioneerDto.AuctioneerBirthday)
                 );
+            }
+        private Users CreateUserEntity(CreateAuctioneerDto auctioneerDto, Guid userId)
+            {
+                string hashedPassword = BCrypt.Net.BCrypt.HashPassword(auctioneerDto.UserPassword);
 
-                var users = new Users(
-                    Id,
-                    UserEmail.Create(userEmailValue),
+                return new Users(
+                    userId,
+                    UserEmail.Create(auctioneerDto.UserEmail),
                     UserPassword.Create(hashedPassword),
-                    UserName.Create(usersNameValue),
-                    UserPhone.Create(usersPhoneValue),
-                    UserAddress.Create(usersAddressValue),
-                    UserLastName.Create(usersLastNameValue),
+                    UserName.Create(auctioneerDto.UserName),
+                    UserPhone.Create(auctioneerDto.UserPhone),
+                    UserAddress.Create(auctioneerDto.UserAddress),
+                    UserLastName.Create(auctioneerDto.UserLastName),
                     Enum.Parse<UsersType>("Subastador"),
                     Enum.Parse<UserAvailable>("Activo"),
                     UserDelete.Create(false)
                 );
+            }
 
+            private async Task<UserRoles> CreateUserRoleEntity(Guid userId, string userEmail)
+            {
                 var role = await _roleRepository.GetRolesByNameQuery("Subastador");
                 if (role == null)
                     throw new RoleNotFoundException("Role not found");
 
-                var exist = await _userRoleRepositoryMongo.GetRoleByIdAndByUserIdQuery(role.RoleName.Value, userEmailValue);
+                var exist = await _userRoleRepositoryMongo.GetRoleByIdAndByUserIdQuery(role.RoleName.Value, userEmail);
                 if (exist != null)
                     throw new UserRoleExistException("Este usuario ya tiene este rol.");
 
-                var userRole = new UserRoles(
+                return new UserRoles(
                     UserRoleId.Create(Guid.NewGuid()),
-                    UserId.Create(Id),
+                    UserId.Create(userId),
                     RoleId.Create(role.RoleId)
                 );
+            }
 
-                // Registro en repositorios
+            private async Task SaveEntities(Users users, Auctioneers auctioneer, UserRoles userRole)
+            {
                 await _usersRepository.AddAsync(users);
                 await _auctioneerRepository.AddAsync(auctioneer);
                 await _userRoleRepository.AddAsync(userRole);
+            }
 
-                // Publicar eventos en el bus de mensajes
-                await _eventBus.PublishMessageAsync(_mapper.Map<GetAuctioneerDto>(auctioneer), "auctioneerQueue",
-                    "AUCTIONEER_CREATED");
-                await _eventBusUser.PublishMessageAsync(_mapper.Map<GetUsersDto>(users), "userQueue", "USER_CREATED");
-                await _eventBusUserRol.PublishMessageAsync(_mapper.Map<GetUserRoleDto>(userRole), "userRoleQueue",
-                    "USER_ROLE_CREATED");
+            private async Task PublishEvents(Auctioneers auctioneer, Users users, UserRoles userRole, Guid userId)
+            {
+                var auctioneerDto = _mapper.Map<GetAuctioneerDto>(auctioneer);
+                await _eventBus.PublishMessageAsync(auctioneerDto, "auctioneerQueue", "AUCTIONEER_CREATED");
 
-                // Registrar actividad
+                var userDto = _mapper.Map<GetUsersDto>(users);
+                await _eventBusUser.PublishMessageAsync(userDto, "userQueue", "USER_CREATED");
+
+                var userRoleDto = _mapper.Map<GetUserRoleDto>(userRole);
+                userRoleDto.UserEmail = users.UserEmail.Value;
+                userRoleDto.RoleName = await _roleRepository.GetRolesByNameQuery("Subastador").ContinueWith(t => t.Result.RoleName.Value);
+
+                await _eventBusUserRol.PublishMessageAsync(userRoleDto, "userRoleQueue", "USER_ROLE_CREATED");
+
                 var activity = new Domain.Entities.ActivityHistory.ActivityHistory(
                     Guid.NewGuid(),
-                    Id,
+                    userId,
                     "Creación de Subastador",
                     DateTime.UtcNow
                 );
                 await _activityHistoryRepository.AddAsync(activity);
-                await _eventBusActivity.PublishMessageAsync(_mapper.Map<GetActivityHistoryDto>(activity),
-                    "activityHistoryQueue", "ACTIVITY_CREATED");
 
-                return auctioneer.UserId;
+                var activityDto = _mapper.Map<GetActivityHistoryDto>(activity);
+                await _eventBusActivity.PublishMessageAsync(activityDto, "activityHistoryQueue", "ACTIVITY_CREATED");
             }
-            catch (ValidationException ex)
-            {
 
-                throw;
-            }
-            catch (UserExistException ex)
-            {
-
-                throw;
-            }
-            catch (RoleNotFoundException ex)
-            {
-                throw;
-            }
-            catch (UserRoleExistException ex)
-            {
-
-                throw;
-            }
-            catch (Exception ex)
-            {
-
-                throw new ApplicationException("Ocurrió un error al crear el subastador.", ex);
-            }
-        }
     }
 }

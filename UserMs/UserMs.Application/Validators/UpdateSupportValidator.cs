@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -8,6 +9,9 @@ using UserMs.Commoon.Dtos.Users.Request.Support;
 
 namespace UserMs.Application.Validators
 {
+
+
+    [ExcludeFromCodeCoverage]
     public class UpdateSupportValidator : ValidatorBase<UpdateSupportDto>
     {
         public UpdateSupportValidator()

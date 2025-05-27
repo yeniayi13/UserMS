@@ -94,15 +94,10 @@ namespace UserMs.Application.Handlers.Support.Command
 
                 return request.SupportId;
             }
-            catch (UserNotFoundException ex)
-            {
-               
-                throw;
-            }
             catch (Exception ex)
             {
-               
-                throw new ApplicationException("Ocurrió un error inesperado al eliminar el trabajador de soporte.", ex);
+                ExceptionHandlerService.HandleException(ex);
+                throw;
             }
         }
     }

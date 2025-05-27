@@ -98,18 +98,9 @@ namespace UserMs.Application.Handlers.User.Commands
 
                 return users.UserId;
             }
-            catch (ValidationException ex)
-            {
-
-                throw;
-            }
-            catch (UserExistException ex)
-            {
-
-                throw;
-            }
             catch (Exception ex)
             {
+                ExceptionHandlerService.HandleException(ex);
                 throw;
             }
         }

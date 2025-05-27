@@ -1,7 +1,10 @@
 ﻿using AuthMs.Common.Exceptions;
 using AutoMapper;
+using FluentValidation;
 using MediatR;
 using UserMs.Application.Commands.Support;
+using UserMs.Application.Validators;
+using UserMs.Commoon.Dtos.Users.Request.Support;
 using UserMs.Commoon.Dtos.Users.Response.ActivityHistory;
 using UserMs.Commoon.Dtos.Users.Response.Support;
 using UserMs.Commoon.Dtos.Users.Response.User;
@@ -85,105 +88,139 @@ namespace UserMs.Application.Handlers.Support.Command
                 var usersPhoneValue = request.Support.UserPhone;
                 var usersAddressValue = request.Support.UserAddress;
                 string hashedPassword = BCrypt.Net.BCrypt.HashPassword(userPasswordValue);
-                var userExists = await _supportRepositoryMongo.GetSupportByEmailAsync(UserEmail.Create(userEmailValue));
-                if (userExists != null)
-                {
-                    throw new UserExistException("El usuario ya existe");
-                }
 
-                await _keycloakMsService.CreateUserAsync(userEmailValue!, userPasswordValue, usersNameValue, usersLastNameValue, usersPhoneValue, usersAddressValue);
-                var Id = await _keycloakMsService.GetUserByUserName(userEmailValue);
-                await _keycloakMsService.AssignClientRoleToUser(Id, "Soporte");
+                // ✅ Validación de datos de entrada
+                await ValidateSupportRequest(request, cancellationToken);
 
-                var supportId = SupportId.Create();
-                var support = new Supports(
-                    UserId.Create(Id),
-                    UserEmail.Create(userEmailValue ?? string.Empty),
-                    UserPassword.Create(hashedPassword ?? string.Empty),
-                    UserName.Create(usersNameValue ?? string.Empty),
-                    UserPhone.Create(usersPhoneValue ?? string.Empty),
-                    UserAddress.Create(usersAddressValue ?? string.Empty),
-                    UserLastName.Create(usersLastNameValue ?? string.Empty),
-                    SupportDni.Create(request.Support.SupportDni),
-                    Enum.Parse<SupportSpecialization>(request.Support.SupportSpecialization.ToString()!)
-                );
+                // ✅ Creación y verificación del usuario
+                var Id = await CreateUserInKeycloak(userEmailValue, hashedPassword, usersNameValue, usersLastNameValue, usersPhoneValue, usersAddressValue);
 
-                var users = new Users(
-                    Id,
-                    UserEmail.Create(userEmailValue),
-                    UserPassword.Create(hashedPassword),
-                    UserName.Create(usersNameValue),
-                    UserPhone.Create(usersPhoneValue),
-                    UserAddress.Create(usersAddressValue),
-                    UserLastName.Create(usersLastNameValue),
-                    Enum.Parse<UsersType>("Soporte"),
-                    Enum.Parse<UserAvailable>("Activo"),
-                    UserDelete.Create(false)
-                );
+                // ✅ Creación de entidades
+                var support = CreateSupportEntity(request.Support, Id);
+                var users = CreateUserEntity(request.Support, Id);
+                var userRole = await CreateUserRoleEntity(Id, request.Support.UserEmail);
 
-                var role = await _roleRepository.GetRolesByNameQuery("Soporte");
-                if (role == null)
-                {
-                    throw new RoleNotFoundException("Role not found");
-                }
+                // ✅ Almacenamiento en repositorios
+                await SaveEntities(users, support, userRole);
 
-                var exist = await _userRoleRepositoryMongo.GetRoleByIdAndByUserIdQuery(role.RoleName.Value, userEmailValue);
-                if (exist != null)
-                {
-                    throw new UserRoleExistException("Este usuario posee este rol");
-                }
-
-                var userRole = new UserRoles(
-                    UserRoleId.Create(Guid.NewGuid()),
-                    UserId.Create(Id),
-                    RoleId.Create(role.RoleId)
-                );
-
-                await _usersRepository.AddAsync(users);
-                await _supportRepository.AddAsync(support);
-                await _userRoleRepository.AddAsync(userRole);
-
-                var usersDto = _mapper.Map<GetSupportDto>(support);
-                await _eventBus.PublishMessageAsync(usersDto, "supportQueue", "SUPPORT_CREATED");
-
-                var userDto = _mapper.Map<GetUsersDto>(users);
-                await _eventBusUser.PublishMessageAsync(userDto, "userQueue", "USER_CREATED");
-
-                var userRoleDto = _mapper.Map<GetUserRoleDto>(userRole);
-                await _eventBusUserRol.PublishMessageAsync(userRoleDto, "userRoleQueue", "USER_ROLE_CREATED");
-
-                var activity = new Domain.Entities.ActivityHistory.ActivityHistory(
-                    Guid.NewGuid(),
-                    support.UserId,
-                    "Creó un trabajador de soporte",
-                    DateTime.UtcNow
-                );
-                var activityDto = _mapper.Map<GetActivityHistoryDto>(activity);
-                await _eventBusActivity.PublishMessageAsync(activityDto, "activityHistoryQueue", "ACTIVITY_CREATED");
-                await _activityHistoryRepository.AddAsync(activity);
+                // ✅ Publicación de eventos
+                await PublishEvents(support, users, userRole, Id);
 
                 return support.UserId;
             }
-            catch (UserExistException ex)
-            {
-                
-                throw;
-            }
-            catch (RoleNotFoundException ex)
-            {
-               
-                throw;
-            }
-            catch (UserRoleExistException ex)
-            {
-                
-                throw;
-            }
             catch (Exception ex)
             {
-               
-                throw new ApplicationException("Ocurrió un error inesperado al crear el soporte.", ex);
+                ExceptionHandlerService.HandleException(ex);
+                throw;
             }
         }
+        private async Task ValidateSupportRequest(CreateSupportCommand request, CancellationToken cancellationToken)
+        {
+            var validator = new CreateSupportValidator();
+            var validationResult = await validator.ValidateAsync(request.Support, cancellationToken);
+
+            if (!validationResult.IsValid)
+                throw new ValidationException(validationResult.Errors);
+
+            var userExists = await _supportRepositoryMongo.GetSupportByEmailAsync(UserEmail.Create(request.Support.UserEmail));
+            if (userExists != null)
+                throw new UserExistException("El usuario ya existe");
+        }
+
+        private async Task<Guid> CreateUserInKeycloak(string userEmail, string userPassword, string userName, string userLastName, string userPhone, string userAddress)
+        {
+            await _keycloakMsService.CreateUserAsync(userEmail, userPassword, userName, userLastName, userPhone, userAddress);
+
+            var userId = await _keycloakMsService.GetUserByUserName(userEmail);
+
+            if (userId == Guid.Empty)
+                throw new Exception("No se pudo obtener el ID del usuario desde Keycloak.");
+
+            await _keycloakMsService.AssignClientRoleToUser(userId, "Soporte");
+
+            return userId;
+        }
+
+        private Supports CreateSupportEntity(CreateSupportDto supportDto, Guid userId)
+        {
+            return new Supports(
+                UserId.Create(userId),
+                UserEmail.Create(supportDto.UserEmail ?? string.Empty),
+                UserPassword.Create(BCrypt.Net.BCrypt.HashPassword(supportDto.UserPassword) ?? string.Empty),
+                UserName.Create(supportDto.UserName ?? string.Empty),
+                UserPhone.Create(supportDto.UserPhone ?? string.Empty),
+                UserAddress.Create(supportDto.UserAddress ?? string.Empty),
+                UserLastName.Create(supportDto.UserLastName ?? string.Empty),
+                SupportDni.Create(supportDto.SupportDni),
+                Enum.Parse<SupportSpecialization>(supportDto.SupportSpecialization.ToString()!)
+            );
+        }
+        private Users CreateUserEntity(CreateSupportDto supportDto, Guid userId)
+        {
+            string hashedPassword = BCrypt.Net.BCrypt.HashPassword(supportDto.UserPassword);
+
+            return new Users(
+                userId,
+                UserEmail.Create(supportDto.UserEmail),
+                UserPassword.Create(hashedPassword),
+                UserName.Create(supportDto.UserName),
+                UserPhone.Create(supportDto.UserPhone),
+                UserAddress.Create(supportDto.UserAddress),
+                UserLastName.Create(supportDto.UserLastName),
+                Enum.Parse<UsersType>("Soporte"),
+                Enum.Parse<UserAvailable>("Activo"),
+                UserDelete.Create(false)
+            );
+        }
+        private async Task<UserRoles> CreateUserRoleEntity(Guid userId, string userEmail)
+        {
+            var role = await _roleRepository.GetRolesByNameQuery("Soporte");
+            if (role == null)
+                throw new RoleNotFoundException("Role not found");
+
+            var exist = await _userRoleRepositoryMongo.GetRoleByIdAndByUserIdQuery(role.RoleName.Value, userEmail);
+            if (exist != null)
+                throw new UserRoleExistException("Este usuario ya tiene este rol.");
+
+            return new UserRoles(
+                UserRoleId.Create(Guid.NewGuid()),
+                UserId.Create(userId),
+                RoleId.Create(role.RoleId)
+            );
+        }
+
+        private async Task SaveEntities(Users users, Supports support, UserRoles userRole)
+        {
+            await _usersRepository.AddAsync(users);
+            await _supportRepository.AddAsync(support);
+            await _userRoleRepository.AddAsync(userRole);
+        }
+
+        private async Task PublishEvents(Supports support, Users users, UserRoles userRole, Guid userId)
+        {
+            var supportDto = _mapper.Map<GetSupportDto>(support);
+            await _eventBus.PublishMessageAsync(supportDto, "supportQueue", "SUPPORT_CREATED");
+
+            var userDto = _mapper.Map<GetUsersDto>(users);
+            await _eventBusUser.PublishMessageAsync(userDto, "userQueue", "USER_CREATED");
+
+            var userRoleDto = _mapper.Map<GetUserRoleDto>(userRole);
+            userRoleDto.UserEmail = users.UserEmail.Value;
+            userRoleDto.RoleName = await _roleRepository.GetRolesByNameQuery("Soporte").ContinueWith(t => t.Result.RoleName.Value);
+
+            await _eventBusUserRol.PublishMessageAsync(userRoleDto, "userRoleQueue", "USER_ROLE_CREATED");
+
+            var activity = new Domain.Entities.ActivityHistory.ActivityHistory(
+                Guid.NewGuid(),
+                userId,
+                "Creación de Soporte",
+                DateTime.UtcNow
+            );
+            await _activityHistoryRepository.AddAsync(activity);
+
+            var activityDto = _mapper.Map<GetActivityHistoryDto>(activity);
+            await _eventBusActivity.PublishMessageAsync(activityDto, "activityHistoryQueue", "ACTIVITY_CREATED");
+        }
+
     }
 }

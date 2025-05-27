@@ -34,8 +34,8 @@ namespace UserMs.Infrastructure.Repositories.Supports
 
         public async Task<List<Domain.Entities.Support.Supports>> GetSupportAllAsync()
         {
-            var projection = Builders<Domain.Entities.Support.Supports>.Projection.Exclude("_id").Exclude("IsDeleted").Exclude("CreatedAt").Exclude("CreatedBy");
-
+            var projection = Builders<Domain.Entities.Support.Supports>.Projection.Exclude("_id").Exclude("IsDeleted")
+                .Exclude("CreatedAt").Exclude("CreatedBy").Exclude("UserPassword").Exclude("SupportDelete");
             var supportDto = await _collection.Find(Builders<Domain.Entities.Support.Supports>.Filter.Empty)
                 .Project<GetSupportDto>(projection)
                 .ToListAsync()
@@ -47,7 +47,7 @@ namespace UserMs.Infrastructure.Repositories.Supports
         public async Task<Domain.Entities.Support.Supports?> GetSupportByIdAsync(UserId supportId)
         {
             var filter = Builders<Domain.Entities.Support.Supports>.Filter.Eq("UserId", supportId.Value);
-            var projection = Builders<Domain.Entities.Support.Supports>.Projection.Exclude("_id").Exclude("IsDeleted").Exclude("CreatedAt").Exclude("CreatedBy");
+            var projection = Builders<Domain.Entities.Support.Supports>.Projection.Exclude("_id").Exclude("IsDeleted").Exclude("CreatedAt").Exclude("CreatedBy").Exclude("UserPassword").Exclude("SupportDelete");
 
             var supportDto = await _collection.Find(filter).Project<GetSupportDto>(projection).FirstOrDefaultAsync().ConfigureAwait(false);
             return _mapper.Map<Domain.Entities.Support.Supports>(supportDto);
@@ -56,7 +56,7 @@ namespace UserMs.Infrastructure.Repositories.Supports
         public async Task<Domain.Entities.Support.Supports?> GetSupportByEmailAsync(UserEmail supportUserEmail)
         {
             var filter = Builders<Domain.Entities.Support.Supports>.Filter.Eq("UserEmail", supportUserEmail.Value);
-            var projection = Builders<Domain.Entities.Support.Supports>.Projection.Exclude("_id").Exclude("IsDeleted").Exclude("CreatedAt").Exclude("CreatedBy");
+            var projection = Builders<Domain.Entities.Support.Supports>.Projection.Exclude("_id").Exclude("IsDeleted").Exclude("CreatedAt").Exclude("CreatedBy").Exclude("UserPassword").Exclude("SupportDelete");
 
             var supportDto = await _collection.Find(filter).Project<GetSupportDto>(projection).FirstOrDefaultAsync().ConfigureAwait(false);
             return _mapper.Map<Domain.Entities.Support.Supports>(supportDto);
