@@ -5,9 +5,11 @@ using UserMs.Core.Interface;
 using UserMs.Domain.Entities;
 using Microsoft.AspNetCore.Http;
 using UserMs.Infrastructure.Exceptions;
+using System.Diagnostics.CodeAnalysis;
 
 namespace UserMs.Infrastructure
 {
+    [ExcludeFromCodeCoverage]
     public class AuthMsService : IAuthMsService
     {
         public readonly HttpClient _httpClient;

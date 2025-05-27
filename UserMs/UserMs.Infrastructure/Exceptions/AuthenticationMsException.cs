@@ -1,5 +1,8 @@
+using System.Diagnostics.CodeAnalysis;
+
 namespace UserMs.Infrastructure.Exceptions
 {
+    [ExcludeFromCodeCoverage]
     public class AuthenticationMsException : Exception
     {
         public AuthenticationMsException() { }

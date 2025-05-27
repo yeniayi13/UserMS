@@ -1,19 +1,19 @@
 using UserMs.Application.Queries.User;
-using UserMs.Application.Dtos.Users.Response;
-using UserMs.Core.Repositories;
 
 using MediatR;
 using UserMs.Infrastructure.Exceptions;
 using AutoMapper;
+using UserMs.Commoon.Dtos.Users.Response.User;
+using UserMs.Core.Repositories.UserRepo;
 
 namespace UserMs.Application.Handlers.User.Queries
 {
     public class GetUsersByIdQueryHandler : IRequestHandler<GetUsersByIdQuery, GetUsersDto>
     {
-        private readonly IUserRepository _usersRepository;
+        private readonly IUserRepositoryMongo _usersRepository;
         private readonly IMapper _mapper;
 
-        public GetUsersByIdQueryHandler(IUserRepository usersRepository, IMapper mapper)
+        public GetUsersByIdQueryHandler(IUserRepositoryMongo usersRepository, IMapper mapper)
         {
             _usersRepository = usersRepository;
             _mapper = mapper;

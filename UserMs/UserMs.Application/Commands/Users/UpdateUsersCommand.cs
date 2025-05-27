@@ -1,7 +1,8 @@
 
 using MediatR;
 using UserMs.Domain.Entities;
-using UserMs.Commoon.Dtos.Users.Request;
+using UserMs.Commoon.Dtos.Users.Request.User;
+using UserMs.Domain.Entities.UserEntity;
 
 namespace UserMs.Application.Commands.User
 {

@@ -1,7 +1,4 @@
 
-
-
-
 namespace UserMs.Domain.Entities
 {
     public class UserDelete : ValueObject
@@ -11,6 +8,11 @@ namespace UserMs.Domain.Entities
         private UserDelete(bool value = false)
         {
             Value = value;
+        }
+
+        private UserDelete()
+        {
+           
         }
 
         public static UserDelete Create(bool value)

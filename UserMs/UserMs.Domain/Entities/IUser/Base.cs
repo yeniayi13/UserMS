@@ -9,30 +9,17 @@ namespace UserMs.Domain.Entities
         //   [BsonRepresentation(BsonType.String)]
         //[BsonElement("UserId")]
         public UserId UserId { get;  set; } // Make it private to enforce immutability
-        public UserEmail UserEmail { get; private set; }
+        public UserEmail UserEmail { get;  set; }
         public UserPassword UserPassword { get; private set; }
-        public UserDelete? UserDelete { get; private set; }
         public UserAddress? UserAddress { get; private set; }
         public UserPhone? UserPhone { get; private set; }
-        public UserName UserName { get; private set; }
+        public UserName UserName { get;  set; }
         public UserLastName UserLastName { get; private set; }
         public DateTime CreatedAt { get; set; }
         public string? CreatedBy { get; set; }
         public DateTime? UpdatedAt { get; set; }
         public string? UpdatedBy { get; set; }
 
-        protected Base(UserId userId, UserEmail userEmail, UserPassword userPassword,UserName userName, UserPhone userPhone, UserAddress userAddress, UserLastName userLastName, UserDelete userDelete)
-        {
-            UserId = userId;
-            UserEmail = userEmail;
-            UserPassword = userPassword;
-            UserName = userName;
-            UserPhone = userPhone;
-            UserAddress = userAddress;
-            UserLastName = userLastName;
-            UserDelete = userDelete;
-
-        }
 
         protected Base(UserId userId, UserEmail userEmail, UserPassword userPassword, UserName userName, UserPhone userPhone, UserAddress userAddress, UserLastName userLastName)
         {
@@ -61,6 +48,12 @@ namespace UserMs.Domain.Entities
         { 
             UserId = userId;
         }
+
+        protected Base(UserId userId, UserName userName)
+        {
+            UserId = userId;
+            UserName = userName;
+        }
         protected Base()
         {
             
@@ -81,10 +74,7 @@ namespace UserMs.Domain.Entities
             UserPassword = userPassword;
         }
 
-        public void SetUserDelete(UserDelete userDelete)
-        {
-            UserDelete = userDelete;
-        }
+
 
         public void SetUserAddress(UserAddress userAddress)
         {

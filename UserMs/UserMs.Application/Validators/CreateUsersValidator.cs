@@ -1,9 +1,12 @@
 
 using FluentValidation;
-using UserMs.Commoon.Dtos.Users.Request;
+using System.Diagnostics.CodeAnalysis;
+using UserMs.Commoon.Dtos.Users.Request.User;
 
 namespace UserMs.Application.Validators
 {
+
+    [ExcludeFromCodeCoverage]
     public class CreateUsersValidator : ValidatorBase<CreateUsersDto>
     {
         public CreateUsersValidator()

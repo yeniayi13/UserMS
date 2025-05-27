@@ -5,7 +5,8 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
-using UserMs.Infrastructure.Database.Factory.Postgres;
+using UserMs.Infrastructure.Database.Context.Postgress;
+
 
 #nullable disable
 

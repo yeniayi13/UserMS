@@ -5,27 +5,34 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using UserMs.Core.RabbitMQ;
 using UserMs.Infrastructure.RabbitMQ.Consumer;
 
 namespace UserMs.Infrastructure.RabbitMQ.Connection
 {
     public class RabbitMQBackgroundService : BackgroundService
     {
-        private readonly RabbitMQConsumer _rabbitMQConsumer;
+        private readonly IRabbitMQConsumer _rabbitMQConsumer;
 
-        public RabbitMQBackgroundService(RabbitMQConsumer rabbitMQConsumer)
+        public RabbitMQBackgroundService(IRabbitMQConsumer rabbitMQConsumer)
         {
             _rabbitMQConsumer = rabbitMQConsumer;
         }
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
-            Console.WriteLine(" Esperando la inicialización de RabbitMQ...");
+            Console.WriteLine("Esperando la inicialización de RabbitMQ...");
 
             await Task.Delay(3000); // Pequeño retraso para asegurar la inicialización
-            await _rabbitMQConsumer.ConsumeMessagesAsync("userQueue");
 
-            Console.WriteLine(" Consumidor de RabbitMQ iniciado.");
+            var queues = new List<string> { "userQueue", "supportQueue", "bidderQueue", "auctioneerQueue", "userRoleQueue","roleQueue","rolePermissionQueue", "activityHistoryQueue" };
+
+            foreach (var queueName in queues)
+            {
+                _ = Task.Run(() => _rabbitMQConsumer.ConsumeMessagesAsync(queueName), stoppingToken);
+            }
+
+            Console.WriteLine("Todos los consumidores de RabbitMQ han sido iniciados.");
         }
     }
 }

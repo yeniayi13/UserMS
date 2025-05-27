@@ -1,0 +1,39 @@
+﻿<wpf:ResourceDictionary xml:space="preserve" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:s="clr-namespace:System;assembly=mscorlib" xmlns:ss="urn:shemas-jetbrains-com:settings-storage-xaml" xmlns:wpf="http://schemas.microsoft.com/winfx/2006/xaml/presentation">
+	<s:Boolean x:Key="/Default/Environment/Filtering/ExcludeCoverageFilters/=_002A_003B_002A_003B_002AProgram_003B_002A/@EntryIndexedValue">True</s:Boolean>
+	<s:Boolean x:Key="/Default/Environment/Filtering/ExcludeCoverageFilters/=_002A_003B_002A_003B_002ARabbitMQConsumer_003B_002A/@EntryIndexedValue">True</s:Boolean>
+	<s:Boolean x:Key="/Default/Environment/Filtering/ExcludeCoverageFilters/=_002A_003B_002A_003B_002ARolePermissionRepositoryMongoTests_003B_002A/@EntryIndexedValue">True</s:Boolean>
+	<s:Boolean x:Key="/Default/Environment/Filtering/ExcludeCoverageFilters/=_002A_003B_002A_003B_002AUserRolesRepositoryMongo_003B_002A/@EntryIndexedValue">True</s:Boolean>
+	<s:Boolean x:Key="/Default/Environment/Filtering/ExcludeCoverageFilters/=_002A_003B_002A_003B_002A_003B_002ASaveEfContextChanges/@EntryIndexedValue">True</s:Boolean>
+	<s:Boolean x:Key="/Default/Environment/Filtering/ExcludeCoverageFilters/=_002A_003B_002A_003B_002A_003B_002ASendPasswordResetEmailAsync/@EntryIndexedValue">True</s:Boolean>
+	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=1dbf0919_002D1507_002D45ba_002Dbbcd_002Ddd39cbef434a/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" Name="All tests from Solution" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
+  &lt;Solution /&gt;&#xD;
+&lt;/SessionState&gt;</s:String>
+	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=2f4f4dae_002D8d81_002D4c0a_002Dbad2_002Dd37828415389/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" Name="CreateDbContext_ShouldUsePostgreSQLConfiguration" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
+  &lt;Solution /&gt;&#xD;
+&lt;/SessionState&gt;</s:String>
+	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=40d60b0b_002D54af_002D46d1_002Dbe51_002D8e71950162cf/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" Name="Constructor_ShouldThrowException_WhenMongoDatabaseIsNull" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
+  &lt;TestAncestor&gt;&#xD;
+    &lt;TestId&gt;xUnit::7D32C41C-5197-4994-9E4F-03C36A995937::net8.0::UserMs.Test.Infrastructure.Repositories.Mongo.PermissionRepositoryMongoTests.Constructor_ShouldThrowException_WhenMongoDatabaseIsNull&lt;/TestId&gt;&#xD;
+    &lt;TestId&gt;xUnit::7D32C41C-5197-4994-9E4F-03C36A995937::net8.0::UserMs.Test.Infrastructure.Repositories.Mongo.PermissionRepositoryMongoTests.Constructor_ShouldThrowException_WhenMongoContextIsNull&lt;/TestId&gt;&#xD;
+    &lt;TestId&gt;xUnit::7D32C41C-5197-4994-9E4F-03C36A995937::net8.0::UserMs.Test.Infrastructure.Repositories.Mongo.PermissionRepositoryMongoTests.GetPermissionAllQueryAsync_ShouldReturnPermissions_WhenFound&lt;/TestId&gt;&#xD;
+    &lt;TestId&gt;xUnit::7D32C41C-5197-4994-9E4F-03C36A995937::net8.0::UserMs.Test.Infrastructure.Repositories.Mongo.PermissionRepositoryMongoTests.GetPermissionByIdAsync_ShouldReturnNull_WhenPermissionNotFound&lt;/TestId&gt;&#xD;
+    &lt;TestId&gt;xUnit::7D32C41C-5197-4994-9E4F-03C36A995937::net8.0::UserMs.Test.Infrastructure.Repositories.Mongo.PermissionRepositoryMongoTests.GetPermissionByIdAsync_ShouldReturnPermission_WhenFound&lt;/TestId&gt;&#xD;
+    &lt;TestId&gt;xUnit::7D32C41C-5197-4994-9E4F-03C36A995937::net8.0::UserMs.Test.Infrastructure.Repositories.Mongo.RoleRepositoryMongoTests.Constructor_ShouldThrowException_WhenMongoContextIsNull&lt;/TestId&gt;&#xD;
+  &lt;/TestAncestor&gt;&#xD;
+&lt;/SessionState&gt;</s:String>
+	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=5a801fbb_002D2fd0_002D4d0f_002D92fb_002D838cd0a6b41e/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" IsActive="True" Name="Constructor_ShouldThrowException_WhenMapperIsNull" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
+  &lt;Solution /&gt;&#xD;
+&lt;/SessionState&gt;</s:String>
+	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=7285be2b_002Dabe7_002D4082_002D9cb1_002Db0b3c5c0db67/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" Name="GetPermissionAllQueryAsync_ShouldReturnEmptyList_WhenNoPermissionsFound" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
+  &lt;TestAncestor&gt;&#xD;
+    &lt;TestId&gt;xUnit::7D32C41C-5197-4994-9E4F-03C36A995937::net8.0::UserMs.Test.Infrastructure.Repositories.Mongo.PermissionRepositoryMongoTests.GetPermissionAllQueryAsync_ShouldReturnEmptyList_WhenNoPermissionsFound&lt;/TestId&gt;&#xD;
+  &lt;/TestAncestor&gt;&#xD;
+&lt;/SessionState&gt;</s:String>
+	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=7fc9c079_002Db819_002D466d_002D82bc_002D2fd8dc77b313/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" Name="Constructor_ShouldThrowException_WhenMongoDatabaseIsNull #2" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
+  &lt;TestAncestor&gt;&#xD;
+    &lt;TestId&gt;xUnit::7D32C41C-5197-4994-9E4F-03C36A995937::net8.0::UserMs.Test.Infrastructure.Repositories.Mongo.RoleRepositoryMongoTests.Constructor_ShouldThrowException_WhenMongoDatabaseIsNull&lt;/TestId&gt;&#xD;
+  &lt;/TestAncestor&gt;&#xD;
+&lt;/SessionState&gt;</s:String>
+	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=b484db66_002D22a0_002D49aa_002Da285_002D3d99248be062/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" Name="All tests from Solution #2" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
+  &lt;Solution /&gt;&#xD;
+&lt;/SessionState&gt;</s:String></wpf:ResourceDictionary>

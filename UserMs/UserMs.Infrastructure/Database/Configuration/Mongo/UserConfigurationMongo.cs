@@ -1,13 +1,16 @@
 ﻿using MongoDB.Driver;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using UserMs.Domain.Entities;
+using UserMs.Domain.Entities.UserEntity;
 
 namespace UserMs.Infrastructure.Database.Configuration.Mongo
 {
+    [ExcludeFromCodeCoverage]
     public class UserConfigurationMongo
     {
         public static void Configure(IMongoCollection<Users> collection)

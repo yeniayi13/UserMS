@@ -1,4 +1,6 @@
-﻿namespace UserMs.Domain.Entities.Bidder.ValueObjects
+﻿using UserMs.Domain.Entities.Support.ValueObjects;
+
+namespace UserMs.Domain.Entities.Bidder.ValueObjects
 {
     public class BidderId : ValueObject
     {
@@ -10,6 +12,10 @@
             return new BidderId(value);
         }
 
+        public static BidderId Create()
+        {
+            return new BidderId(Guid.NewGuid());
+        }
         public Guid Value { get; init; } //*init no permite setear desde afuera, solo desde el constructor
 
         protected override IEnumerable<object> GetEqualityComponents()

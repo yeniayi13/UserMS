@@ -1,5 +1,5 @@
-using UserMs.Application.Dtos.Users.Response;
 using MediatR;
+using UserMs.Commoon.Dtos.Users.Response.User;
 
 namespace UserMs.Application.Queries.User
 {

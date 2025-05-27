@@ -9,7 +9,7 @@ namespace UserMs.Domain.Entities
     public class UserId : ValueObject
         {
 
-        [BsonRepresentation(BsonType.Binary)]
+       // [BsonRepresentation(BsonType.Binary)]
         public Guid Value { get; }
 
             private UserId(Guid value)

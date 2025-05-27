@@ -7,13 +7,13 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Commands\Auctioneer\" />
-    <Folder Include="Commands\Bidder\" />
-    <Folder Include="Handlers\Auctioneer\" />
-    <Folder Include="Handlers\Bidder\" />
+    <Compile Remove="Handlers\User-Roles\Queries\**" />
+    <EmbeddedResource Remove="Handlers\User-Roles\Queries\**" />
+    <None Remove="Handlers\User-Roles\Queries\**" />
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="BCrypt.Net-Next" Version="4.0.3" />
     <PackageReference Include="FluentValidation" Version="11.11.0" />
     <PackageReference Include="MediatR" Version="12.5.0" />
   </ItemGroup>
@@ -22,6 +22,10 @@
     <ProjectReference Include="..\UserMs.Core\UserMs.Core.csproj" />
     <ProjectReference Include="..\UserMs.Domain\UserMs.Domain.csproj" />
     <ProjectReference Include="..\UserMs.Infrastructure\UserMs.Infrastructure.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Commands\Roles\" />
   </ItemGroup>
 
 </Project>

@@ -28,5 +28,24 @@ public class BidderUserIdValueConverter : ValueConverter<BidderUserId, Guid>
     ) { }
 
 }
+public class BidderBirthdayValueConverter : ValueConverter<BidderBirthday, DateOnly>
+{
+    public BidderBirthdayValueConverter() : base(
+        v => v.Value, // Convierte UserPassword a string
+        v => BidderBirthday.Create(v) // Convierte string a UserPassword
+    )
+    { }
 
+
+}
+
+
+public class BidderDeleteConverter : ValueConverter<BidderDelete, bool>
+{
+    public BidderDeleteConverter() : base(
+        u => u.Value,
+        b => BidderDelete.Create(b)
+    )
+    { }
+}
 
