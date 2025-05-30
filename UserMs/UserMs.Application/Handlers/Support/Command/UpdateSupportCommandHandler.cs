@@ -152,7 +152,17 @@ namespace UserMs.Application.Handlers.Support.Command
 
         private async Task SaveUpdatedEntities(Supports updatedSupport, Users updatedUser)
         {
-            var updateUserDto = _mapper.Map<UpdateUserDto>(updatedUser);
+            var updateUserDto = new UpdateUserDto
+            {
+
+                UserEmail = updatedUser.UserEmail.Value,
+                UserPassword = updatedUser.UserPassword.Value,
+                UserName = updatedUser.UserName.Value,
+                UserLastName = updatedUser.UserLastName.Value,
+                UserPhone = updatedUser.UserPhone.Value,
+                UserAddress = updatedUser.UserAddress.Value,
+
+            };
             _keycloakRepository.UpdateUser(updatedSupport.UserId, updateUserDto);
 
             await _supportRepository.UpdateAsync(updatedSupport.UserId, updatedSupport);

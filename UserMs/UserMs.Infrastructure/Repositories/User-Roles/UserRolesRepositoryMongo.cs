@@ -44,10 +44,10 @@ namespace UserMs.Infrastructure.Repositories.User_Roles
             Console.WriteLine($"Buscando roles del usuario con ID: {userRoleId}");
 
             // Crear el filtro para buscar por UserId
-            var filter = Builders<GetUserRoleDto>.Filter.Eq("_id", userRoleId);
+            var filter = Builders<GetUserRoleDto>.Filter.Eq("UserRoleId", userRoleId);
 
             // Excluir el campo _id de la consulta
-            var projection = Builders<GetUserRoleDto>.Projection.Include("_id");
+            var projection = Builders<GetUserRoleDto>.Projection.Exclude("_id");
 
             // Ejecutar la consulta en MongoDB y proyectar al DTO
             var userRolesDto = await _collection
@@ -124,14 +124,14 @@ namespace UserMs.Infrastructure.Repositories.User_Roles
             return userRolesDtoList;
         }
 
-        public async Task<GetUserRoleDto> GetRoleByIdAndByUserIdQuery(string roleId, string userId)
+        public async Task<GetUserRoleDto> GetRoleByRoleNameAndByUserEmail(string roleName, string userEmail)
         {
-            Console.WriteLine($"Buscando roles del usuario con ID: {userId}");
-            Console.WriteLine($"Buscando roles del usuario con rol: {roleId}");
+            Console.WriteLine($"Buscando roles del usuario con ID: {userEmail}");
+            Console.WriteLine($"Buscando roles del usuario con rol: {roleName}");
             // Crear el filtro para buscar por UserId
             var filter = Builders<GetUserRoleDto>.Filter.And(
-                Builders<GetUserRoleDto>.Filter.Eq("UserEmail", userId),
-                Builders<GetUserRoleDto>.Filter.Eq("RoleName", roleId)
+                Builders<GetUserRoleDto>.Filter.Eq("UserEmail", userEmail),
+                Builders<GetUserRoleDto>.Filter.Eq("RoleName", roleName)
             );
             // Excluir el campo _id de la consulta
             var projection = Builders<GetUserRoleDto>.Projection.Exclude("_id");

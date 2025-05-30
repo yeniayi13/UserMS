@@ -12,7 +12,7 @@ using UserMs.Core.Repositories.ActivityHistoryRepo;
 using UserMs.Core.Repositories.UserRepo;
 using UserMs.Domain.Entities;
 
-namespace UserMs.Application.Handlers.ActivityHistory.NewFolder
+namespace UserMs.Application.Handlers.ActivityHistory.Command
 {
     public class CreateHistoryActivityCommandHandler : IRequestHandler<CreateHistoryActivityCommand, UserId>
     {

@@ -41,8 +41,7 @@ namespace UserMs.Application.Handlers.Roles_Permission.Queries
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error en Handle(): {ex.Message}");
-                return new List<GetRolePermissionDto>(); // Retornar lista vacía en caso de error
+                throw; // Retornar lista vacía en caso de error
             }
         }
     }

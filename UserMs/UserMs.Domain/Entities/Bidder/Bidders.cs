@@ -15,10 +15,10 @@ namespace UserMs.Domain.Entities.Bidder
 {
     public class Bidders:Base
     {
-        public BidderDni BidderDni { get; private set; }
-        public BidderBirthday BidderBirthday { get; private set; }
+        public BidderDni BidderDni { get;  set; }
+        public BidderBirthday BidderBirthday { get;  set; }
 
-        public BidderDelete BidderDelete { get; private set; }
+        public BidderDelete BidderDelete { get;  set; }
         public Bidders() { }
 
         public Bidders(UserId userId, UserEmail userEmail, UserPassword userPassword, UserName userName, UserPhone userPhone, UserAddress userAddress, UserLastName userLastName, BidderDni bidderDni, BidderBirthday bidderBirthday)

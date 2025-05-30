@@ -14,6 +14,7 @@ using UserMs.Core.Repositories.Supports;
 using UserMs.Core.Repositories.SupportsRepo;
 using UserMs.Domain.Entities;
 using UserMs.Domain.Entities.Support.ValueObjects;
+using UserMs.Infrastructure.Exceptions;
 
 namespace UserMs.Application.Handlers.Support.Queries
 {
@@ -39,8 +40,7 @@ namespace UserMs.Application.Handlers.Support.Queries
 
                 if (support == null)
                 {
-                    Console.WriteLine($"No se encontró soporte con ID: {request.SupportId}");
-                    return null;
+                    throw new UserNotFoundException($"No se encontró soporte con el email: {request.SupportId}");
                 }
                 var activity = new Domain.Entities.ActivityHistory.ActivityHistory(
                     Guid.NewGuid(),
@@ -55,8 +55,7 @@ namespace UserMs.Application.Handlers.Support.Queries
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error en Handle(): {ex.Message}");
-                return null;
+                throw;
             }
         }
     }

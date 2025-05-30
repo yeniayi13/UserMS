@@ -11,8 +11,8 @@ namespace UserMs.Domain.Entities.Permission
     public  class Permissions
     {
         
-        public PermissionId PermissionId { get; private set; }
-        public PermissionName PermissionName { get; private set; }
+        public PermissionId PermissionId { get;  set; }
+        public PermissionName PermissionName { get;  set; }
 
         public ICollection<RolePermissions> RolePermission { get; set; }
         public DateTime CreatedAt { get; set; }

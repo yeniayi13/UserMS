@@ -15,12 +15,12 @@ using UserMs.Core.Repositories.RolesRepo;
 
 namespace UserMs.Application.Handlers.Permission
 {
-    public class GetRolesAllQueryHandler : IRequestHandler<GetPermissionAllQuery, List<GetPermissionDto>>
+    public class GetPermissionAllQueryHandler : IRequestHandler<GetPermissionAllQuery, List<GetPermissionDto>>
     {
         private readonly IPermissionRepositoryMongo _permissionRepository;
         private readonly IMapper _mapper;
 
-        public GetRolesAllQueryHandler(IPermissionRepositoryMongo permissionRepository, IMapper mapper)
+        public GetPermissionAllQueryHandler(IPermissionRepositoryMongo permissionRepository, IMapper mapper)
         {
             _permissionRepository = permissionRepository;
             _mapper = mapper; // Inyectar el Mapper

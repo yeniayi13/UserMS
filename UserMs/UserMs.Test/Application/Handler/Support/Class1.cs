@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace UserMs.Application.Handlers.Permission
+namespace UserMs.Test.Application.Handler.Support
 {
-    internal class GetPermissionByIdQueryHandler
+    internal class Class1
     {
     }
 }

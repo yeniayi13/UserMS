@@ -1,4 +1,6 @@
-﻿namespace UserMs.Controllers
+﻿using Microsoft.AspNetCore.Authorization;
+
+namespace UserMs.Controllers
 {
     using Microsoft.AspNetCore.Mvc;
     using MediatR;
@@ -28,6 +30,7 @@
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
 
+        [Authorize]
         [HttpGet("UserId/{UserId}")]
         public async Task<IActionResult> GetActivitiesByUserId(
             [FromRoute] Guid UserId,

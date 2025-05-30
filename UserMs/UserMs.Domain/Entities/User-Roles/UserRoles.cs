@@ -13,10 +13,10 @@ namespace UserMs.Domain.User_Roles
 {
     public class UserRoles
     {
-       public UserRoleId UserRoleId { get; private set; } 
-        public UserId UserId { get; private set; }
+       public UserRoleId UserRoleId { get;  set; } 
+        public UserId UserId { get;  set; }
         public Users User { get; private set; }
-        public RoleId RoleId { get; private set; }
+        public RoleId RoleId { get;  set; }
         public Roles Role { get; private set; }
         public DateTime CreatedAt { get; set; }
         public string? CreatedBy { get; set; }

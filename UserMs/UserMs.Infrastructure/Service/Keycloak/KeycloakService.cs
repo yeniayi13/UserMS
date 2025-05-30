@@ -411,17 +411,18 @@ namespace UserMs.Infrastructure.Service.Keycloak
                     throw new KeycloakException("Error obteniendo roles del usuario: respuesta vacía.");
                 }
 
-                List<dynamic> assignedRoles;
+                List<JsonElement> assignedRoles;
                 try
                 {
-                    assignedRoles = JsonSerializer.Deserialize<List<dynamic>>(responseString) ?? new List<dynamic>();
+                    assignedRoles = JsonSerializer.Deserialize<List<JsonElement>>(responseString) ?? new List<JsonElement>();
                 }
                 catch (JsonException ex)
                 {
                     throw new KeycloakException($"Error procesando JSON: {ex.Message}");
                 }
 
-                if (assignedRoles.Any(r => r.name == role))
+                // 🔹 Validar si la propiedad "name" existe antes de acceder a ella
+                if (assignedRoles.Any(r => r.TryGetProperty("name", out JsonElement nameElement) && nameElement.GetString() == role))
                 {
                     throw new InvalidOperationException($"El usuario {userId} ya tiene asignado el rol '{roleName}'.");
                 }
@@ -445,30 +446,33 @@ namespace UserMs.Infrastructure.Service.Keycloak
             }
             catch (KeycloakException ex)
             {
-               
                 throw new KeycloakException($"Error en Keycloak: {ex.Message}");
             }
             catch (JsonException ex)
             {
-               
                 throw new KeycloakException($"Error procesando JSON: {ex.Message}");
             }
             catch (InvalidOperationException ex)
             {
-                
                 throw new InvalidOperationException($"Error de lógica: {ex.Message}");
             }
             catch (Exception ex)
             {
-              
                 throw new Exception($"Error crítico en AssignClientRoleToUser: {ex.Message}");
             }
         }
 
-        public async Task RemoveClientRoleFromUser(Guid userId, string roleName)
+        public async Task RemoveClientRoleFromUser(string userEmail, string roleName)
         {
             try
             {
+                var userId = await GetUserByUserName(userEmail);
+
+                if (userId == Guid.Empty)
+                {
+                    throw new KeycloakException("❌ No se encontró ningún usuario con el email proporcionado.");
+                }
+
                 var role = roleName switch
                 {
                     "Administrador" => "Administrator",
@@ -477,33 +481,98 @@ namespace UserMs.Infrastructure.Service.Keycloak
                     _ => "Support"
                 };
 
-                var clientId = await GetClientId("admin-client");
-                var roleId = await GetClientRolesId(clientId, userId.ToString(), role);
+                Console.WriteLine($"🔍 Verificando rol '{role}' para el usuario {userId} en Keycloak...");
 
+                var clientId = await GetClientId("admin-client");
+
+                // 🔹 Verificar si el rol realmente existe en Keycloak antes de continuar
+                var allRolesResponse = await _httpClient.GetAsync($"admin/realms/auth-demo/clients/{clientId}/roles");
+                var allRolesString = await allRolesResponse.Content.ReadAsStringAsync();
+
+                if (string.IsNullOrWhiteSpace(allRolesString))
+                {
+                    throw new KeycloakException($"⚠️ No se encontraron roles en Keycloak para el cliente {clientId}.");
+                }
+
+                List<JsonElement> availableRoles;
+                try
+                {
+                    availableRoles = JsonSerializer.Deserialize<List<JsonElement>>(allRolesString) ?? new List<JsonElement>();
+                }
+                catch (JsonException ex)
+                {
+                    throw new KeycloakException($"Error procesando JSON de roles disponibles: {ex.Message}");
+                }
+
+                var roleExists = availableRoles.Any(r => r.TryGetProperty("name", out JsonElement nameElement) && nameElement.GetString() == role);
+
+                if (!roleExists)
+                {
+                    throw new KeycloakException($"⚠️ El rol '{role}' no existe en Keycloak.");
+                }
+
+                // 🔹 Verificar si el usuario tiene el rol asignado antes de intentar eliminarlo
+                var assignedRolesResponse = await _httpClient.GetAsync($"admin/realms/auth-demo/users/{userId}/role-mappings/clients/{clientId}");
+                var responseString = await assignedRolesResponse.Content.ReadAsStringAsync();
+
+                if (string.IsNullOrWhiteSpace(responseString))
+                {
+                    throw new KeycloakException($"⚠️ El usuario {userEmail} no tiene roles asignados.");
+                }
+
+                List<JsonElement> assignedRoles;
+                try
+                {
+                    assignedRoles = JsonSerializer.Deserialize<List<JsonElement>>(responseString) ?? new List<JsonElement>();
+                }
+                catch (JsonException ex)
+                {
+                    throw new KeycloakException($"Error procesando JSON de roles asignados: {ex.Message}");
+                }
+
+                if (!assignedRoles.Any(r => r.TryGetProperty("name", out JsonElement nameElement) && nameElement.GetString() == role))
+                {
+                    throw new KeycloakException($"⚠️ El usuario {userEmail} no tiene el rol '{roleName}' asignado.");
+                }
+
+                // 🔹 Obtener el ID del rol antes de eliminarlo
+                var roleId = await GetClientRolesId(clientId, userId.ToString(), role);
                 var roles = new[] { new { id = roleId, name = role } };
 
                 var jsonBody = JsonSerializer.Serialize(roles);
                 var contentJson = new StringContent(jsonBody, Encoding.UTF8, "application/json");
+                Console.WriteLine($"📜 JSON generado: {contentJson}");
+                // 🔹 Enviar solicitud DELETE con el rol específico en el cuerpo
+                var request = new HttpRequestMessage(HttpMethod.Delete, $"admin/realms/auth-demo/users/{userId}/role-mappings/clients/{clientId}")
+                {
+                    Content = contentJson
+                };
 
-                var response = await _httpClient.DeleteAsync($"admin/realms/auth-demo/users/{userId}/role-mappings/clients/{clientId}");
+                var response = await _httpClient.SendAsync(request);
 
                 if (!response.IsSuccessStatusCode)
                 {
                     var errorContent = await response.Content.ReadAsStringAsync();
-                    throw new KeycloakException($"Error eliminando rol en Keycloak: {response.StatusCode} - {errorContent}");
+                    throw new KeycloakException($"❌ Error eliminando rol en Keycloak: {response.StatusCode} - {errorContent}");
                 }
 
-                Console.WriteLine($"Rol '{roleName}' eliminado del usuario {userId} en Keycloak.");
+                Console.WriteLine($"✅ Rol '{roleName}' eliminado exitosamente del usuario {userId} en Keycloak.");
             }
             catch (KeycloakException ex)
             {
-                
-                throw; // 🔹 Relanza la excepción correctamente sin envolverla en AggregateException
+                throw new KeycloakException($"⚠️ Error en Keycloak: {ex.Message}");
+            }
+            catch (JsonException ex)
+            {
+                throw new KeycloakException($"⚠️ Error procesando JSON: {ex.Message}");
+            }
+            catch (InvalidOperationException ex)
+            {
+                throw new InvalidOperationException($"⚠️ Error de lógica: {ex.Message}");
             }
             catch (Exception ex)
             {
-               
-                throw new KeycloakException($"Error crítico: {ex.Message}");
+                throw new KeycloakException($"❌ Error crítico en RemoveClientRoleFromUser: {ex.Message}");
             }
         }
 

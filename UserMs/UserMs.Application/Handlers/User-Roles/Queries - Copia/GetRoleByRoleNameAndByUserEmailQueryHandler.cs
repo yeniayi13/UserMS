@@ -10,15 +10,16 @@ using UserMs.Application.Queries.User_Roles;
 using UserMs.Commoon.Dtos.Users.Response.UserRole;
 using UserMs.Core.Repositories.ActivityHistoryRepo;
 using UserMs.Core.Repositories.UserRoleRepo;
+using UserMs.Infrastructure.Exceptions;
 
 namespace UserMs.Application.Handlers.User_Roles.Queries___Copia
 {
-    internal class GetRoleByIdAndByUserIdQueryHandler : IRequestHandler<GetRoleByIdAndByUserIdQuery, bool>
+    public class GetRoleByRoleNameAndByUserEmailQueryHandler : IRequestHandler<GetRoleByIdAndByUserIdQuery, bool>
     {
         private readonly IUserRoleRepositoryMongo _userRoleRepository;
         private readonly IMapper _mapper;
         private readonly IActivityHistoryRepository _activityHistoryRepository;
-        public GetRoleByIdAndByUserIdQueryHandler(IUserRoleRepositoryMongo userRoleRepository, IMapper mapper)
+        public GetRoleByRoleNameAndByUserEmailQueryHandler(IUserRoleRepositoryMongo userRoleRepository, IMapper mapper)
         {
             _userRoleRepository = userRoleRepository;
             _mapper = mapper;
@@ -28,12 +29,11 @@ namespace UserMs.Application.Handlers.User_Roles.Queries___Copia
         {
             try
             {
-                var userRoles = await _userRoleRepository.GetRoleByIdAndByUserIdQuery(request.RoleId,request.UserId);
+                var userRoles = await _userRoleRepository.GetRoleByRoleNameAndByUserEmail(request.RoleId,request.UserId);
 
                 if (userRoles == null)
                 {
-                    Console.WriteLine($"No se encontraron roles para el usuario con ID: {request.UserId}");
-                    return false; // Retornar lista vacía en lugar de `null`
+                    throw new RoleNotFoundException(); // Retornar lista vacía en lugar de `null`
                 }
 
                // var userRolesDto = _mapper.Map<GetUserRoleDto>(userRoles);
@@ -41,8 +41,7 @@ namespace UserMs.Application.Handlers.User_Roles.Queries___Copia
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error en Handle(): {ex.Message}");
-                return false; // Retornar lista vacía en caso de error
+                throw;
             }
         }
     }

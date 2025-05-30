@@ -13,6 +13,7 @@ using UserMs.Core.Repositories.ActivityHistoryRepo;
 using UserMs.Core.Repositories.Auctioneer;
 using UserMs.Domain.Entities;
 using UserMs.Domain.Entities.Auctioneer.ValueObjects;
+using UserMs.Infrastructure.Exceptions;
 using UserMs.Infrastructure.Repositories.ActivityHistoryRepo;
 
 namespace UserMs.Application.Handlers.Auctioneer.Queries
@@ -41,8 +42,7 @@ namespace UserMs.Application.Handlers.Auctioneer.Queries
 
                 if (auctioneer == null)
                 {
-                    Console.WriteLine($"No se encontró subastador con ID: {request.AuctioneerId}");
-                    return null;
+                    throw new UserNotFoundException($"No se encontró soporte con el email: {request.AuctioneerId}");
                 }
                 // **Registrar actividad en `ActivityHistoryRepository`**
                 var activity = new Domain.Entities.ActivityHistory.ActivityHistory(
@@ -58,8 +58,7 @@ namespace UserMs.Application.Handlers.Auctioneer.Queries
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error en Handle(): {ex.Message}");
-                return null;
+                throw;
             }
         }
     }

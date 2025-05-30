@@ -13,7 +13,7 @@ namespace UserMs.Domain.Entities.UserEntity
         public UsersType UsersType { get; private set; }
         public UserAvailable UserAvailable { get; private set; }
         public ICollection<UserRoles> UserRoles { get; set; }
-        public UserDelete? UserDelete { get; private set; }
+        public UserDelete? UserDelete { get;  set; }
         public ICollection<ActivityHistory.ActivityHistory> ActivityHistories { get; set; }
 
 

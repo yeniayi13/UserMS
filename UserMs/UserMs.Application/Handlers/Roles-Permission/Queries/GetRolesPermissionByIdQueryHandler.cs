@@ -9,6 +9,7 @@ using UserMs.Application.Queries.Roles_Permission;
 using UserMs.Commoon.Dtos.Users.Response.Role_Permission;
 using UserMs.Core.Repositories.ActivityHistoryRepo;
 using UserMs.Core.Repositories.RolePermissionRepo;
+using UserMs.Infrastructure.Exceptions;
 
 namespace UserMs.Application.Handlers.Roles_Permission.Queries
 {
@@ -25,12 +26,21 @@ namespace UserMs.Application.Handlers.Roles_Permission.Queries
 
         public async Task<GetRolePermissionDto> Handle(GetRolesPermissionByIdQuery request, CancellationToken cancellationToken)
         {
-            var rolePermission = await _rolePermissionRepository.GetRolesPermissionByIdQuery(request.RolePermissionId);
-            // if (rolePermission == null) 
-            // throw new RolePermissionNotFoundException("Role permission not found.");
+            try
+            {
+                var rolePermission = await _rolePermissionRepository.GetRolesPermissionByIdQuery(request.RolePermissionId);
+                if (rolePermission == null)
+                    throw new RolePermissionNotFoundException("Role permission not found.");
 
-            var rolePermissionDto = _mapper.Map<GetRolePermissionDto>(rolePermission);
-            return rolePermissionDto;
+                var rolePermissionDto = _mapper.Map<GetRolePermissionDto>(rolePermission);
+                return rolePermissionDto;
+            }
+            catch (Exception e)
+            {
+               
+                throw;
+            }
+            
         }
     }
 }

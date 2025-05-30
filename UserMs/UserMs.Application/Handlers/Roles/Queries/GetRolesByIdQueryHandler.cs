@@ -9,6 +9,7 @@ using UserMs.Application.Queries.Roles;
 using UserMs.Commoon.Dtos.Users.Response.Role;
 using UserMs.Core.Repositories.ActivityHistoryRepo;
 using UserMs.Core.Repositories.RolesRepo;
+using UserMs.Infrastructure.Exceptions;
 
 namespace UserMs.Application.Handlers.Roles.Queries
 {
@@ -25,12 +26,19 @@ namespace UserMs.Application.Handlers.Roles.Queries
 
         public async Task<GetRoleDto> Handle(GetRolesByIdQuery request, CancellationToken cancellationToken)
         {
-            var role = await _rolesRepository.GetRolesByIdQuery(request.RoleId);
-            // if (role == null) 
-            // throw new RoleNotFoundException("Role not found.");
+            try
+            {
+                var role = await _rolesRepository.GetRolesByIdQuery(request.RoleId);
+                if (role == null)
+                    throw new RoleNotFoundException("Role not found.");
 
-            var roleDto = _mapper.Map<GetRoleDto>(role);
-            return roleDto;
+                var roleDto = _mapper.Map<GetRoleDto>(role);
+                return roleDto;
+            }
+            catch (Exception ex)
+            {
+                throw; // Retornar lista vacía en caso de error
+            }
         }
     }
 }

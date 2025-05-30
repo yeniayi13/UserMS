@@ -21,12 +21,21 @@ namespace UserMs.Application.Handlers.User.Queries
 
         public async Task<GetUsersDto> Handle(GetUsersByIdQuery request, CancellationToken cancellationToken)
         {
-            var users = await _usersRepository.GetUsersById(request.Id);
-            //if (users == null || users.UserDelete.Value)
-            // throw new UserNotFoundException("User not found.");
 
-            var userDto = _mapper.Map<GetUsersDto>(users);
-            return userDto;
+            try
+            {
+                var users = await _usersRepository.GetUsersById(request.Id);
+                if (users == null || users.UserDelete.Value== true)
+                    throw new UserNotFoundException("User not found.");
+
+                var userDto = _mapper.Map<GetUsersDto>(users);
+                return userDto;
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+            
         }
         
     }

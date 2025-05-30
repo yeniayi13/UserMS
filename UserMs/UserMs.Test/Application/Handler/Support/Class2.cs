@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace UserMs.Commoon.Service
+namespace UserMs.Test.Application.Handler.Support
 {
-    internal class Class1
+    internal class Class2
     {
     }
 }

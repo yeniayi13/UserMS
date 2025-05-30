@@ -65,7 +65,7 @@ namespace UserMs.Application.Handlers.Auctioneer.Command
             try
             {
                 var auctioneer =
-                    await _auctioneerRepositoryMongo.GetAuctioneerByIdAsync(UserId.Create(request.AuctioneerId));
+                    await _auctioneerRepositoryMongo.GetAuctioneerByIdAsync(request.AuctioneerId);
                 var users = await _usersRepositoryMongo.GetUsersById(request.AuctioneerId);
 
                 if (auctioneer == null)
@@ -73,7 +73,7 @@ namespace UserMs.Application.Handlers.Auctioneer.Command
 
                 // Eliminación del subastador
                 await _auctioneerRepository.DeleteAsync(request.AuctioneerId);
-                await _keycloakMsService.DeleteUserAsync(auctioneer.UserId);
+                await _keycloakMsService.DeleteUserAsync(auctioneer.UserId.Value);
                 await _usersRepository.DeleteUsersAsync(request.AuctioneerId);
 
                 // Publicar eventos en el bus de mensajes

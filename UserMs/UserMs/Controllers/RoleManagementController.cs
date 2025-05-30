@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using UserMs.Application.Commands.RolesPermission;
 using UserMs.Application.Commands.UsersRoles;
@@ -209,7 +210,8 @@ namespace UserMs.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, "Error interno al buscar el permiso.");
             }
         }
-
+        
+       /* [Authorize(Policy = "AdministradorPolicy")]
         // 🔹 Asignar un permiso a un rol
         [HttpPost("Assign-Permission-Role")]
             public async Task<IActionResult> CreateRolePermission(
@@ -233,10 +235,11 @@ namespace UserMs.Controllers
                     _logger.LogError(ex, "Error inesperado al asignar permisos.");
                     return StatusCode(StatusCodes.Status500InternalServerError, "Error interno al asignar el permiso.");
                 }
-            }
+            }*/
 
 
-
+    
+        [Authorize(Policy = "AdministradorPolicy")]
         [HttpGet("Roles-Permissions-All")]
         public async Task<IActionResult> GetAllRolePermission()
         {
@@ -261,7 +264,7 @@ namespace UserMs.Controllers
         }
 
 
-
+        [Authorize(Policy = "AdministradorPolicy")]
         [HttpDelete("Unassign-Permission-To-Role/{rolePermissionId}")]
         public async Task<IActionResult> DeleteRolePermission(Guid rolePermissionId)
         {
@@ -289,7 +292,7 @@ namespace UserMs.Controllers
             }
         }
 
-
+        [Authorize(Policy = "AdministradorPolicy")]
 
         // 🔹 Crear un rol de usuario
         [HttpPost("Assign-Roles-Users")]
@@ -313,12 +316,12 @@ namespace UserMs.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, "Error interno al asignar rol.");
             }
         }
-
+        [Authorize(Policy = "AdministradorPolicy")]
         // 🔹 Eliminar un rol de usuario
-        [HttpDelete("Unassign-Roles-Users/{roleId}/{userId}")]
-        public async Task<IActionResult> DeleteUserRole(string roleId, string userId)
+        [HttpDelete("Unassign-Roles-Users/{roleName}/{userEmail}")]
+        public async Task<IActionResult> DeleteUserRole(string roleName, string userEmail)
         {
-            if (string.IsNullOrWhiteSpace(roleId) || string.IsNullOrWhiteSpace(userId))
+            if (string.IsNullOrWhiteSpace(roleName) || string.IsNullOrWhiteSpace(userEmail))
             {
                 _logger.LogWarning("Solicitud de eliminación de rol con parámetros vacíos.");
                 return BadRequest("El ID de rol y usuario no pueden estar vacíos.");
@@ -326,14 +329,14 @@ namespace UserMs.Controllers
 
             try
             {
-                var command = new DeleteUserRolesCommand(roleId, userId);
+                var command = new DeleteUserRolesCommand(roleName, userEmail);
                 await _mediator.Send(command);
                 return NoContent();
             }
             catch (KeyNotFoundException ex)
             {
-                _logger.LogError(ex, $"No se encontró el rol {roleId} para el usuario {userId}");
-                return NotFound($"No se encontró el rol {roleId} para el usuario {userId}");
+                _logger.LogError(ex, $"No se encontró el rol {roleName} para el usuario {userEmail}");
+                return NotFound($"No se encontró el rol {roleName} para el usuario {userEmail}");
             }
             catch (Exception ex)
             {

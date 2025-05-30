@@ -10,11 +10,11 @@ namespace UserMs.Domain.Entities
         //[BsonElement("UserId")]
         public UserId UserId { get;  set; } // Make it private to enforce immutability
         public UserEmail UserEmail { get;  set; }
-        public UserPassword UserPassword { get; private set; }
-        public UserAddress? UserAddress { get; private set; }
-        public UserPhone? UserPhone { get; private set; }
+        public UserPassword UserPassword { get;  set; }
+        public UserAddress? UserAddress { get;  set; }
+        public UserPhone? UserPhone { get;  set; }
         public UserName UserName { get;  set; }
-        public UserLastName UserLastName { get; private set; }
+        public UserLastName UserLastName { get;  set; }
         public DateTime CreatedAt { get; set; }
         public string? CreatedBy { get; set; }
         public DateTime? UpdatedAt { get; set; }

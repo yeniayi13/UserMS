@@ -28,4 +28,8 @@
     <ProjectReference Include="..\UserMs\UserMs.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Application\Handler\Bidder\" />
+  </ItemGroup>
+
 </Project>

@@ -15,6 +15,7 @@ using UserMs.Core.Repositories.UserRepo;
 using UserMs.Core.Repositories.UserRoleRepo;
 using UserMs.Core.Service.Keycloak;
 using UserMs.Domain.Entities;
+using UserMs.Domain.Entities.Role.ValueObjects;
 using UserMs.Domain.Entities.UserEntity;
 using UserMs.Domain.User_Roles.ValueObjects;
 using UserMs.Infrastructure.Exceptions;
@@ -57,7 +58,8 @@ namespace UserMs.Application.Handlers.User_Roles.Commands
         {
             try
             {
-                var userRole = await _userRoleRepositoryMongo.GetRoleByIdAndByUserIdQuery(request.Rol, request.Email);
+                Console.WriteLine($"Email{request.Email}.");
+                var userRole = await _userRoleRepositoryMongo.GetRoleByRoleNameAndByUserEmail(request.Rol, request.Email);
 
                 if (userRole == null)
                     throw new UserNotFoundException("Error: No se encontró el usuario con el rol especificado.");
@@ -66,7 +68,7 @@ namespace UserMs.Application.Handlers.User_Roles.Commands
 
                 await _userRoleRepository.DeleteUsersRoleAsync(userRoleDto.UserRoleId);
                 await _eventBus.PublishMessageAsync(userRoleDto, "userRoleQueue", "USER_ROLE_DELETED");
-                await _keycloakMsService.RemoveClientRoleFromUser(userRole.UserId, request.Rol);
+                await _keycloakMsService.RemoveClientRoleFromUser(userRole.UserEmail, request.Rol);
 
                 var activity = new Domain.Entities.ActivityHistory.ActivityHistory(
                     Guid.NewGuid(),

@@ -10,7 +10,7 @@ namespace UserMs.Commoon.Dtos.Users.Request.UserRole
 {
     public class CreateUserRolesDto
     {
-       // public Guid UserRoleId { get; private set; }
+        public Guid UserRoleId { get;  set; }
         public Guid UserId { get;  set; }
         public Guid RoleId { get;  set; }
 

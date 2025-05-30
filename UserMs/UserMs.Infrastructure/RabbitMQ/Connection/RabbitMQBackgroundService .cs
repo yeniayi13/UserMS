@@ -23,16 +23,17 @@ namespace UserMs.Infrastructure.RabbitMQ.Connection
         {
             Console.WriteLine("Esperando la inicialización de RabbitMQ...");
 
-            await Task.Delay(3000); // Pequeño retraso para asegurar la inicialización
+                await Task.Delay(3000); // Espera de 2 segundos antes de volver a comprobar
+                
 
-            var queues = new List<string> { "userQueue", "supportQueue", "bidderQueue", "auctioneerQueue", "userRoleQueue","roleQueue","rolePermissionQueue", "activityHistoryQueue" };
+            var queues = new List<string> { "userQueue", "supportQueue", "bidderQueue", "auctioneerQueue", "userRoleQueue", "roleQueue", "rolePermissionQueue", "activityHistoryQueue" };
 
             foreach (var queueName in queues)
             {
                 _ = Task.Run(() => _rabbitMQConsumer.ConsumeMessagesAsync(queueName), stoppingToken);
             }
 
-            Console.WriteLine("Todos los consumidores de RabbitMQ han sido iniciados.");
+            Console.WriteLine("🚀 Todos los consumidores de RabbitMQ han sido iniciados.");
         }
     }
 }

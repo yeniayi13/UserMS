@@ -15,6 +15,7 @@ using UserMs.Core.Repositories.Bidders;
 using UserMs.Domain.Entities;
 using UserMs.Domain.Entities.Auctioneer.ValueObjects;
 using UserMs.Domain.Entities.Bidder.ValueObjects;
+using UserMs.Infrastructure.Exceptions;
 
 namespace UserMs.Application.Handlers.Bidder.Queries
 {
@@ -41,8 +42,7 @@ namespace UserMs.Application.Handlers.Bidder.Queries
 
                 if (bidder == null)
                 {
-                    Console.WriteLine($"No se encontró postor con UserId: {request.Email}");
-                    return null;
+                    throw new UserNotFoundException($"No se encontró soporte con el email: {request.Email}");
                 }
                 var activity = new Domain.Entities.ActivityHistory.ActivityHistory(
                     Guid.NewGuid(),
@@ -57,8 +57,7 @@ namespace UserMs.Application.Handlers.Bidder.Queries
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error en Handle(): {ex.Message}");
-                return null;
+                throw;
             }
         }
     }
