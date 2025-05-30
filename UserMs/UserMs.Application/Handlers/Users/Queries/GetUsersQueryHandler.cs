@@ -3,6 +3,7 @@ using MediatR;
 using AutoMapper;
 using UserMs.Commoon.Dtos.Users.Response.User;
 using UserMs.Core.Repositories.UserRepo;
+using UserMs.Infrastructure.Exceptions;
 
 
 namespace UserMs.Application.Handlers.User.Queries
@@ -27,8 +28,7 @@ namespace UserMs.Application.Handlers.User.Queries
                 //var activeUsers = users.Where(u => !u.UserDelete.Value).ToList();
                 if (users == null || users.Count == 0)
                 {
-                    Console.WriteLine("No se encontraron los usuarios con el estado solicitado.");
-                    return new List<GetUsersDto>(); //  Retornar lista vacía en lugar de `null`
+                    throw new UserNotFoundException("User not found."); //  Retornar lista vacía en lugar de `null`
                 }
 
                 var userDto = _mapper.Map < List<GetUsersDto>>(users);
@@ -36,8 +36,7 @@ namespace UserMs.Application.Handlers.User.Queries
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error en Handle(): {ex.Message}");
-                return new List<GetUsersDto>(); //  Retornar lista vacía en caso de error
+                throw; //  Retornar lista vacía en caso de error
             }
         }
     }

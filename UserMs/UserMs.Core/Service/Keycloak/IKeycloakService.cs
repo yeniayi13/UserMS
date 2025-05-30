@@ -10,7 +10,7 @@ namespace UserMs.Core.Service.Keycloak
         Task<string> LogOutAsync();
         Task<string> CreateUserAsync(string userEmail, string userPassword,string userName, string userLastName, string userPhone, string userAddress);
         Task<string> DeleteUserAsync(Guid userId);
-        Task RemoveClientRoleFromUser(Guid userId, string roleName);
+        Task RemoveClientRoleFromUser(string userEmail, string roleName);
         Task AssignClientRoleToUser(
             Guid userId,
             string roleName

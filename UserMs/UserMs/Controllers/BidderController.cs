@@ -43,7 +43,7 @@ namespace UserMs.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, "Error interno al crear el postor.");
             }
         }
-
+        [Authorize]
         [HttpGet("Bidder-All")]
         public async Task<IActionResult> GetBidders()
         {
@@ -66,7 +66,7 @@ namespace UserMs.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, "Error interno al obtener los postores.");
             }
         }
-
+        [Authorize]
         [HttpGet("{bidderId}")]
         public async Task<IActionResult> GetBidderById([FromRoute] Guid bidderId)
         {
@@ -95,7 +95,7 @@ namespace UserMs.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, "Error interno al buscar el postor.");
             }
         }
-
+        [Authorize]
         [HttpGet("UserEmail/{UserEmail}")]
         public async Task<IActionResult> GetBidderByUserEmail([FromRoute] string UserEmail)
         {
@@ -124,7 +124,7 @@ namespace UserMs.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, "Error interno al buscar el postor.");
             }
         }
-
+        [Authorize]
         [HttpPut("Update-Bidder/{bidderId}")]
         public async Task<IActionResult> UpdateBidder([FromRoute] Guid bidderId, [FromBody] UpdateBidderDto bidderDto)
         {
@@ -146,6 +146,7 @@ namespace UserMs.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, "Error interno al actualizar el postor.");
             }
         }
+        [Authorize]
         [HttpDelete("Delete-Bidder/{bidderId}")]
         public async Task<IActionResult> DeleteBidder([FromRoute] Guid bidderId)
         {

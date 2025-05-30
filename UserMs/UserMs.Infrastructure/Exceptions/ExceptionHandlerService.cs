@@ -18,7 +18,7 @@ namespace UserMs.Infrastructure.Exceptions
                 case ValidationException:
                     throw new ValidationException("Error de validación: " + ex.Message);
                 case UserNotFoundException:
-                    throw new UserNotFoundException("Subastador no encontrado.");
+                    throw new UserNotFoundException("Usuario no encontrado.");
                 case RoleNotFoundException:
                     throw new RoleNotFoundException("Rol no encontrado.");
                 case UserRoleExistException:

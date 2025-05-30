@@ -12,7 +12,7 @@ namespace UserMs.Core.Repositories.UserRoleRepo
         Task<List<GetUserRoleDto>> GetUsersRoleAsync();
         Task<List<GetUserRoleDto>> GetUserRolesByUserEmailQuery(string email);
         Task<List<GetUserRoleDto>> GetUserRolesByRoleNameQuery(string name);
-        Task<GetUserRoleDto?> GetRoleByIdAndByUserIdQuery(string roleId, string userId);
+        Task<GetUserRoleDto?> GetRoleByRoleNameAndByUserEmail(string roleName, string userEmail);
         Task<List<GetUserRoleDto>> GetUserRolesByIdQuery(Guid userRoleId);
     }
 }

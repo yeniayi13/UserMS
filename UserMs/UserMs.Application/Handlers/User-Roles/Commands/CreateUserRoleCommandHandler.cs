@@ -79,7 +79,7 @@ namespace UserMs.Application.Handlers.User_Roles.Commands
 
                 // 🔹 Verificar si el usuario ya tiene el rol asignado
                 var roleUser =
-                    await _userRoleRepositoryMongo.GetRoleByIdAndByUserIdQuery(role.RoleName.Value, user.UserEmail.Value);
+                    await _userRoleRepositoryMongo.GetRoleByRoleNameAndByUserEmail(role.RoleName.Value, user.UserEmail.Value);
                 if (roleUser != null)
                 {
                   
@@ -101,7 +101,7 @@ namespace UserMs.Application.Handlers.User_Roles.Commands
                     RoleName = role.RoleName.Value
                 };
 
-                await _keycloakMsService.AssignClientRoleToUser(userId, data.RoleName);
+                await _keycloakMsService.AssignClientRoleToUser(userId,role.RoleName.Value);
                 await _eventBus.PublishMessageAsync(data, "userRoleQueue", "USER_ROLE_CREATED");
 
                

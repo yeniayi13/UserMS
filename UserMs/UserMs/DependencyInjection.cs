@@ -84,7 +84,7 @@ namespace UserMs
                             if (resourceAccessJson.RootElement.TryGetProperty("admin-client", out var webClientAccess))
                             {
                                 return webClientAccess.GetProperty("roles").EnumerateArray()
-                                    .Any(role => role.GetString() == "Auctioneer");
+                                    .Any(role => role.GetString() == "Bidder");
                             }
 
                             return false;
@@ -101,7 +101,7 @@ namespace UserMs
                             if (resourceAccessJson.RootElement.TryGetProperty("admin-client", out var webClientAccess))
                             {
                                 return webClientAccess.GetProperty("roles").EnumerateArray()
-                                    .Any(role => role.GetString() == "Bidder");
+                                    .Any(role => role.GetString() == "Auctioneer");
                             }
 
                             return false;

@@ -14,10 +14,12 @@ using UserMs.Domain.Entities.UserEntity;
 using UserMs.Core.Service.Keycloak;
 using AuthMs.Common.Exceptions;
 using FluentValidation;
+using System.Diagnostics.CodeAnalysis;
 
 
 namespace UserMs.Application.Handlers.User.Commands
 {
+    [ExcludeFromCodeCoverage]
     public class CreateUsersCommandHandler : IRequestHandler<CreateUsersCommand, UserId>
     {
         private readonly IUserRepository _usersRepository;

@@ -6,7 +6,7 @@ using MongoDB.Bson;
 using MongoDB.Bson.Serialization;
 using MongoDB.Bson.Serialization.Serializers;
 using UserMs;
-using UserMs.Application.Handlers.ActivityHistory.NewFolder;
+using UserMs.Application.Handlers.ActivityHistory;
 using UserMs.Application.Handlers.Auctioneer.Command;
 using UserMs.Application.Handlers.Auctioneer.Queries;
 using UserMs.Application.Handlers.Bidder.Command;
@@ -76,7 +76,7 @@ using UserMs.Commoon.Dtos.Users.Response.Auctioneer;
 using UserMs.Commoon.Dtos.Users.Request.Auctioneer;
 using UserMs.Domain.Entities;
 using UserMs.Domain.Entities.ActivityHistory;
-using UserMs.Application.Handlers.ActivityHistory.NewFolder1;
+using UserMs.Application.Handlers.ActivityHistory.Queries;
 using UserMs.Commoon.Dtos.Users.Response.ActivityHistory;
 using UserMs.Core.Repositories.ActivityHistory;
 using UserMs.Core.Repositories.ActivityHistoryRepo;
@@ -91,7 +91,8 @@ using UserMs.Infrastructure.Repositories.Bidders;
 using UserMs.Infrastructure.Repositories.Supports;
 using UserMs.Infrastructure.Repositories.Users;
 using RabbitMQ.Client;
-
+using MongoDB.Driver;
+using UserMs.Application.Handlers.ActivityHistory.Command;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -277,6 +278,8 @@ builder.Services.AddTransient<IAuctioneerRepositoryMongo, AuctioneerRepositoryMo
 builder.Services.AddTransient<IActivityHistoryRepository, ActivityHistoryRepository>();
 builder.Services.AddTransient<IActivityHistoryRepositoryMongo, ActivityHistoryRepositoryMongo>();
 builder.Services.AddTransient<IEmailSender, EmailSender>();
+builder.Services.AddSingleton<IRabbitMQConsumer, RabbitMQConsumer>();
+builder.Services.AddSingleton<IHostedService, RabbitMQBackgroundService>();
 
 
 //***********************************************************************
@@ -295,10 +298,6 @@ builder.Services.AddControllers().AddJsonOptions(options =>
 
 // *********************Configuracion de RabbitMQ*********************
 
-// Configura la dependencia en tu contenedor 
-builder.Services.AddSingleton<IRabbitMQConsumer, RabbitMQConsumer>();
-builder.Services.AddSingleton<IConnectionRabbbitMQ, RabbitMQConnection>();
-builder.Services.AddSingleton(typeof(IEventBus<>), typeof(RabbitMQProducer<>));
 builder.Services.AddSingleton<IConnectionFactory>(provider =>
 {
     return new ConnectionFactory
@@ -309,39 +308,45 @@ builder.Services.AddSingleton<IConnectionFactory>(provider =>
         Password = "guest",
     };
 });
-
 builder.Services.AddSingleton<IConnectionRabbbitMQ>(provider =>
 {
     var connectionFactory = provider.GetRequiredService<IConnectionFactory>();
     var rabbitMQConnection = new RabbitMQConnection(connectionFactory);
     rabbitMQConnection.InitializeAsync().Wait(); // ?? Ejecutar inicialización antes de inyectarlo
     return rabbitMQConnection;
-}); builder.Services.AddSingleton<IRabbitMQConsumer, RabbitMQConsumer>();
+}); 
+
+// Configura la dependencia en tu contenedor 
+
+builder.Services.AddSingleton(typeof(IEventBus<>), typeof(RabbitMQProducer<>));
+
+
+
 // Usa la misma instancia de `RabbitMQConnection` para el Producer
 
 
 builder.Services.AddSingleton<IEventBus<CreateUserDto>>(provider =>
 {
-    var rabbitMQConnection = provider.GetRequiredService<RabbitMQConnection>();
+    var rabbitMQConnection = provider.GetRequiredService<IConnectionRabbbitMQ>();
     return new RabbitMQProducer<CreateUserDto>(rabbitMQConnection);
 });
 
 builder.Services.AddSingleton<IEventBus<UpdateUserDto>>(provider =>
 {
-    var rabbitMQConnection = provider.GetRequiredService<RabbitMQConnection>();
+    var rabbitMQConnection = provider.GetRequiredService<IConnectionRabbbitMQ>();
     return new RabbitMQProducer<UpdateUserDto>(rabbitMQConnection);
 });
 
 
 builder.Services.AddSingleton<IEventBus<GetUsersDto>>(provider =>
 {
-    var rabbitMQConnection = provider.GetRequiredService<RabbitMQConnection>();
+    var rabbitMQConnection = provider.GetRequiredService<IConnectionRabbbitMQ>();
     return new RabbitMQProducer<GetUsersDto>(rabbitMQConnection);
 });
 
 builder.Services.AddSingleton<IEventBus<GetActivityHistoryDto>>(provider =>
 {
-    var rabbitMQConnection = provider.GetRequiredService<RabbitMQConnection>();
+    var rabbitMQConnection = provider.GetRequiredService<IConnectionRabbbitMQ>();
     return new RabbitMQProducer<GetActivityHistoryDto>(rabbitMQConnection);
 });
 
@@ -351,39 +356,39 @@ builder.Services.AddSingleton<IEventBus<GetActivityHistoryDto>>(provider =>
 
 builder.Services.AddSingleton<IEventBus<CreateAuctioneerDto>>(provider =>
 {
-    var rabbitMQConnection = provider.GetRequiredService<RabbitMQConnection>();
+    var rabbitMQConnection = provider.GetRequiredService<IConnectionRabbbitMQ>();
     return new RabbitMQProducer<CreateAuctioneerDto>(rabbitMQConnection);
 });
 
 builder.Services.AddSingleton<IEventBus<UpdateAuctioneerDto>>(provider =>
 {
-    var rabbitMQConnection = provider.GetRequiredService<RabbitMQConnection>();
+    var rabbitMQConnection = provider.GetRequiredService<IConnectionRabbbitMQ>();
     return new RabbitMQProducer<UpdateAuctioneerDto>(rabbitMQConnection);
 });
 
 
 builder.Services.AddSingleton<IEventBus<GetAuctioneerDto>>(provider =>
 {
-    var rabbitMQConnection = provider.GetRequiredService<RabbitMQConnection>();
+    var rabbitMQConnection = provider.GetRequiredService<IConnectionRabbbitMQ>();
     return new RabbitMQProducer<GetAuctioneerDto>(rabbitMQConnection);
 });
 
 builder.Services.AddSingleton<IEventBus<CreateBidderDto>>(provider =>
 {
-    var rabbitMQConnection = provider.GetRequiredService<RabbitMQConnection>();
+    var rabbitMQConnection = provider.GetRequiredService<IConnectionRabbbitMQ>();
     return new RabbitMQProducer<CreateBidderDto>(rabbitMQConnection);
 });
 
 builder.Services.AddSingleton<IEventBus<UpdateBidderDto>>(provider =>
 {
-    var rabbitMQConnection = provider.GetRequiredService<RabbitMQConnection>();
+    var rabbitMQConnection = provider.GetRequiredService<IConnectionRabbbitMQ>();
     return new RabbitMQProducer<UpdateBidderDto>(rabbitMQConnection);
 });
 
 
 builder.Services.AddSingleton<IEventBus<GetBidderDto>>(provider =>
 {
-    var rabbitMQConnection = provider.GetRequiredService<RabbitMQConnection>();
+    var rabbitMQConnection = provider.GetRequiredService<IConnectionRabbbitMQ>();
     return new RabbitMQProducer<GetBidderDto>(rabbitMQConnection);
 });
 
@@ -395,14 +400,14 @@ builder.Services.AddSingleton<IEventBus<CreateSupportDto>>(provider =>
 
 builder.Services.AddSingleton<IEventBus<UpdateSupportDto>>(provider =>
 {
-    var rabbitMQConnection = provider.GetRequiredService<RabbitMQConnection>();
+    var rabbitMQConnection = provider.GetRequiredService<IConnectionRabbbitMQ>();
     return new RabbitMQProducer<UpdateSupportDto>(rabbitMQConnection);
 });
 
 
 builder.Services.AddSingleton<IEventBus<GetSupportDto>>(provider =>
 {
-    var rabbitMQConnection = provider.GetRequiredService<RabbitMQConnection>();
+    var rabbitMQConnection = provider.GetRequiredService<IConnectionRabbbitMQ>();
     return new RabbitMQProducer<GetSupportDto>(rabbitMQConnection);
 });
 //  Usa la misma instancia de `RabbitMQConnection` para el Consumer
@@ -411,7 +416,13 @@ builder.Services.AddSingleton<RabbitMQConsumer>(provider =>
     var rabbitMQConnection = provider.GetRequiredService<IConnectionRabbbitMQ>();
     return new RabbitMQConsumer(rabbitMQConnection);
 });
+builder.Services.AddSingleton<RabbitMQConsumer>(provider =>
+{
 
+    var rabbitMQConnection = provider.GetRequiredService<IConnectionRabbbitMQ>();
+    //var productCollection = provider.GetRequiredService<IMongoCollection<GetProductDto>>();
+    return new RabbitMQConsumer(rabbitMQConnection);
+});
 // Iniciar el consumidor automáticamente con `RabbitMQBackgroundService`
 builder.Services.AddHostedService<RabbitMQBackgroundService>();
 

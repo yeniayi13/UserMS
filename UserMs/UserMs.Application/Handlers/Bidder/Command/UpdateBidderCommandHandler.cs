@@ -138,13 +138,26 @@ namespace UserMs.Application.Handlers.Bidder.Command
                 UserName.Create(bidderDto.UserName),
                 UserPhone.Create(bidderDto.UserPhone),
                 UserAddress.Create(bidderDto.UserAddress),
-                UserLastName.Create(bidderDto.UserLastName)
+                UserLastName.Create(bidderDto.UserLastName),
+                Enum.Parse<UsersType>("Postor"), // 🔹 UserType configurado correctamente
+                Enum.Parse<UserAvailable>("Activo"),
+                UserDelete.Create(false)
             );
         }
 
         private async Task SaveUpdatedEntities(Bidders updatedBidder, Users updatedUser)
         {
-            var updateUserDto = _mapper.Map<UpdateUserDto>(updatedUser);
+            var updateUserDto = new UpdateUserDto
+            {
+
+                UserEmail = updatedUser.UserEmail.Value,
+                UserPassword = updatedUser.UserPassword.Value,
+                UserName = updatedUser.UserName.Value,
+                UserLastName = updatedUser.UserLastName.Value,
+                UserPhone = updatedUser.UserPhone.Value,
+                UserAddress = updatedUser.UserAddress.Value,
+
+            };
             _keycloakRepository.UpdateUser(updatedBidder.UserId, updateUserDto);
 
             await _bidderRepository.UpdateAsync(updatedBidder.UserId, updatedBidder);

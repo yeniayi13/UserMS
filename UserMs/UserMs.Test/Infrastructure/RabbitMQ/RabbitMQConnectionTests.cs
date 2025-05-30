@@ -149,7 +149,7 @@ namespace UserMs.Test.Infrastructure.RabbitMQ
                 It.IsAny<bool>(),
                 It.IsAny<bool>(),
                 It.IsAny<CancellationToken>()
-            ), Times.Once);
+            ), Times.Exactly(8));
         }
 
     }

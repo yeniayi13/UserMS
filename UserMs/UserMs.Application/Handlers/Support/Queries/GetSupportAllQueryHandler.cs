@@ -10,6 +10,7 @@ using UserMs.Commoon.Dtos.Users.Response.Support;
 using UserMs.Core.Repositories.ActivityHistoryRepo;
 using UserMs.Core.Repositories.Supports;
 using UserMs.Core.Repositories.SupportsRepo;
+using UserMs.Infrastructure.Exceptions;
 
 namespace UserMs.Application.Handlers.Support.Queries
 {
@@ -32,16 +33,14 @@ namespace UserMs.Application.Handlers.Support.Queries
 
                 if (supports == null || supports.Count == 0)
                 {
-                    Console.WriteLine("No se encontraron registros de soporte.");
-                    return new List<GetSupportDto>(); // Retornar lista vacía en lugar de `null`
+                    throw new UserNotFoundException($"No se encontró ningun trabajador de soporte");// Retornar lista vacía en lugar de `null`
                 }
 
                 return _mapper.Map<List<GetSupportDto>>(supports);
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error en Handle(): {ex.Message}");
-                return new List<GetSupportDto>(); // Retornar lista vacía en caso de error
+                throw; // Retornar lista vacía en caso de error
             }
         }
     }

@@ -41,9 +41,11 @@ namespace UserMs.Infrastructure.RabbitMQ.Consumer
 
         /*private readonly IMongoCollection<UpdateUsersDto> _collectionU;
         private readonly IMongoCollection<GetUsersDto> _collectionG;*/
-        
-        
-        
+
+
+        private bool _isInitialized = false;
+
+        public bool IsInitialized() => _isInitialized;
         public RabbitMQConsumer(IConnectionRabbbitMQ rabbitMQConnection)
         {
             _rabbitMQConnection = rabbitMQConnection;

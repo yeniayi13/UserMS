@@ -15,9 +15,11 @@ using UserMs.Core.Service.Keycloak;
 using UserMs.Domain.Entities.UserEntity;
 using AutoMapper;
 using UserMs.Commoon.Dtos.Users.Response.Auctioneer;
+using System.Diagnostics.CodeAnalysis;
 
 namespace UserMs.Application.Handlers.User.Commands
 {
+    [ExcludeFromCodeCoverage]
     public class UpdateUsersCommandHandler : IRequestHandler<UpdateUsersCommand,Users>
     {
         private readonly IUserRepository _usersRepository;

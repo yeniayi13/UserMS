@@ -40,8 +40,7 @@ namespace UserMs.Application.Handlers.User_Roles.Queries___Copia
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error en Handle(): {ex.Message}");
-                return new List<GetUserRoleDto>(); // Retornar lista vacía en caso de error
+                throw; // Retornar lista vacía en caso de error
             }
         }
     }

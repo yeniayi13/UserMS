@@ -104,21 +104,21 @@ namespace UserMs.Application.Handlers.Auctioneer.Command
                     var usersAddressValue = request.Auctioneer.UserAddress;
                     string hashedPassword = BCrypt.Net.BCrypt.HashPassword(userPasswordValue);
 
-                    // ✅ Validación de datos de entrada
+                    //  Validación de datos de entrada
                     await ValidateAuctioneerRequest(request, cancellationToken);
 
-                    // ✅ Creación y verificación del usuario
+                    //  Creación y verificación del usuario
                     var Id = await CreateUserInKeycloak(userEmailValue, hashedPassword, usersNameValue, usersLastNameValue, usersPhoneValue, usersAddressValue);
 
-                    // ✅ Creación de entidades
+                    //  Creación de entidades
                     var auctioneer = CreateAuctioneerEntity(request.Auctioneer, Id);
                     var users = CreateUserEntity(request.Auctioneer, Id);
                     var userRole = await CreateUserRoleEntity(Id, request.Auctioneer.UserEmail);
 
-                    // ✅ Almacenamiento en repositorios
+                    //  Almacenamiento en repositorios
                     await SaveEntities(users, auctioneer, userRole);
 
-                    // ✅ Publicación de eventos
+                    //  Publicación de eventos
                     await PublishEvents(auctioneer, users, userRole, Id);
 
                     return auctioneer.UserId;
@@ -195,7 +195,7 @@ namespace UserMs.Application.Handlers.Auctioneer.Command
                 if (role == null)
                     throw new RoleNotFoundException("Role not found");
 
-                var exist = await _userRoleRepositoryMongo.GetRoleByIdAndByUserIdQuery(role.RoleName.Value, userEmail);
+                var exist = await _userRoleRepositoryMongo.GetRoleByRoleNameAndByUserEmail(role.RoleName.Value, userEmail);
                 if (exist != null)
                     throw new UserRoleExistException("Este usuario ya tiene este rol.");
 

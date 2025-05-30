@@ -14,13 +14,13 @@ namespace UserMs.Domain.Entities.Role_Permission
     public  class RolePermissions
     {
        
-        public RolePermissionId RolePermissionId { get; private set; } 
-        public RoleId RoleId { get; private set; }
-        public PermissionId PermissionId { get; private set; }
+        public RolePermissionId RolePermissionId { get;  set; } 
+        public RoleId RoleId { get;  set; }
+        public PermissionId PermissionId { get;  set; }
 
        
-        public Roles Role { get; private set; }
-        public Permissions Permission { get; private set; }
+        public Roles Role { get;  set; }
+        public Permissions Permission { get;  set; }
 
         public DateTime CreatedAt { get; set; }
         public string? CreatedBy { get; set; }

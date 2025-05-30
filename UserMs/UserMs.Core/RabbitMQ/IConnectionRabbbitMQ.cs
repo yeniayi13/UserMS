@@ -9,6 +9,6 @@ namespace UserMs.Core.RabbitMQ
     public interface IConnectionRabbbitMQ
     {
         public Task InitializeAsync();
-        public IChannel GetChannel();
+       public IChannel GetChannel();
     }
 }

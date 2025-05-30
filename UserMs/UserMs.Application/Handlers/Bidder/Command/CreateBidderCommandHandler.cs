@@ -31,6 +31,7 @@ using UserMs.Infrastructure.Exceptions;
 
 namespace UserMs.Application.Handlers.Bidder.Command
 {
+
     public class CreateBidderCommandHandler : IRequestHandler<CreateBidderCommand, UserId>
     {
         private readonly IBidderRepository _bidderRepository;
@@ -189,7 +190,7 @@ namespace UserMs.Application.Handlers.Bidder.Command
             if (role == null)
                 throw new RoleNotFoundException("Role not found");
 
-            var exist = await _userRoleRepositoryMongo.GetRoleByIdAndByUserIdQuery(role.RoleName.Value, userEmail);
+            var exist = await _userRoleRepositoryMongo.GetRoleByRoleNameAndByUserEmail(role.RoleName.Value, userEmail);
             if (exist != null)
                 throw new UserRoleExistException("Este usuario posee este rol");
 

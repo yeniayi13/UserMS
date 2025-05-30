@@ -45,8 +45,7 @@ namespace UserMs.Application.Handlers.Bidder.Queries
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error en Handle(): {ex.Message}");
-                return new List<GetBidderDto>(); // Retornar lista vacía en caso de error
+                throw; // Retornar lista vacía en caso de error
             }
         }
     }
