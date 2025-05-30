@@ -137,7 +137,7 @@ namespace UserMs.Controllers
             }
         }
 
-
+        [Authorize(Policy = "AdministradorPolicy")]
         [HttpGet("Permission-All")]
         public async Task<IActionResult> GetPermissionAll()
         {
@@ -176,41 +176,7 @@ namespace UserMs.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, "Error interno al obtener los permisos.");
             }
         }
-
-        [HttpGet("Permission/{permissionId}")]
-        public async Task<IActionResult> GetPermissionById([FromRoute] Guid permissionId)
-        {
-            if (permissionId == Guid.Empty)
-            {
-                _logger.LogWarning("Solicitud con ID de permiso vacío.");
-                return BadRequest("El ID del permiso no puede estar vacío.");
-            }
-
-            try
-            {
-                var query = new GetPemissionByIdQuery(permissionId);
-                var permission = await _mediator.Send(query);
-
-                if (permission == null)
-                {
-                    _logger.LogWarning($"No se encontró un permiso con ID: {permissionId}");
-                    return NotFound($"No se encontró un permiso con ID: {permissionId}");
-                }
-
-                return Ok(permission);
-            }
-            catch (KeyNotFoundException ex)
-            {
-                _logger.LogError(ex, $"No se encontró el permiso con ID: {permissionId}");
-                return NotFound($"No se encontró un permiso con ID: {permissionId}");
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, $"Error inesperado al obtener permiso con ID: {permissionId}");
-                return StatusCode(StatusCodes.Status500InternalServerError, "Error interno al buscar el permiso.");
-            }
-        }
-        
+       
        /* [Authorize(Policy = "AdministradorPolicy")]
         // 🔹 Asignar un permiso a un rol
         [HttpPost("Assign-Permission-Role")]
@@ -345,7 +311,7 @@ namespace UserMs.Controllers
             }
         }
 
-        // 🔹 Obtener todos los roles de usuario
+       
         [HttpGet("User-Roles-All")]
         public async Task<IActionResult> GetAllUserRole()
         {

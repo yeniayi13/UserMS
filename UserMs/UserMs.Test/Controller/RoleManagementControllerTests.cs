@@ -377,62 +377,6 @@ namespace UserMs.Test.Controller
         }
 
 
-        [Fact]
-        public async Task GetPermissionById_ReturnsBadRequest_WhenPermissionIdIsEmpty()
-        {
-            var result = await _controller.GetPermissionById(Guid.Empty) as BadRequestObjectResult;
-
-            Assert.NotNull(result);
-            Assert.Equal(400, result.StatusCode);
-            Assert.Equal("El ID del permiso no puede estar vacío.", result.Value);
-        }
-
-        [Fact]
-        public async Task GetPermissionById_ReturnsNotFound_WhenPermissionDoesNotExist()
-        {
-            Guid permissionId = Guid.NewGuid();
-            _mockMediator.Setup(m => m.Send(It.IsAny<GetPemissionByIdQuery>(), default))
-                .ReturnsAsync((GetPermissionDto)null);
-
-            var result = await _controller.GetPermissionById(permissionId) as NotFoundObjectResult;
-
-            Assert.NotNull(result);
-            Assert.Equal(404, result.StatusCode);
-            Assert.Equal($"No se encontró un permiso con ID: {permissionId}", result.Value);
-        }
-
-        [Fact]
-        public async Task GetPermissionById_ReturnsOk_WhenPermissionExists()
-        {
-            Guid permissionId = Guid.NewGuid();
-            var mockPermission = new GetPermissionDto();
-
-            _mockMediator.Setup(m => m.Send(It.IsAny<GetPemissionByIdQuery>(), default))
-                .ReturnsAsync(mockPermission);
-
-            var result = await _controller.GetPermissionById(permissionId) as OkObjectResult;
-
-            Assert.NotNull(result);
-            Assert.Equal(200, result.StatusCode);
-            Assert.Equal(mockPermission, result.Value);
-        }
-
-        [Fact]
-        public async Task GetPermissionById_ReturnsInternalServerError_WhenExceptionOccurs()
-        {
-            Guid permissionId = Guid.NewGuid();
-
-            _mockMediator.Setup(m => m.Send(It.IsAny<GetPemissionByIdQuery>(), default))
-                .ThrowsAsync(new Exception("Unexpected error"));
-
-            var result = await _controller.GetPermissionById(permissionId) as ObjectResult;
-
-            Assert.NotNull(result);
-            Assert.Equal(500, result.StatusCode);
-            Assert.Equal("Error interno al buscar el permiso.", result.Value);
-        }
-
-        [Fact]
         public async Task GetRoleById_ReturnsBadRequest_WhenRoleIdIsEmpty()
         {
             var result = await _controller.GetRoleById(Guid.Empty) as BadRequestObjectResult;

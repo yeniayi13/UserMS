@@ -26,10 +26,10 @@ namespace UserMs.Controllers
             _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
         }
 
-       // [Authorize(Policy = "AdministradorPolicy")]
-        
+        // [Authorize(Policy = "AdministradorPolicy")]
 
-        //[Authorize(Policy = "AdministradorPolicy")]
+
+        [Authorize]
         [HttpGet("All")]
         public async Task<IActionResult> GetUsers()
         {
@@ -52,7 +52,7 @@ namespace UserMs.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, "Error interno al obtener los usuarios.");
             }
         }
-
+        [Authorize]
         [HttpGet("{usersId}")]
         public async Task<IActionResult> GetUsersById([FromRoute] Guid usersId)
         {
