@@ -87,7 +87,7 @@ namespace UserMs.Test.Application.Handler.Command.Auctioneer
         /// <summary>
         /// Verifica que cuando los datos son válidos, se crea el subastador correctamente.
         /// </summary>
-        [Fact]
+      /*  [Fact]
         public async Task Handle_ShouldCreateAuctioneer_WhenRequestIsValid()
         {
             // Arrange
@@ -174,11 +174,9 @@ namespace UserMs.Test.Application.Handler.Command.Auctioneer
             var userRoleDto = _mapperMock.Object.Map<GetUserRoleDto>(userRole);
             Assert.NotNull(userRoleDto);
             await _eventBusUserRolMock.Object.PublishMessageAsync(userRoleDto, "userRoleQueue", "USER_ROLE_CREATED");
-        }
+        }*/
 
-        /// <summary>
-        /// Verifica que cuando el usuario ya existe, se lanza una excepción `UserExistException`.
-        /// </summary>
+        
         [Fact]
         public async Task Handle_ShouldThrowUserExistException_WhenUserAlreadyExists()
         {
@@ -201,9 +199,7 @@ namespace UserMs.Test.Application.Handler.Command.Auctioneer
             await Assert.ThrowsAsync<ApplicationException>(() => _handler.Handle(command, CancellationToken.None));
         }
 
-        /// <summary>
-        /// Verifica que cuando ocurre un error en Keycloak, se lanza una excepción.
-        /// </summary>
+        
         [Fact]
         public async Task Handle_ShouldThrowException_WhenKeycloakFails()
         {

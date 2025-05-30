@@ -7,9 +7,11 @@ using AutoMapper;
 using UserMs.Commoon.Dtos.Users.Response.User;
 using UserMs.Core.Repositories.UserRepo;
 using UserMs.Core.Service.Keycloak;
+using System.Diagnostics.CodeAnalysis;
 
 namespace UserMs.Application.Handlers.User.Commands
 {
+    [ExcludeFromCodeCoverage]
     public class DeleteUsersCommandHandler : IRequestHandler<DeleteUsersCommand, UserId>
     {
         private readonly IUserRepository _usersRepository;

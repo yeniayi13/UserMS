@@ -37,12 +37,13 @@
 	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=97003b82_002D1877_002D4ee7_002Dbb64_002D29db78295b80/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" Name="Handle_ShouldThrowUserNotFoundException_WhenSupportDoesNotExist" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
   &lt;Solution /&gt;&#xD;
 &lt;/SessionState&gt;</s:String>
-	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=ae757f24_002D9f4e_002D4f5d_002D97a6_002D746c31106b6a/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" IsActive="True" Name="Handle_ShouldThrowValidationException_WhenRequestIsInvalid" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
+	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=ae757f24_002D9f4e_002D4f5d_002D97a6_002D746c31106b6a/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" Name="Handle_ShouldThrowValidationException_WhenRequestIsInvalid" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
   &lt;TestAncestor&gt;&#xD;
     &lt;TestId&gt;xUnit::7D32C41C-5197-4994-9E4F-03C36A995937::net8.0::UserMs.Test.Application.Handler.Command.Bidder.UpdateBidderCommandHandlerTests.Handle_ShouldThrowValidationException_WhenRequestIsInvalid&lt;/TestId&gt;&#xD;
     &lt;TestId&gt;xUnit::7D32C41C-5197-4994-9E4F-03C36A995937::net8.0::UserMs.Test.Application.Handler.Command.Bidder.UpdateBidderCommandHandlerTests.Handle_ShouldThrowException_WhenDatabaseUpdateFails&lt;/TestId&gt;&#xD;
     &lt;TestId&gt;xUnit::7D32C41C-5197-4994-9E4F-03C36A995937::net8.0::UserMs.Test.Application.Handler.Command.Bidder.UpdateBidderCommandHandlerTests.Handle_ShouldThrowException_WhenEventBusFails&lt;/TestId&gt;&#xD;
     &lt;TestId&gt;xUnit::7D32C41C-5197-4994-9E4F-03C36A995937::net8.0::UserMs.Test.Application.Handler.Command.Bidder.UpdateBidderCommandHandlerTests.Handle_ShouldUpdateBidder_WhenValidRequest&lt;/TestId&gt;&#xD;
+    &lt;TestId&gt;xUnit::7D32C41C-5197-4994-9E4F-03C36A995937::net8.0::UserMs.Test.Application.Handler.Command.Auctioneer.UpdateAuctioneerCommandHandlerTests.Handle_ShouldThrowUserNotFoundException_WhenAuctioneerDoesNotExist&lt;/TestId&gt;&#xD;
   &lt;/TestAncestor&gt;&#xD;
 &lt;/SessionState&gt;</s:String>
 	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=b484db66_002D22a0_002D49aa_002Da285_002D3d99248be062/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" Name="All tests from Solution #2" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
@@ -59,4 +60,7 @@
     &lt;TestId&gt;xUnit::7D32C41C-5197-4994-9E4F-03C36A995937::net8.0::UserMs.Test.Application.Handler.Command.Bidder.UpdateBidderCommandHandlerTests.Handle_ShouldThrowUserNotFoundException_WhenBidderDoesNotExist&lt;/TestId&gt;&#xD;
     &lt;TestId&gt;xUnit::7D32C41C-5197-4994-9E4F-03C36A995937::net8.0::UserMs.Test.Application.Handler.Command.Bidder.UpdateBidderCommandHandlerTests.Handle_ShouldThrowValidationException_WhenRequestIsInvalid&lt;/TestId&gt;&#xD;
   &lt;/TestAncestor&gt;&#xD;
+&lt;/SessionState&gt;</s:String>
+	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=f91ff779_002Dbfb0_002D4983_002D9b52_002De21cc9575297/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" IsActive="True" Name="Handle_ShouldThrowException_WhenDatabaseUpdateFails" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
+  &lt;Solution /&gt;&#xD;
 &lt;/SessionState&gt;</s:String></wpf:ResourceDictionary>

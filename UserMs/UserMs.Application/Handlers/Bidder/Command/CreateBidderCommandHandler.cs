@@ -31,6 +31,7 @@ using UserMs.Infrastructure.Exceptions;
 
 namespace UserMs.Application.Handlers.Bidder.Command
 {
+
     public class CreateBidderCommandHandler : IRequestHandler<CreateBidderCommand, UserId>
     {
         private readonly IBidderRepository _bidderRepository;

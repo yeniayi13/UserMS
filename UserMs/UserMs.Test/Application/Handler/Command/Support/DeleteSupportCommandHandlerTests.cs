@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace UserMs.Test.Application.Handler.Support
+namespace UserMs.Test.Application.Handler.Command.Support
 {
     using Moq;
     using Xunit;
