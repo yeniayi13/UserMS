@@ -81,6 +81,26 @@ namespace UserMs.Infrastructure.Database.Context.Postgress
                        .Property(u => u.UserLastName)
                        .HasConversion(new UserLastNameValueConverter());
 
+            modelBuilder.Entity<Users>().HasData(
+                new
+                {
+                    UserId = Guid.Parse("7671574c-6fb8-43b7-98be-897a98c487a0"),
+                    UsersType = UsersType.Administrador,
+                    UserAvailable = UserAvailable.Activo,
+                    UserEmail = "admin@example.com",
+                    UserPassword = "hashedpassword",
+                    UserDelete = false,
+                    UserAddress = "123 Main St",
+                    UserPhone = "555-1234",
+                    UserName = "Admin",
+                    UserLastName = "User",
+                    CreatedAt = DateTime.UtcNow,
+                    CreatedBy = "seed",
+                    UpdatedAt = (DateTime?)null,
+                    UpdatedBy = (string)null
+                }
+            );
+
 
             modelBuilder.Entity<Roles>()
                 .Property(r => r.RoleId)
