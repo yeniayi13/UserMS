@@ -28,6 +28,7 @@ using UserMs.Domain.Entities.UserEntity;
 using UserMs.Domain.User_Roles;
 using Xunit;
 using UserMs.Domain.User_Roles.ValueObjects;
+using Handlers.Auctioneer.Command;
 
 namespace UserMs.Test.Application.Handler.Command.Auctioneer
 {

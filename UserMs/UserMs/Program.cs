@@ -93,6 +93,14 @@ using UserMs.Infrastructure.Repositories.Users;
 using RabbitMQ.Client;
 using MongoDB.Driver;
 using UserMs.Application.Handlers.ActivityHistory.Command;
+using Handlers.Support.Command;
+using Handlers.Auctioneer.Command;
+using Handlers.Bidder.Command;
+using Handlers.User.Commands;
+using UserMs.Application.Handlers.User.Commands;
+using Application.Handlers.User.Commads;
+using ClaimsMS.Core.Service.Notification;
+using UserMs.Infrastructure.Service.Notification;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -152,6 +160,7 @@ builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblies(
     typeof(GetUsersByIdQueryHandler).Assembly,
     typeof(UpdateUsersCommandHandler).Assembly,
     typeof(DeleteUsersCommandHandler).Assembly,
+    typeof(UpdatePasswordCommandHandler).Assembly,
 
     typeof(CreateHistoryActivityCommandHandler).Assembly,
     typeof(GetActivitiesByUserQueryHandler).Assembly,
@@ -263,6 +272,7 @@ builder.Services.AddTransient<IUserRepository, UsersRepository>();
 builder.Services.AddTransient<IUserRepositoryMongo, UsersRepositoryMongo>();
 builder.Services.AddTransient<IAuthMsService, AuthMsService>();
 builder.Services.AddTransient<IKeycloakService, KeycloakService>();
+builder.Services.AddTransient<INotificationService, NotificationService>();
 builder.Services.AddTransient<IRolesRepository, RoleRepository>();
 builder.Services.AddTransient<IPermissionRepositoryMongo, PermissionRepository>();
 builder.Services.AddTransient<IRolePermissionRepository, RolePermissionRepository>();

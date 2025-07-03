@@ -54,7 +54,7 @@ namespace UserMs.Controllers
             catch (TimeoutException ex)
             {
                 _logger.LogError(ex, "Fallo de conexión con la base de datos.");
-                return StatusCode(StatusCodes.Status500InternalServerError, "Error interno al obtener los permisos.");
+                return StatusCode(StatusCodes.Status500InternalServerError, $"Error interno al obtener los roles.{ex.Message}");
             }
 
             catch (InvalidOperationException ex)
@@ -65,7 +65,7 @@ namespace UserMs.Controllers
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error inesperado al obtener roles.");
-                return StatusCode(StatusCodes.Status500InternalServerError, "Error interno al obtener los roles.");
+                return StatusCode(StatusCodes.Status500InternalServerError, $"Error interno al obtener los roles.{ex.Message}");
             }
         }
 
@@ -99,7 +99,7 @@ namespace UserMs.Controllers
             catch (Exception ex)
             {
                 _logger.LogError(ex, $"Error inesperado al obtener rol con ID: {roleId}");
-                return StatusCode(StatusCodes.Status500InternalServerError, "Error interno al buscar el rol.");
+                return StatusCode(StatusCodes.Status500InternalServerError, $"Error interno al buscar el rol. {ex.Message}");
             }
         }
 
@@ -133,7 +133,7 @@ namespace UserMs.Controllers
             catch (Exception ex)
             {
                 _logger.LogError(ex, $"Error inesperado al obtener rol con nombre: {roleName}");
-                return StatusCode(StatusCodes.Status500InternalServerError, "Error interno al buscar el rol.");
+                return StatusCode(StatusCodes.Status500InternalServerError, $"Error interno al buscar el rol. {ex.Message}");
             }
         }
 
@@ -162,7 +162,7 @@ namespace UserMs.Controllers
             catch (TimeoutException ex)
             {
                 _logger.LogError(ex, "Fallo de conexión con la base de datos.");
-                return StatusCode(StatusCodes.Status500InternalServerError, "Error interno al obtener los permisos.");
+                return StatusCode(StatusCodes.Status500InternalServerError, $"Error interno al obtener los permisos. {ex.Message}");
             }
 
             catch (InvalidOperationException ex)
@@ -173,7 +173,7 @@ namespace UserMs.Controllers
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error inesperado al obtener permisos.");
-                return StatusCode(StatusCodes.Status500InternalServerError, "Error interno al obtener los permisos.");
+                return StatusCode(StatusCodes.Status500InternalServerError, $"Error interno al obtener los permisos.{ex.Message}");
             }
         }
        
@@ -225,7 +225,7 @@ namespace UserMs.Controllers
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error inesperado al obtener permisos de roles.");
-                return StatusCode(StatusCodes.Status500InternalServerError, "Error interno al obtener permisos de roles.");
+                return StatusCode(StatusCodes.Status500InternalServerError, $"Error interno al obtener permisos de roles. {ex.Message}");
             }
         }
 
@@ -254,7 +254,7 @@ namespace UserMs.Controllers
             catch (Exception ex)
             {
                 _logger.LogError(ex, $"Error inesperado al eliminar permiso con ID: {rolePermissionId}");
-                return StatusCode(StatusCodes.Status500InternalServerError, "Error interno al eliminar el permiso.");
+                return StatusCode(StatusCodes.Status500InternalServerError, $"Error interno al eliminar el permiso.{ex.Message}");
             }
         }
 
@@ -279,7 +279,7 @@ namespace UserMs.Controllers
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error inesperado al asignar rol al usuario.");
-                return StatusCode(StatusCodes.Status500InternalServerError, "Error interno al asignar rol.");
+                return StatusCode(StatusCodes.Status500InternalServerError, $"Error interno al asignar rol. {ex.Message}");
             }
         }
         [Authorize(Policy = "AdministradorPolicy")]
@@ -307,7 +307,7 @@ namespace UserMs.Controllers
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error inesperado al eliminar rol de usuario.");
-                return StatusCode(StatusCodes.Status500InternalServerError, "Error interno al eliminar rol.");
+                return StatusCode(StatusCodes.Status500InternalServerError, $"Error interno al eliminar rol.{ex.Message}");
             }
         }
 
@@ -331,7 +331,7 @@ namespace UserMs.Controllers
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error inesperado al obtener roles de usuario.");
-                return StatusCode(StatusCodes.Status500InternalServerError, "Error interno al obtener roles de usuario.");
+                return StatusCode(StatusCodes.Status500InternalServerError, $"Error interno al obtener roles de usuario. {ex.Message}");
             }
         }
 
@@ -361,7 +361,7 @@ namespace UserMs.Controllers
             catch (Exception ex)
             {
                 _logger.LogError(ex, $"Error inesperado al obtener rol de usuario con ID: {userRoleId}");
-                return StatusCode(StatusCodes.Status500InternalServerError, "Error interno al buscar el rol de usuario.");
+                return StatusCode(StatusCodes.Status500InternalServerError, $"Error interno al buscar el rol de usuario. {ex.Message}");
             }
         }
 

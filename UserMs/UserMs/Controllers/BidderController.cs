@@ -43,7 +43,7 @@ namespace UserMs.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, "Error interno al crear el postor.");
             }
         }
-        [Authorize]
+       // [Authorize]
         [HttpGet("Bidder-All")]
         public async Task<IActionResult> GetBidders()
         {
@@ -66,7 +66,7 @@ namespace UserMs.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, "Error interno al obtener los postores.");
             }
         }
-        [Authorize]
+       // [Authorize]
         [HttpGet("{bidderId}")]
         public async Task<IActionResult> GetBidderById([FromRoute] Guid bidderId)
         {

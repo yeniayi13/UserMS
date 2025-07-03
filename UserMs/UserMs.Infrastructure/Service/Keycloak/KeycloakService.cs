@@ -15,6 +15,7 @@ using System.Data;
 using UserMs.Core.Service.Keycloak;
 using Microsoft.IdentityModel.Tokens;
 using UserMs.Core;
+using System.Security.Authentication;
 
 namespace UserMs.Infrastructure.Service.Keycloak
 {
@@ -111,6 +112,8 @@ namespace UserMs.Infrastructure.Service.Keycloak
             response.EnsureSuccessStatusCode();
 
             var content = await response.Content.ReadAsStringAsync();
+            Console.WriteLine("Error: " + content);
+
             return content;
         }
 
@@ -754,6 +757,58 @@ namespace UserMs.Infrastructure.Service.Keycloak
             }
 
             return true;
+        }
+
+
+        public async Task<bool> ChangeUserPasswordSecureAsync(string username, string currentPassword, string newPassword)
+        {
+            try
+            {
+                // 🔹 Obtener el userId por username
+                var userId = await GetUserByUserName(username);
+
+                if (userId == Guid.Empty)
+                {
+                    Console.WriteLine("No se encontró ningún usuario con el email proporcionado.");
+                    return false;
+                }
+
+                var token = LoginAsync(username, currentPassword);
+
+                if (string.IsNullOrWhiteSpace(token.Result))
+                {
+                    Console.WriteLine("Credenciales incorrectas.");
+                    return false;
+                }
+
+
+                // 🔁 Cambiar contraseña
+                var passwordData = new
+                {
+                    type = "password",
+                    value = newPassword,
+                    temporary = false
+                };
+
+                var jsonBody = JsonSerializer.Serialize(passwordData);
+                var contentJson = new StringContent(jsonBody, Encoding.UTF8, "application/json");
+
+                var response = await _httpClient.PutAsync($"admin/realms/auth-demo/users/{userId}/reset-password", contentJson);
+
+                if (!response.IsSuccessStatusCode)
+                {
+                    Console.WriteLine("Error al cambiar la contraseña: " + response.StatusCode);
+                    return false;
+                }
+
+                Console.WriteLine("Contraseña cambiada correctamente.");
+                return true;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Exception: " + ex.Message);
+                return false;
+            }
         }
     }
 }

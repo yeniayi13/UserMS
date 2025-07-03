@@ -41,7 +41,7 @@ namespace UserMs.Controllers
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error inesperado al intentar registrar un soporte.");
-                return StatusCode(StatusCodes.Status500InternalServerError, "Error interno al crear el soporte.");
+                return StatusCode(StatusCodes.Status500InternalServerError, $"Error interno al crear el soporte. {ex.Message}");
             }
         }
         [Authorize]
@@ -64,7 +64,7 @@ namespace UserMs.Controllers
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error inesperado al obtener los registros de soporte.");
-                return StatusCode(StatusCodes.Status500InternalServerError, "Error interno al obtener los soportes.");
+                return StatusCode(StatusCodes.Status500InternalServerError, $"Error interno al obtener los soportes. {ex.Message}");
             }
         }
         [Authorize]
@@ -93,7 +93,7 @@ namespace UserMs.Controllers
             catch (Exception ex)
             {
                 _logger.LogError(ex, $"Error inesperado al obtener el soporte con ID: {supportId}");
-                return StatusCode(StatusCodes.Status500InternalServerError, "Error interno al buscar el soporte.");
+                return StatusCode(StatusCodes.Status500InternalServerError, $"Error interno al buscar el soporte.{ex.Message}");
             }
         }
         [Authorize]
@@ -122,7 +122,7 @@ namespace UserMs.Controllers
             catch (Exception ex)
             {
                 _logger.LogError(ex, $"Error inesperado al obtener el soporte con correo: {UserEmail}");
-                return StatusCode(StatusCodes.Status500InternalServerError, "Error interno al buscar el soporte.");
+                return StatusCode(StatusCodes.Status500InternalServerError, $"Error interno al buscar el soporte.{ex.Message}");
             }
         }
         [Authorize]
@@ -144,7 +144,7 @@ namespace UserMs.Controllers
             catch (Exception ex)
             {
                 _logger.LogError(ex, $"Error inesperado al actualizar el soporte con ID: {supportId}");
-                return StatusCode(StatusCodes.Status500InternalServerError, "Error interno al actualizar el soporte.");
+                return StatusCode(StatusCodes.Status500InternalServerError, $"Error interno al actualizar el soporte.{ex.Message}");
             }
         }
         [Authorize]
@@ -167,7 +167,7 @@ namespace UserMs.Controllers
             catch (Exception ex)
             {
                 _logger.LogError(ex, $"Error inesperado al eliminar el soporte con ID: {supportId}");
-                return StatusCode(StatusCodes.Status500InternalServerError, "Error interno al eliminar el soporte.");
+                return StatusCode(StatusCodes.Status500InternalServerError, $"Error interno al eliminar el soporte.{ex.Message}");
             }
         }
     }

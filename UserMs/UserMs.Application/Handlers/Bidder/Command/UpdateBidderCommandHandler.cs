@@ -29,8 +29,9 @@ using UserMs.Domain.Entities.IUser.ValueObjects;
 using UserMs.Domain.Entities.UserEntity;
 using UserMs.Infrastructure.Exceptions;
 using UserMs.Commoon.Dtos.Users.Response.Auctioneer;
+using UserMs.Domain.Entities.ActivityHistory;
 
-namespace UserMs.Application.Handlers.Bidder.Command
+namespace Handlers.Bidder.Command
 {
     public class UpdateBidderCommandHandler : IRequestHandler<UpdateBidderCommand, GetBidderDto>
     {
@@ -172,7 +173,7 @@ namespace UserMs.Application.Handlers.Bidder.Command
             var userDto = _mapper.Map<GetUsersDto>(updatedUser);
             await _eventBusUser.PublishMessageAsync(userDto, "userQueue", "USER_UPDATED");
 
-            var activity = new Domain.Entities.ActivityHistory.ActivityHistory(
+            var activity = new ActivityHistory(
                 Guid.NewGuid(),
                 bidderId,
                 "Actualizó perfil de Postor",

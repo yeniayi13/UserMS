@@ -31,8 +31,9 @@ using UserMs.Commoon.Dtos.Users.Response.ActivityHistory;
 using UserMs.Core.Service.Keycloak;
 using UserMs.Application.Validators;
 using Microsoft.Extensions.Logging;
+using UserMs.Domain.Entities.ActivityHistory;
 
-namespace UserMs.Application.Handlers.Auctioneer.Command
+namespace Handlers.Auctioneer.Command
 {
     public class UpdateAuctioneerCommandHandler : IRequestHandler<UpdateAuctioneerCommand, GetAuctioneerDto>
     {
@@ -175,7 +176,7 @@ namespace UserMs.Application.Handlers.Auctioneer.Command
             var usersDto = _mapper.Map<GetUsersDto>(updatedUser);
             await _eventBusUser.PublishMessageAsync(usersDto, "userQueue", "USER_UPDATED");
 
-            var activity = new Domain.Entities.ActivityHistory.ActivityHistory(
+            var activity = new ActivityHistory(
                 Guid.NewGuid(),
                 auctioneerId,
                 "Actualizó Perfil de Subastador",

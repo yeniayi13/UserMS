@@ -35,10 +35,11 @@ using UserMs.Domain.User_Roles.ValueObjects;
 using UserMs.Infrastructure.Exceptions;
 using UserMs.Application.Validators;
 using BCrypt.Net;
+using UserMs.Domain.Entities.ActivityHistory;
 
 
 
-namespace UserMs.Application.Handlers.Auctioneer.Command
+namespace   Handlers.Auctioneer.Command
 {
     public class CreateAuctioneerCommandHandler : IRequestHandler<CreateAuctioneerCommand, UserId>
     {
@@ -227,7 +228,7 @@ namespace UserMs.Application.Handlers.Auctioneer.Command
 
                 await _eventBusUserRol.PublishMessageAsync(userRoleDto, "userRoleQueue", "USER_ROLE_CREATED");
 
-                var activity = new Domain.Entities.ActivityHistory.ActivityHistory(
+                var activity = new ActivityHistory(
                     Guid.NewGuid(),
                     userId,
                     "Creación de Subastador",

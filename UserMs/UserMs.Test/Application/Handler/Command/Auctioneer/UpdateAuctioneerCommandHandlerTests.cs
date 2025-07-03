@@ -24,6 +24,7 @@ using UserMs.Domain.Entities;
 using UserMs.Domain.Entities.Auctioneer;
 using UserMs.Infrastructure.Exceptions;
 using Xunit;
+using Handlers.Auctioneer.Command;
 
 namespace UserMs.Test.Application.Handler.Command.Auctioneer
 {

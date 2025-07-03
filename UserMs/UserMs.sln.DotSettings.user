@@ -11,6 +11,9 @@
 	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=2f4f4dae_002D8d81_002D4c0a_002Dbad2_002Dd37828415389/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" Name="CreateDbContext_ShouldUsePostgreSQLConfiguration" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
   &lt;Solution /&gt;&#xD;
 &lt;/SessionState&gt;</s:String>
+	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=3948d924_002D4f18_002D44f9_002Db2de_002Df6bca4c19b7d/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" Name="All tests from Solution #2" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
+  &lt;Solution /&gt;&#xD;
+&lt;/SessionState&gt;</s:String>
 	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=40d60b0b_002D54af_002D46d1_002Dbe51_002D8e71950162cf/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" Name="Constructor_ShouldThrowException_WhenMongoDatabaseIsNull" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
   &lt;TestAncestor&gt;&#xD;
     &lt;TestId&gt;xUnit::7D32C41C-5197-4994-9E4F-03C36A995937::net8.0::UserMs.Test.Infrastructure.Repositories.Mongo.PermissionRepositoryMongoTests.Constructor_ShouldThrowException_WhenMongoDatabaseIsNull&lt;/TestId&gt;&#xD;
@@ -21,6 +24,9 @@
     &lt;TestId&gt;xUnit::7D32C41C-5197-4994-9E4F-03C36A995937::net8.0::UserMs.Test.Infrastructure.Repositories.Mongo.RoleRepositoryMongoTests.Constructor_ShouldThrowException_WhenMongoContextIsNull&lt;/TestId&gt;&#xD;
   &lt;/TestAncestor&gt;&#xD;
 &lt;/SessionState&gt;</s:String>
+	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=478250f8_002D8776_002D44c8_002D9eb4_002D57503a02ce57/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" IsActive="True" Name="All tests from Solution #3" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
+  &lt;Solution /&gt;&#xD;
+&lt;/SessionState&gt;</s:String>
 	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=5a801fbb_002D2fd0_002D4d0f_002D92fb_002D838cd0a6b41e/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" Name="Constructor_ShouldThrowException_WhenMapperIsNull" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
   &lt;Solution /&gt;&#xD;
 &lt;/SessionState&gt;</s:String>
@@ -29,11 +35,7 @@
     &lt;TestId&gt;xUnit::7D32C41C-5197-4994-9E4F-03C36A995937::net8.0::UserMs.Test.Infrastructure.Repositories.Mongo.PermissionRepositoryMongoTests.GetPermissionAllQueryAsync_ShouldReturnEmptyList_WhenNoPermissionsFound&lt;/TestId&gt;&#xD;
   &lt;/TestAncestor&gt;&#xD;
 &lt;/SessionState&gt;</s:String>
-	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=7fc9c079_002Db819_002D466d_002D82bc_002D2fd8dc77b313/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" Name="Constructor_ShouldThrowException_WhenMongoDatabaseIsNull #2" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
-  &lt;TestAncestor&gt;&#xD;
-    &lt;TestId&gt;xUnit::7D32C41C-5197-4994-9E4F-03C36A995937::net8.0::UserMs.Test.Infrastructure.Repositories.Mongo.RoleRepositoryMongoTests.Constructor_ShouldThrowException_WhenMongoDatabaseIsNull&lt;/TestId&gt;&#xD;
-  &lt;/TestAncestor&gt;&#xD;
-&lt;/SessionState&gt;</s:String>
+	
 	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=97003b82_002D1877_002D4ee7_002Dbb64_002D29db78295b80/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" Name="Handle_ShouldThrowUserNotFoundException_WhenSupportDoesNotExist" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
   &lt;Solution /&gt;&#xD;
 &lt;/SessionState&gt;</s:String>
@@ -46,9 +48,7 @@
     &lt;TestId&gt;xUnit::7D32C41C-5197-4994-9E4F-03C36A995937::net8.0::UserMs.Test.Application.Handler.Command.Auctioneer.UpdateAuctioneerCommandHandlerTests.Handle_ShouldThrowUserNotFoundException_WhenAuctioneerDoesNotExist&lt;/TestId&gt;&#xD;
   &lt;/TestAncestor&gt;&#xD;
 &lt;/SessionState&gt;</s:String>
-	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=b484db66_002D22a0_002D49aa_002Da285_002D3d99248be062/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" Name="All tests from Solution #2" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
-  &lt;Solution /&gt;&#xD;
-&lt;/SessionState&gt;</s:String>
+	
 	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=f4f999d1_002Dfd58_002D4715_002Daeb7_002D1acafe1cb8e1/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" Name="Handle_ShouldReturnExistingUserRoleId_WhenRoleAlreadyAssigned" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
   &lt;TestAncestor&gt;&#xD;
     &lt;TestId&gt;xUnit::7D32C41C-5197-4994-9E4F-03C36A995937::net8.0::UserMs.Test.Application.Handler.Command.User_Role.CreateUserRoleCommandHandlerTests.Handle_ShouldReturnExistingUserRoleId_WhenRoleAlreadyAssigned&lt;/TestId&gt;&#xD;
@@ -61,6 +61,6 @@
     &lt;TestId&gt;xUnit::7D32C41C-5197-4994-9E4F-03C36A995937::net8.0::UserMs.Test.Application.Handler.Command.Bidder.UpdateBidderCommandHandlerTests.Handle_ShouldThrowValidationException_WhenRequestIsInvalid&lt;/TestId&gt;&#xD;
   &lt;/TestAncestor&gt;&#xD;
 &lt;/SessionState&gt;</s:String>
-	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=f91ff779_002Dbfb0_002D4983_002D9b52_002De21cc9575297/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" IsActive="True" Name="Handle_ShouldThrowException_WhenDatabaseUpdateFails" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
+	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=f91ff779_002Dbfb0_002D4983_002D9b52_002De21cc9575297/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" Name="Handle_ShouldThrowException_WhenDatabaseUpdateFails" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
   &lt;Solution /&gt;&#xD;
 &lt;/SessionState&gt;</s:String></wpf:ResourceDictionary>

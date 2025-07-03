@@ -155,11 +155,11 @@ namespace UserMs.Application.Handlers.Support.Command
                 Enum.Parse<SupportSpecialization>(supportDto.SupportSpecialization.ToString()!)
             );
         }
-        private Users CreateUserEntity(CreateSupportDto supportDto, Guid userId)
+        private Domain.Entities.UserEntity.Users CreateUserEntity(CreateSupportDto supportDto, Guid userId)
         {
             string hashedPassword = BCrypt.Net.BCrypt.HashPassword(supportDto.UserPassword);
 
-            return new Users(
+            return new Domain.Entities.UserEntity.Users(
                 userId,
                 UserEmail.Create(supportDto.UserEmail),
                 UserPassword.Create(hashedPassword),
@@ -189,14 +189,14 @@ namespace UserMs.Application.Handlers.Support.Command
             );
         }
 
-        private async Task SaveEntities(Users users, Supports support, UserRoles userRole)
+        private async Task SaveEntities(Domain.Entities.UserEntity.Users users, Supports support, UserRoles userRole)
         {
             await _usersRepository.AddAsync(users);
             await _supportRepository.AddAsync(support);
             await _userRoleRepository.AddAsync(userRole);
         }
 
-        private async Task PublishEvents(Supports support, Users users, UserRoles userRole, Guid userId)
+        private async Task PublishEvents(Supports support, Domain.Entities.UserEntity.Users users, UserRoles userRole, Guid userId)
         {
             var supportDto = _mapper.Map<GetSupportDto>(support);
             await _eventBus.PublishMessageAsync(supportDto, "supportQueue", "SUPPORT_CREATED");

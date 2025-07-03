@@ -46,12 +46,12 @@ namespace UserMs.Application.Handlers.Keycloak
             try
             {
                 // 🔹 Obtener el userId antes de iniciar sesión
-                var Id = await _keycloakService.GetUserByUserName(request.Login.Username);
+               /* var Id = await _keycloakService.GetUserByUserName(request.Login.Username);
 
                 if (Id == Guid.Empty)
                 {
                     throw new KeycloakException("No se encontró ningún usuario con el nombre de usuario proporcionado.");
-                }
+                }*/
 
                 // 🔹 Iniciar sesión en Keycloak
                 var token = await _keycloakService.LoginAsync(request.Login.Username, request.Login.Password);
@@ -60,7 +60,7 @@ namespace UserMs.Application.Handlers.Keycloak
                 {
                     throw new UnauthorizedAccessException("Credenciales incorrectas. No se pudo obtener el token.");
                 }
-                var activity = new Domain.Entities.ActivityHistory.ActivityHistory(
+              /*  var activity = new Domain.Entities.ActivityHistory.ActivityHistory(
                     Guid.NewGuid(),
                     Id,
                     "Inicio Sesion",
@@ -69,7 +69,7 @@ namespace UserMs.Application.Handlers.Keycloak
 
                 await _activityHistoryRepository.AddAsync(activity);
                 var activityDto = _mapper.Map<GetActivityHistoryDto>(activity);
-                await _eventBusActivity.PublishMessageAsync(activityDto, "activityHistoryQueue", "ACTIVITY_CREATED");
+                await _eventBusActivity.PublishMessageAsync(activityDto, "activityHistoryQueue", "ACTIVITY_CREATED");*/
 
                 return token;
             }

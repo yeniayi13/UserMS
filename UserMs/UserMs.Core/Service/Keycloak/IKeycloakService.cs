@@ -16,6 +16,8 @@ namespace UserMs.Core.Service.Keycloak
             string roleName
         );
 
+        Task<bool> ChangeUserPasswordSecureAsync(string username, string currentPassword, string newPassword);
+
         //Task<string> ActivateUser(Guid userId);
         Task<Guid> GetUserByUserName(string userName);
         Task UpdateUser(Guid id, UpdateUserDto userDto);

@@ -12,6 +12,8 @@ using UserMs.Core.RabbitMQ;
 using UserMs.Core.Repositories.ActivityHistoryRepo;
 using UserMs.Core.Service.Keycloak;
 using UserMs.Domain.Entities.IUser.ValueObjects;
+using UserMs.Core.Repositories.UserRepo;
+using UserMs.Infrastructure.Exceptions;
 
 namespace UserMs.Application.Handlers.Keycloak
 {
@@ -21,17 +23,21 @@ namespace UserMs.Application.Handlers.Keycloak
         private readonly IActivityHistoryRepository _activityHistoryRepository;
         private readonly IEventBus<GetActivityHistoryDto> _eventBusActivity;
         private readonly IMapper _mapper;
-    public ResetPasswordCommandHandler(
+       // private readonly IUserRepository _userRepository;
+      //  private readonly IUserRepositoryMongo _userRepositoryMongo;
+        public ResetPasswordCommandHandler(
         IKeycloakService keycloakService,
         IActivityHistoryRepository activityHistoryRepository,
-        IEventBus<GetActivityHistoryDto> eventBusActivity, IMapper mapper)
+        IEventBus<GetActivityHistoryDto> eventBusActivity, IMapper mapper/*IUserRepository userRepository, IUserRepositoryMongo userRepositoryMongo*/)
 
-    {
-        _keycloakService = keycloakService;
-        _activityHistoryRepository = activityHistoryRepository;
-        _eventBusActivity = eventBusActivity;
-        _mapper = mapper;
-    }
+        {
+            _keycloakService = keycloakService;
+            _activityHistoryRepository = activityHistoryRepository;
+            _eventBusActivity = eventBusActivity;
+            _mapper = mapper;
+           /* _userRepository = userRepository;
+            _userRepositoryMongo = userRepositoryMongo;*/
+        }
 
         public async Task<bool> Handle(ResetPasswordCommand request, CancellationToken cancellationToken)
         {
@@ -68,7 +74,7 @@ namespace UserMs.Application.Handlers.Keycloak
 
                 await _activityHistoryRepository.AddAsync(activity);
                 var activityDto = _mapper.Map<GetActivityHistoryDto>(activity);
-                await _eventBusActivity.PublishMessageAsync(activityDto, "activityHistoryQueue", "PASSWORD_RECOVERY_REQUESTED");
+                await _eventBusActivity.PublishMessageAsync(activityDto, "activityHistoryQueue", "ACTIVITY_CREATED");
 
               
 
