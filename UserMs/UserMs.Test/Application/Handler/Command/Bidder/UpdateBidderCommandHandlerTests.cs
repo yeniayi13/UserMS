@@ -26,6 +26,7 @@ using UserMs.Infrastructure.Exceptions;
 using Xunit;
 using UserMs.Domain.Entities.Bidder.ValueObjects;
 using UserMs.Domain.Entities.IUser.ValueObjects;
+using Handlers.Bidder.Command;
 
 namespace UserMs.Test.Application.Handler.Command.Bidder
 {

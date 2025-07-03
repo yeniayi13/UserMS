@@ -8,6 +8,10 @@ using UserMs.Core.RabbitMQ;
 using UserMs.Domain.Entities.IUser.ValueObjects;
 using UserMs.Commoon.Dtos;
 using UserMs.Commoon.Dtos.Users.Request.User;
+using UserMs.Application.Commands.Bidder;
+using UserMs.Commoon.Dtos.Users.Request.Bidder;
+using UserMs.Commoon.Dtos.Keycloak;
+using UserMs.Application.Commands.Users;
 
 
 namespace UserMs.Controllers
@@ -49,7 +53,7 @@ namespace UserMs.Controllers
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error inesperado al obtener los usuarios.");
-                return StatusCode(StatusCodes.Status500InternalServerError, "Error interno al obtener los usuarios.");
+                return StatusCode(StatusCodes.Status500InternalServerError, $"Error interno al obtener los usuarios.{ex.Message}");
             }
         }
         [Authorize]
@@ -78,7 +82,31 @@ namespace UserMs.Controllers
             catch (Exception ex)
             {
                 _logger.LogError(ex, $"Error inesperado al obtener el usuario con ID: {usersId}");
-                return StatusCode(StatusCodes.Status500InternalServerError, "Error interno al buscar el usuario.");
+                return StatusCode(StatusCodes.Status500InternalServerError, $"Error interno al buscar el usuario.{ex.Message}");
+            }
+        }
+
+
+        [Authorize]
+        [HttpPut("Update-Password/{userId}")]
+        public async Task<IActionResult> UpdatePassword([FromRoute] Guid userId, [FromBody] UpdatePasswordDto updateDto)
+        {
+            if (userId == Guid.Empty || updateDto == null)
+            {
+                _logger.LogWarning("Solicitud de actualización con datos inválidos.");
+                return BadRequest("El ID del postor y los datos de actualización no pueden estar vacíos.");
+            }
+
+            try
+            {
+                var command = new UpdatePasswordCommand(updateDto,userId);
+                var user = await _mediator.Send(command);
+                return Ok(user);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, $"Error inesperado al actualizar el postor con ID: {userId}");
+                return StatusCode(StatusCodes.Status500InternalServerError, $"Error interno al actualizar el postor. {ex.Message}");
             }
         }
 

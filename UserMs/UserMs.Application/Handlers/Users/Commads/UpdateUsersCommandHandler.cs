@@ -16,8 +16,10 @@ using UserMs.Domain.Entities.UserEntity;
 using AutoMapper;
 using UserMs.Commoon.Dtos.Users.Response.Auctioneer;
 using System.Diagnostics.CodeAnalysis;
+using UserMs.Application.Commands.UserEntity;
+using Commands.UserEntity;
 
-namespace UserMs.Application.Handlers.User.Commands
+namespace Handlers.User.Commands
 {
     [ExcludeFromCodeCoverage]
     public class UpdateUsersCommandHandler : IRequestHandler<UpdateUsersCommand,Users>

@@ -30,7 +30,7 @@ using UserMs.Domain.Entities.UserEntity;
 using UserMs.Infrastructure.Exceptions;
 using UserMs.Infrastructure.Repositories;
 
-namespace UserMs.Application.Handlers.Support.Command
+namespace Handlers.Support.Command
 {
     public class UpdateSupportCommandHandler : IRequestHandler<UpdateSupportCommand, GetSupportDto>
     {
@@ -177,7 +177,7 @@ namespace UserMs.Application.Handlers.Support.Command
             var usersDto = _mapper.Map<GetUsersDto>(updatedUser);
             await _eventBusUser.PublishMessageAsync(usersDto, "userQueue", "USER_UPDATED");
 
-            var activity = new Domain.Entities.ActivityHistory.ActivityHistory(
+            var activity = new UserMs.Domain.Entities.ActivityHistory.ActivityHistory(
                 Guid.NewGuid(),
                 supportId,
                 "Actualizó perfil de un trabajador de soporte",

@@ -15,9 +15,11 @@ using UserMs.Core.Service.Keycloak;
 using AuthMs.Common.Exceptions;
 using FluentValidation;
 using System.Diagnostics.CodeAnalysis;
+using Commands.UserEntity;
+using UserMs.Application.Commands.UserEntity;
 
 
-namespace UserMs.Application.Handlers.User.Commands
+namespace Handlers.User.Commands
 {
     [ExcludeFromCodeCoverage]
     public class CreateUsersCommandHandler : IRequestHandler<CreateUsersCommand, UserId>

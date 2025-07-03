@@ -41,7 +41,7 @@ namespace UserMs.Controllers
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error inesperado al intentar registrar un subastador.");
-                return StatusCode(StatusCodes.Status500InternalServerError, "Error interno al crear el subastador.");
+                return StatusCode(StatusCodes.Status500InternalServerError, $"Error interno al crear el subastador. {ex.Message}");
             }
         }
         [Authorize]
@@ -64,7 +64,7 @@ namespace UserMs.Controllers
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error inesperado al obtener los subastadores.");
-                return StatusCode(StatusCodes.Status500InternalServerError, "Error interno al obtener los subastadores.");
+                return StatusCode(StatusCodes.Status500InternalServerError, $"Error interno al obtener los subastadores. {ex.Message}");
             }
         }
         [Authorize]
@@ -93,7 +93,7 @@ namespace UserMs.Controllers
             catch (Exception ex)
             {
                 _logger.LogError(ex, $"Error inesperado al obtener el subastador con ID: {auctioneerId}");
-                return StatusCode(StatusCodes.Status500InternalServerError, "Error interno al buscar el subastador.");
+                return StatusCode(StatusCodes.Status500InternalServerError, $"Error interno al buscar el subastador.{ex.Message}");
             }
         }
         [Authorize]
@@ -144,7 +144,7 @@ namespace UserMs.Controllers
             catch (Exception ex)
             {
                 _logger.LogError(ex, $"Error inesperado al actualizar el subastador con ID: {auctioneerId}");
-                return StatusCode(StatusCodes.Status500InternalServerError, "Error interno al actualizar el subastador.");
+                return StatusCode(StatusCodes.Status500InternalServerError, $"Error interno al actualizar el subastador.{ex.Message}");
             }
         }
         [Authorize]
@@ -167,7 +167,7 @@ namespace UserMs.Controllers
             catch (Exception ex)
             {
                 _logger.LogError(ex, $"Error inesperado al eliminar el subastador con ID: {auctioneerId}");
-                return StatusCode(StatusCodes.Status500InternalServerError, "Error interno al eliminar el subastador.");
+                return StatusCode(StatusCodes.Status500InternalServerError, $"Error interno al eliminar el subastador.{ex.Message}s");
             }
         }
     }

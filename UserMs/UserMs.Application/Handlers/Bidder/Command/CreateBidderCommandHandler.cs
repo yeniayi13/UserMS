@@ -20,6 +20,7 @@ using UserMs.Core.Repositories.UserRepo;
 using UserMs.Core.Repositories.UserRoleRepo;
 using UserMs.Core.Service.Keycloak;
 using UserMs.Domain.Entities;
+using UserMs.Domain.Entities.ActivityHistory;
 using UserMs.Domain.Entities.Bidder;
 using UserMs.Domain.Entities.Bidder.ValueObjects;
 using UserMs.Domain.Entities.IUser.ValueObjects;
@@ -29,7 +30,7 @@ using UserMs.Domain.User_Roles;
 using UserMs.Domain.User_Roles.ValueObjects;
 using UserMs.Infrastructure.Exceptions;
 
-namespace UserMs.Application.Handlers.Bidder.Command
+namespace Handlers.Bidder.Command
 {
 
     public class CreateBidderCommandHandler : IRequestHandler<CreateBidderCommand, UserId>
@@ -208,7 +209,7 @@ namespace UserMs.Application.Handlers.Bidder.Command
             await _userRoleRepository.AddAsync(userRole);
         }
 
-        private async Task PublishEvents(Bidders bidder, Users users, UserRoles userRole, Guid userId)
+        private async Task PublishEvents(Bidders bidder,Users users, UserRoles userRole, Guid userId)
         {
             var bidderDto = _mapper.Map<GetBidderDto>(bidder);
             await _eventBus.PublishMessageAsync(bidderDto, "bidderQueue", "BIDDER_CREATED");
@@ -221,7 +222,7 @@ namespace UserMs.Application.Handlers.Bidder.Command
             userRoleDto.RoleName = await _roleRepository.GetRolesByNameQuery("Subastador").ContinueWith(t => t.Result.RoleName.Value);
             await _eventBusUserRol.PublishMessageAsync(userRoleDto, "userRoleQueue", "USER_ROLE_CREATED");
 
-            var activity = new Domain.Entities.ActivityHistory.ActivityHistory(
+            var activity = new ActivityHistory(
                 Guid.NewGuid(),
                 userId,
                 "Creación de Postor",
