@@ -16,6 +16,7 @@ using UserMs.Core.Service.Keycloak;
 using Microsoft.IdentityModel.Tokens;
 using UserMs.Core;
 using System.Security.Authentication;
+using System.Net.Http.Headers;
 
 namespace UserMs.Infrastructure.Service.Keycloak
 {
@@ -83,7 +84,27 @@ namespace UserMs.Infrastructure.Service.Keycloak
             return tokenJson.RootElement.GetProperty("access_token").GetString();
         }
 
+        private async Task<string> GetAccessTokenAsync()
+        {
+            var request = new HttpRequestMessage(HttpMethod.Post, "http://localhost:18080/realms/auth-demo/protocol/openid-connect/token");
+            request.Content = new FormUrlEncodedContent(new Dictionary<string, string>
+    {
+        { "client_id", "admin-client" },
+        { "client_secret", "QfhngLkKbk6xixmYEzGkXiJc3nvhU0w2" },
+        { "grant_type", "client_credentials" }
+    });
 
+            var response = await _httpClient.SendAsync(request);
+            var responseString = await response.Content.ReadAsStringAsync();
+
+            if (!response.IsSuccessStatusCode)
+            {
+                throw new KeycloakException($"Error al obtener token: {response.StatusCode}");
+            }
+
+            var json = JsonDocument.Parse(responseString);
+            return json.RootElement.GetProperty("access_token").GetString();
+        }
 
 
         public async Task<string> LoginAsync(string username, string password)
@@ -185,40 +206,51 @@ namespace UserMs.Infrastructure.Service.Keycloak
         }
 
 
-        public async Task<string> CreateUserAsync(string userEmail, string userPassword, string userName, string userLastName, string userPhone, string userAddress)
+        public async Task<string> CreateUserAsync(
+     string userEmail,
+     string userPassword,
+     string userName,
+     string userLastName,
+     string userPhone,
+     string userAddress)
         {
             try
             {
-                // Crear el usuario en Keycloak con atributos personalizados
+                // 🔐 1. Obtener el access token desde Keycloak usando client_credentials
+                var accessToken = await GetAccessTokenAsync();
+
+                // 🔧 2. Construir el cuerpo de la solicitud para crear usuario
                 var userData = new
                 {
                     username = userEmail,
                     email = userEmail,
-                    firstName = userName,  // Nombre del usuario
-                    lastName = userLastName,  // Apellido del usuario
-                    emailVerified = true,  // Confirmación de correo
-                    enabled = true,  // Habilitar usuario
+                    firstName = userName,
+                    lastName = userLastName,
+                    emailVerified = true,
+                    enabled = true,
                     credentials = new[]
                     {
                 new
                 {
                     type = "password",
-                    value = $"{userPassword}",
-                    temporary = false  // Contraseña no temporal
+                    value = userPassword,
+                    temporary = false
                 }
             },
                     attributes = new Dictionary<string, object>
-                    {
-                        { "phone", new[] { userPhone ?? "" } },
-                        { "address", new[] { userAddress ?? "" } }
-                    }
+            {
+                { "phone", new[] { userPhone ?? "" } },
+                { "address", new[] { userAddress ?? "" } }
+            }
                 };
 
-                // Serializar el objeto a JSON
                 var jsonBody = JsonSerializer.Serialize(userData);
                 var contentJson = new StringContent(jsonBody, Encoding.UTF8, "application/json");
 
-                // Enviar solicitud para crear el usuario
+                // 📤 3. Establecer el header de autorización con el token
+                _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
+
+                // 🚀 4. Crear el usuario vía Admin API
                 var createUserResponse = await _httpClient.PostAsync("http://localhost:18080/admin/realms/auth-demo/users", contentJson);
 
                 if (!createUserResponse.IsSuccessStatusCode)
@@ -227,26 +259,19 @@ namespace UserMs.Infrastructure.Service.Keycloak
                     {
                         throw new UserExistException("El usuario ya existe. Intenta con otro correo.");
                     }
-                    else
-                    {
-                        throw new KeycloakException($"Error creando usuario: {createUserResponse.StatusCode}");
-                    }
+                    throw new KeycloakException($"Error creando usuario: {createUserResponse.StatusCode}");
                 }
 
-                // Obtener el userId del usuario creado
-                var createdUserLocation = createUserResponse.Headers.Location.ToString();
-                var userId = createdUserLocation.Split('/').Last();
-                Console.WriteLine($"Created User Location: {userId}");
+                var userId = createUserResponse.Headers.Location.ToString().Split('/').Last();
 
-                // Enviar enlace de activación por correo
+                // ✉️ 5. Enviar email de activación (opcional)
                 var activationResponse = await SendActivationEmail(userId, userEmail);
-
-
 
                 return "Usuario creado y enlace de activación enviado con éxito.";
             }
             catch (Exception ex)
             {
+                // Puedes loguear el error aquí si prefieres
                 throw ex;
             }
         }
