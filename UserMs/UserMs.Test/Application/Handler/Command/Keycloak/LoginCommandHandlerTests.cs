@@ -14,6 +14,7 @@ using UserMs.Core.RabbitMQ;
 using UserMs.Core.Repositories.ActivityHistoryRepo;
 using UserMs.Core.Service.Keycloak;
 using Xunit;
+using UserMs.Core.Repositories.UserRepo;
 
 namespace UserMs.Test.Application.Handler.Command.Keycloak
 {
@@ -24,19 +25,21 @@ namespace UserMs.Test.Application.Handler.Command.Keycloak
         private readonly Mock<IEventBus<GetActivityHistoryDto>> _eventBusActivityMock;
         private readonly Mock<IMapper> _mapperMock;
         private readonly LoginCommandHandler _handler;
-
+        private readonly Mock<IUserRepositoryMongo> _userMock;
         public LoginCommandHandlerTests()
         {
             _keycloakServiceMock = new Mock<IKeycloakService>();
             _activityHistoryRepositoryMock = new Mock<IActivityHistoryRepository>();
             _eventBusActivityMock = new Mock<IEventBus<GetActivityHistoryDto>>();
             _mapperMock = new Mock<IMapper>();
+            _userMock = new Mock<IUserRepositoryMongo>();
 
             _handler = new LoginCommandHandler(
                 _keycloakServiceMock.Object,
                 _activityHistoryRepositoryMock.Object,
                 _eventBusActivityMock.Object,
-                _mapperMock.Object
+                _mapperMock.Object,
+                _userMock.Object
             );
         }
 
