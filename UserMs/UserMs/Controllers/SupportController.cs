@@ -22,7 +22,7 @@ namespace UserMs.Controllers
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
             _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
         }
-        [Authorize]
+       // [Authorize]
         [HttpPost("Support-Registration")]
         public async Task<IActionResult> CreateSupport([FromBody] CreateSupportDto createSupportDto)
         {
@@ -44,7 +44,7 @@ namespace UserMs.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, $"Error interno al crear el soporte. {ex.Message}");
             }
         }
-        [Authorize]
+        //[Authorize]
         [HttpGet("Support-All")]
         public async Task<IActionResult> GetSupport()
         {
@@ -67,7 +67,7 @@ namespace UserMs.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, $"Error interno al obtener los soportes. {ex.Message}");
             }
         }
-        [Authorize]
+       // [Authorize]
         [HttpGet("{supportId}")]
         public async Task<IActionResult> GetSupportById([FromRoute] Guid supportId)
         {
@@ -96,7 +96,7 @@ namespace UserMs.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, $"Error interno al buscar el soporte.{ex.Message}");
             }
         }
-        [Authorize]
+        //[Authorize]
         [HttpGet("UserEmail/{UserEmail}")]
         public async Task<IActionResult> GetSupportByUserEmail([FromRoute] string UserEmail)
         {

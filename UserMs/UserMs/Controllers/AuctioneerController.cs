@@ -44,7 +44,7 @@ namespace UserMs.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, $"Error interno al crear el subastador. {ex.Message}");
             }
         }
-        [Authorize]
+       // [Authorize]
         [HttpGet("Auctioneer-All")]
         public async Task<IActionResult> GetAuctioneer()
         {
@@ -67,7 +67,7 @@ namespace UserMs.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, $"Error interno al obtener los subastadores. {ex.Message}");
             }
         }
-        [Authorize]
+        //[Authorize]
         [HttpGet("{auctioneerId}")]
         public async Task<IActionResult> GetAuctioneerById([FromRoute] Guid auctioneerId)
         {
@@ -96,7 +96,7 @@ namespace UserMs.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, $"Error interno al buscar el subastador.{ex.Message}");
             }
         }
-        [Authorize]
+       // [Authorize]
         [HttpGet("UserEmail/{UserEmail}")]
         public async Task<IActionResult> GetAuctioneerByUserEmail([FromRoute] string UserEmail)
         {

@@ -95,7 +95,7 @@ namespace UserMs.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, "Error interno al buscar el postor.");
             }
         }
-        [Authorize]
+       // [Authorize]
         [HttpGet("UserEmail/{UserEmail}")]
         public async Task<IActionResult> GetBidderByUserEmail([FromRoute] string UserEmail)
         {
