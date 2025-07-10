@@ -33,7 +33,7 @@ namespace UserMs.Controllers
         // [Authorize(Policy = "AdministradorPolicy")]
 
 
-        [Authorize]
+      //  [Authorize]
         [HttpGet("All")]
         public async Task<IActionResult> GetUsers()
         {
@@ -56,7 +56,7 @@ namespace UserMs.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, $"Error interno al obtener los usuarios.{ex.Message}");
             }
         }
-        [Authorize]
+//[Authorize]
         [HttpGet("{usersId}")]
         public async Task<IActionResult> GetUsersById([FromRoute] Guid usersId)
         {
