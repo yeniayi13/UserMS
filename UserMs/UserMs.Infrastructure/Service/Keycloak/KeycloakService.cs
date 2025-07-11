@@ -419,6 +419,8 @@ namespace UserMs.Infrastructure.Service.Keycloak
         {
             try
             {
+
+                Console.WriteLine($"🔍 Verificando rol '{roleName}' para el usuario {userId} en Keycloak...");
                 var role = roleName switch
                 {
                     "Administrador" => "Administrator",

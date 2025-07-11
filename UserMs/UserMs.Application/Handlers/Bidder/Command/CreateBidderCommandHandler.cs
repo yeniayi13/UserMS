@@ -135,23 +135,16 @@ namespace Handlers.Bidder.Command
 
         private async Task<Guid> CreateUserInKeycloak(string userEmail, string userPassword, string userName, string userLastName, string userPhone, string userAddress)
         {
-           await _keycloakMsService.CreateUserAsync(
-               userEmail,
-                userPassword, userName,
-                 userLastName,
-                userPhone,
-               userAddress
-            );
+            await _keycloakMsService.CreateUserAsync(userEmail, userPassword, userName, userLastName, userPhone, userAddress);
 
             var userId = await _keycloakMsService.GetUserByUserName(userEmail);
 
             if (userId == Guid.Empty)
-                   //throw new Exception("No se pudo obtener el ID del usuario desde Keycloak.");
+                throw new Exception("No se pudo obtener el ID del usuario desde Keycloak.");
 
-              await _keycloakMsService.AssignClientRoleToUser(userId, "Postor");
+            await _keycloakMsService.AssignClientRoleToUser(userId, "Postor");
 
-             return userId;
-             
+            return userId;
         }
 
         private Bidders CreateBidderEntity(CreateBidderDto bidder, Guid userId)
@@ -219,7 +212,7 @@ namespace Handlers.Bidder.Command
 
             var userRoleDto = _mapper.Map<GetUserRoleDto>(userRole);
             userRoleDto.UserEmail = users.UserEmail.Value;
-            userRoleDto.RoleName = await _roleRepository.GetRolesByNameQuery("Subastador").ContinueWith(t => t.Result.RoleName.Value);
+            userRoleDto.RoleName = await _roleRepository.GetRolesByNameQuery("Postor").ContinueWith(t => t.Result.RoleName.Value);
             await _eventBusUserRol.PublishMessageAsync(userRoleDto, "userRoleQueue", "USER_ROLE_CREATED");
 
             var activity = new ActivityHistory(
