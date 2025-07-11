@@ -11,7 +11,7 @@ namespace UserMs.Commoon.Dtos.Users.Response.Role_Permission
     public class GetRolePermissionDto
     {
 
-        [JsonIgnore]
+      //  [JsonIgnore]
         public Guid RolePermissionId { get; set; }
         [JsonIgnore]
         public Guid RoleId { get; set; }

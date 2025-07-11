@@ -82,8 +82,7 @@ namespace UserMs.Application.Handlers.User_Roles.Commands
                     await _userRoleRepositoryMongo.GetRoleByRoleNameAndByUserEmail(role.RoleName.Value, user.UserEmail.Value);
                 if (roleUser != null)
                 {
-                  
-                    return roleUser.UserRoleId; // ⚠️ En lugar de lanzar una excepción, retorna el ID existente.
+                    throw new InvalidOperationException("Error: La combinación de rol y usuario ya existe."); // ⚠️ En lugar de lanzar una excepción, retorna el ID existente.
                 }
 
                 var userRole = new UserRoles(userRoleId, userId, roleId);
@@ -118,9 +117,13 @@ namespace UserMs.Application.Handlers.User_Roles.Commands
 
                 return userRole.UserRoleId;
             }
+            catch (InvalidOperationException)
+            {
+                throw;
+            }
             catch (Exception ex)
             {
-                ExceptionHandlerService.HandleException(ex);
+               // ExceptionHandlerService.HandleException(ex);
                 throw;
             }
         }

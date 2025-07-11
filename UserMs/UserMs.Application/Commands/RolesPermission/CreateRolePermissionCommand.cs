@@ -11,14 +11,14 @@ using UserMs.Domain.Entities.Role_Permission.ValueObjects;
 
 namespace UserMs.Application.Commands.RolesPermission
 {
-    public class CreateRolePermissionCommand : IRequest<RolePermissionId>
+    public class CreateRolePermissionCommand : IRequest<Guid>
     {
         public CreateRolePermissionDto RolePermission { get; set; }
 
         public CreateRolePermissionCommand(CreateRolePermissionDto rolePermission)
         {
             RolePermission = rolePermission;
-            RolePermission = rolePermission;
+           // RolePermission = rolePermission;
         }
     }
 }

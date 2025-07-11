@@ -177,7 +177,7 @@ namespace UserMs.Controllers
             }
         }
        
-       /* [Authorize(Policy = "AdministradorPolicy")]
+        [Authorize(Policy = "AdministradorPolicy")]
         // 🔹 Asignar un permiso a un rol
         [HttpPost("Assign-Permission-Role")]
             public async Task<IActionResult> CreateRolePermission(
@@ -193,7 +193,8 @@ namespace UserMs.Controllers
                 {
                     var command = new CreateRolePermissionCommand(createRolePermissionDto);
                     var rolePermissionId = await _mediator.Send(command);
-                    return CreatedAtAction(nameof(GetRoleById), new { rolePermissionId }, rolePermissionId);
+                // return CreatedAtAction(nameof(GetRoleById), new { rolePermissionId }, rolePermissionId);
+                return Ok(rolePermissionId);
                 }
 
                 catch (Exception ex)
@@ -201,7 +202,7 @@ namespace UserMs.Controllers
                     _logger.LogError(ex, "Error inesperado al asignar permisos.");
                     return StatusCode(StatusCodes.Status500InternalServerError, "Error interno al asignar el permiso.");
                 }
-            }*/
+            }
 
 
     
@@ -243,8 +244,8 @@ namespace UserMs.Controllers
             try
             {
                 var command = new DeleteRolePermissionCommand(rolePermissionId);
-                await _mediator.Send(command);
-                return NoContent();
+               var id= await _mediator.Send(command);
+                return Ok(id);
             }
             catch (KeyNotFoundException ex)
             {
@@ -276,13 +277,19 @@ namespace UserMs.Controllers
                 var userRoleId = await _mediator.Send(command);
                 return CreatedAtAction(nameof(GetUserRoleById), new { userRoleId }, userRoleId);
             }
+            catch(InvalidOperationException e)
+            {
+                _logger.LogError(e, "Error inesperado al asignar rol al usuario ya existente.");
+                return StatusCode(StatusCodes.Status500InternalServerError, $"Error interno al asignar rol. {e.Message}");
+            }
+
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error inesperado al asignar rol al usuario.");
                 return StatusCode(StatusCodes.Status500InternalServerError, $"Error interno al asignar rol. {ex.Message}");
             }
         }
-        [Authorize(Policy = "AdministradorPolicy")]
+       /* [Authorize(Policy = "AdministradorPolicy")]
         // 🔹 Eliminar un rol de usuario
         [HttpDelete("Unassign-Roles-Users/{roleName}/{userEmail}")]
         public async Task<IActionResult> DeleteUserRole(string roleName, string userEmail)
@@ -296,8 +303,8 @@ namespace UserMs.Controllers
             try
             {
                 var command = new DeleteUserRolesCommand(roleName, userEmail);
-                await _mediator.Send(command);
-                return NoContent();
+               var id= await _mediator.Send(command);
+                return Ok(id);
             }
             catch (KeyNotFoundException ex)
             {
@@ -309,7 +316,7 @@ namespace UserMs.Controllers
                 _logger.LogError(ex, "Error inesperado al eliminar rol de usuario.");
                 return StatusCode(StatusCodes.Status500InternalServerError, $"Error interno al eliminar rol.{ex.Message}");
             }
-        }
+        }*/
 
        
         [HttpGet("User-Roles-All")]

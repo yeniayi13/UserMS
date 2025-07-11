@@ -20,7 +20,7 @@ using UserMs.Infrastructure.Exceptions;
 
 namespace UserMs.Application.Handlers.Roles_Permission.Commands
 {
-    public class CreateRolePermissionCommandHandler : IRequestHandler<CreateRolePermissionCommand, RolePermissionId>
+    public class CreateRolePermissionCommandHandler : IRequestHandler<CreateRolePermissionCommand, Guid>
     {
         private readonly IRolePermissionRepository _rolePermissionRepository;
         private readonly IRolesRepository _roleRepository;
@@ -38,7 +38,7 @@ namespace UserMs.Application.Handlers.Roles_Permission.Commands
             _roleRepositoryMongo = roleRepositoryMongo;
         }
 
-        public async Task<RolePermissionId> Handle(CreateRolePermissionCommand request, CancellationToken cancellationToken)
+        public async Task<Guid> Handle(CreateRolePermissionCommand request, CancellationToken cancellationToken)
         {
             try
             {
@@ -70,17 +70,17 @@ namespace UserMs.Application.Handlers.Roles_Permission.Commands
 
                 var data = new GetRolePermissionDto
                 {
-                    RolePermissionId = rolePermissionId,
+                    RolePermissionId = rolePermissionId.Value,
                     PermissionId = permissions.PermissionId.Value,
                     PermissionName = permissions.PermissionName.Value,
-                    RoleId = role.RoleId,
+                    RoleId = role.RoleId.Value,
                     RoleName = role.RoleName.Value
                 };
 
                 await _rolePermissionRepository.AddAsync(rolePermission);
                 await _eventBus.PublishMessageAsync(data, "rolePermissionQueue", "ROLE_PERMISSION_CREATED");
 
-                return rolePermission.RolePermissionId;
+                return rolePermission.RolePermissionId.Value;
             }
             catch (InvalidOperationException ex)
             {
@@ -89,7 +89,7 @@ namespace UserMs.Application.Handlers.Roles_Permission.Commands
             }
             catch (Exception ex)
             {
-                ExceptionHandlerService.HandleException(ex);
+               // ExceptionHandlerService.HandleException(ex);
                 throw;
             }
         }
